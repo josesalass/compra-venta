@@ -1,3 +1,1 @@
-Esto es una prueba
-
-Esto es una prueba - aaaa
+2021-10-02: Se ha creado el esqueleto de la Rest API Spring Boot
