@@ -1,4 +1,5 @@
-package com.example.demo.model;
+package com.queue.demo.model;
+
 import javax.persistence.*;
 
 @Entity

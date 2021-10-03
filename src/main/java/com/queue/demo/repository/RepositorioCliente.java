@@ -1,6 +1,9 @@
-package com.example.demo.repository;
-import com.example.demo.model.Cliente;
+package com.queue.demo.repository;
+
+import com.queue.demo.model.Cliente;
 import org.springframework.data.jpa.repository.JpaRepository;
+
+
 public interface RepositorioCliente extends JpaRepository <Cliente, Integer>{
 
 }

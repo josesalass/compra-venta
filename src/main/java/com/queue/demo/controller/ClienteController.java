@@ -1,7 +1,7 @@
-package com.example.demo.controller;
+package com.queue.demo.controller;
 
-import com.example.demo.model.Cliente;
-import com.example.demo.service.ClienteService;
+import com.queue.demo.model.Cliente;
+import com.queue.demo.service.ClienteService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;

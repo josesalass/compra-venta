@@ -1,6 +1,7 @@
-package com.example.demo.service;
+package com.queue.demo.service;
+
 import java.util.List;
-import com.example.demo.model.Cliente;
+import com.queue.demo.model.Cliente;
 
 public interface ClienteService {
     public List<Cliente> buscarTodosLosClientes();

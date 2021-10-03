@@ -1,12 +1,12 @@
-package com.example.demo.service;
+package com.queue.demo.service;
 
-import com.example.demo.model.Cliente;
+import com.queue.demo.model.Cliente;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.util.List;
-import com.example.demo.repository.*;
+import com.queue.demo.repository.*;
 
 @Service
 @Transactional
