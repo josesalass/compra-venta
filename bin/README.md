@@ -1,1 +1,1 @@
-2021-10-02: Se ha creado el esqueleto de la Rest API Spring Boot.
+2021-10-02: Se ha creado el esqueleto de la Rest API Spring Boot
