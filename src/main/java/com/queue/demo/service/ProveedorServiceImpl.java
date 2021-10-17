@@ -68,8 +68,4 @@ public class ProveedorServiceImpl implements ProveedorService{
 	public void guardar(Proveedor proveedor) {
 		repProveedor.save(proveedor);
 	}
-	@Override
-	public void borrarProveedorPorRut(String rut) {
-		repProveedor.deleteById(1);
-	}
 }
