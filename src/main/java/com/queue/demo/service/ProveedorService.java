@@ -15,4 +15,7 @@ public interface ProveedorService {
 	public void guardar(Proveedor proveedor);
 	public void borrarProveedorPorRut(String rut);
 	public void borrarProveedorPorNombre(String nombre);
+	void eliminarPorNombre(String nombre);
+	void eliminarPorRut(String rut);
+	
 }

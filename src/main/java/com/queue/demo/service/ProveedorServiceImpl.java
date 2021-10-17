@@ -34,6 +34,18 @@ public class ProveedorServiceImpl implements ProveedorService{
 
 	}
 	
+	@Override
+	public void eliminarPorNombre(String nombre) {
+		
+		repProveedor.deleteBynombreempresa(nombre);
+		
+	}
+	@Override
+	public void eliminarPorRut(String rut) {
+		
+		repProveedor.deleteByrutempresa(rut);
+		
+	}
 	
 	@Override
 	public List <Proveedor> buscarPorRut (String rut){
@@ -51,17 +63,7 @@ public class ProveedorServiceImpl implements ProveedorService{
 	public List<Proveedor> buscarTodosLosProveedores(){
 		return repProveedor.findAll();
 	}
-	/*
-	@Override
-	public Proveedor buscarProveedorPorRut(String rut) {
-		return repProveedor.findById(1).get();
-	}
-	
-	@Override
-	public Proveedor buscarProveedorPorNombre(String nombre) {
-		return repProveedor.findById(1).get();
-	}
-	*/
+
 	@Override
 	public void guardar(Proveedor proveedor) {
 		repProveedor.save(proveedor);
@@ -69,9 +71,5 @@ public class ProveedorServiceImpl implements ProveedorService{
 	@Override
 	public void borrarProveedorPorRut(String rut) {
 		repProveedor.deleteById(1);
-	}
-	@Override
-	public void borrarProveedorPorNombre(String nombre) {
-		
 	}
 }

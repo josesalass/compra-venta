@@ -30,7 +30,16 @@ public class ProveedorController {
 	public List<Proveedor> buscarPorRut (@RequestParam(value="rut",required=true) String rut){
 		return proveedorService.buscarPorRut(rut);
 	}
-}
-	
+	@RequestMapping("/deleteNombre")
+	public void eliminarPorNombre (@RequestParam(value="nombre",required=true) String nombre){
+		proveedorService.eliminarPorNombre(nombre);
+		
+	}
+	@RequestMapping("/deleteRut")
+	public void eliminarPorRut (@RequestParam(value="rut",required=true) String rut){
+		proveedorService.eliminarPorRut(rut);
+		
+	}
+}	
 	
 		
