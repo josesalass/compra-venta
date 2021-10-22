@@ -1,22 +1,48 @@
 package com.queue.demo.model;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.persistence.*;
+
 
 @Entity
 @Table(name = "cliente")
 public class Cliente {
-    private String rutcliente;
-    private String nombre;
-    private String apellido1;
-    private String apellido2;
-    private int telefono;
-    private String comuna;
-    private String calle;
-    private int numerocalle;
-
+	
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    public String getRutcliente() {
+    private String rutcliente;
+    
+    @Column(name = "nombre")
+    private String nombre;
+    
+    @Column(name = "apellido1")
+    private String apellido1;
+    
+    @Column(name = "apellido2")
+    private String apellido2;
+    
+    @Column(name = "telefono")
+    private int telefono;
+    
+    @Column(name = "comuna")
+    private String comuna;
+    
+    @Column(name = "calle")
+    private String calle;
+    
+    @Column(name = "numerocalle")
+    private int numerocalle;
+    
+    
+    @OneToMany(mappedBy = "cliente") //, cascade = {CascadeType.PERSIST,CascadeType.MERGE}
+    private List<Venta> ventas;
+    
+    
+    public Cliente() {}
+
+	public String getRutcliente() {
         return rutcliente;
     }
 
@@ -78,5 +104,21 @@ public class Cliente {
 
     public void setNumerocalle(int numerocalle) {
         this.numerocalle = numerocalle;
+    }
+    
+    public List<Venta> getVentas() {
+        if (ventas == null) {
+        	ventas = new ArrayList<>();
+        }
+        return ventas;
+    }
+
+    public void setEmpleados(List<Venta> ventas) {
+        this.ventas = ventas;
+    }
+
+    public void addVenta(Venta venta) {
+        getVentas().add(venta);
+        venta.setCliente(this);
     }
 }
