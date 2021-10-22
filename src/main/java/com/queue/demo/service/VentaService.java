@@ -9,5 +9,5 @@ public interface VentaService {
 	public Venta buscarVentaPorId(int id);
 	public void guardar(Venta venta);
 	public void borrarVentaPorId(int id);
-	
+	public void addVenta(Venta venta);
 }

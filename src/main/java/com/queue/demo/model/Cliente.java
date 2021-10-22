@@ -5,6 +5,8 @@ import java.util.List;
 
 import javax.persistence.*;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 
 @Entity
 @Table(name = "cliente")
@@ -35,7 +37,7 @@ public class Cliente {
     @Column(name = "numerocalle")
     private int numerocalle;
     
-    
+    @JsonIgnore
     @OneToMany(mappedBy = "cliente") //, cascade = {CascadeType.PERSIST,CascadeType.MERGE}
     private List<Venta> ventas;
     

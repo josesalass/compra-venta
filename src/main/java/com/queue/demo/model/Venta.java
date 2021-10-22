@@ -1,5 +1,7 @@
 package com.queue.demo.model;
 
+import java.sql.Timestamp;
+
 import javax.persistence.*;
 
 @Entity
@@ -11,7 +13,7 @@ public class Venta {
 	private int idventa;
 	
 	@Column(name = "fecha")
-	private String fecha;
+	private Timestamp fecha;
 	
 	@Column(name = "metodopago")
 	private String metodopago;
@@ -26,7 +28,7 @@ public class Venta {
 	private String tipoventa;
 	
 	@ManyToOne
-    @JoinColumn(name = "rutcliente")
+    @JoinColumn(name = "rutcliente", insertable=false, updatable=false)
     private Cliente cliente;
 
 	public int getIdventa() {
@@ -37,11 +39,11 @@ public class Venta {
 		this.idventa = idventa;
 	}
 
-	public String getFecha() {
+	public Timestamp getFecha() {
 		return fecha;
 	}
 
-	public void setFecha(String fecha) {
+	public void setFecha(Timestamp fecha) {
 		this.fecha = fecha;
 	}
 

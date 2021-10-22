@@ -34,4 +34,10 @@ public class VentaServiceImpl implements VentaService{
 	public void borrarVentaPorId(int id) {
 		repVenta.deleteById(id);
 	}
+
+	@Override
+	public void addVenta(Venta venta) {
+		repVenta.save(venta);
+		
+	}
 }
