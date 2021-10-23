@@ -115,7 +115,7 @@ public class Cliente {
         return ventas;
     }
 
-    public void setEmpleados(List<Venta> ventas) {
+    public void setVentas(List<Venta> ventas) {
         this.ventas = ventas;
     }
 
