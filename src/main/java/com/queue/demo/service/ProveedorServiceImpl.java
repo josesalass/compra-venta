@@ -3,13 +3,13 @@ package com.queue.demo.service;
 import com.queue.demo.model.Proveedor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
-import javax.transaction.Transactional;
 import java.util.List;
 import com.queue.demo.repository.*;
 
@@ -21,6 +21,10 @@ public class ProveedorServiceImpl implements ProveedorService{
 	
 	@Autowired
 	RepositorioProveedor repProveedor;
+	@Autowired
+	RepositorioRepresentanteProveedor repRepProveedor;
+	@Autowired
+	RepositorioTelefonoRepresentante repTelefonoRep;
 	
 	@Override
 	public List <Proveedor> buscarPorNombre (String nombre){
@@ -35,19 +39,6 @@ public class ProveedorServiceImpl implements ProveedorService{
 	}
 	
 	@Override
-	public void eliminarPorNombre(String nombre) {
-		
-		repProveedor.deleteBynombreempresa(nombre);
-		
-	}
-	@Override
-	public void eliminarPorRut(String rut) {
-		
-		repProveedor.deleteByrutempresa(rut);
-		
-	}
-	
-	@Override
 	public List <Proveedor> buscarPorRut (String rut){
 		CriteriaBuilder cb = em.getCriteriaBuilder();
 		CriteriaQuery<Proveedor> criteriaQ = cb.createQuery(Proveedor.class);
@@ -58,6 +49,20 @@ public class ProveedorServiceImpl implements ProveedorService{
 		return em.createQuery(criteriaQ).getResultList();
 
 	}
+	
+	@Override
+	public void eliminarPorNombre(String nombre) {
+		String rut=buscarPorNombre(nombre).get(0).getRutempresa();
+		repRepProveedor.ocultarPorRut(rut);
+		repProveedor.ocultarPorNombre(nombre);
+		
+	}
+	@Override
+	public void eliminarPorRut(String rut) {
+		repRepProveedor.ocultarPorRut(rut);
+		repProveedor.ocultarPorRut(rut);
+	}
+	
 	
 	@Override
 	public List<Proveedor> buscarTodosLosProveedores(){

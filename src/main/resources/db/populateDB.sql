@@ -23,19 +23,19 @@ VALUES( 247, 100, 10, 690, 1390, 'aceite vegetal')
 ,( 341, 100, 10, 1500, 2690, 'Tarro de leche grande')
 ;
 
-INSERT INTO Proveedor(rutempresa, nombreempresa)
-VALUES ('142954367','Carozzi')
-,('792954367','Iansa')
-,('796354362','Merkat')
-,('364925517','Lobos')
-,('649317125','Soprole')
+INSERT INTO Proveedor(rutempresa, nombreempresa, estado)
+VALUES ('142954367','Carozzi',true)
+,('792954367','Iansa',true)
+,('796354362','Merkat',true)
+,('364925517','Lobos',true)
+,('649317125','Soprole',true)
 ;
 
 
-INSERT INTO Rep_Proveedor (rutrep, rutemp,nombre,apellido1, apellido2, correo)
-VALUES ('163254764','142954367','Manuel','Garcia','Marquez','m.garcia@yopmail.com'),('203465241','792954367','Luciano','Pereira','Parada','lp.parada@hotmail.com'),
-('123466257','796354362','Aurelio','Castro','Troncoso','acastroncoso@msg.cl'),('156324975','364925517','Fausto','Herrera','Poblete','wolfsur@lobos.com'),
-('186345721','649317125','Martin','Riquelme','Gallegos','mrgallegos@gmail.com')
+INSERT INTO Rep_Proveedor (rutrep, rutemp,nombre,apellido1, apellido2, correo, estado)
+VALUES ('163254764','142954367','Manuel','Garcia','Marquez','m.garcia@yopmail.com',true),('203465241','792954367','Luciano','Pereira','Parada','lp.parada@hotmail.com',true),
+('123466257','796354362','Aurelio','Castro','Troncoso','acastroncoso@msg.cl',true),('156324975','364925517','Fausto','Herrera','Poblete','wolfsur@lobos.com',true),
+('186345721','649317125','Martin','Riquelme','Gallegos','mrgallegos@gmail.com',true)
 ;
 
 

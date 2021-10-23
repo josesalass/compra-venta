@@ -1,15 +1,26 @@
 package com.queue.demo.model;
+
+import java.io.Serializable;
+
 import javax.persistence.*;
 
 @Entity
 @Table(name = "telefono_rep")
-public class TelefonoRepresentante {
+public class TelefonoRepresentante implements Serializable{
+	@Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int telefono;
 	private String rutrep;
 	private String rutemp;
 	
-	@Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+	
+	@ManyToOne
+	@JoinColumns({
+		@JoinColumn(name="rutrep", referencedColumnName="rutrep",insertable=false, updatable=false),
+		@JoinColumn(name="rutemp",referencedColumnName="rutemp",insertable=false, updatable=false)	
+	})
+	private RepresentanteProveedor representanteProveedor;
+
 	
 	public int getTelefono() {
 		return telefono;

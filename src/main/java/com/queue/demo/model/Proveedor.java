@@ -1,17 +1,23 @@
 package com.queue.demo.model;
 
+import java.io.Serializable;
+
 import javax.persistence.*;
 
 
 @Entity
 @Table (name = "proveedor")
 
-public class Proveedor {
-	private String rutempresa;
-	private String nombreempresa;
-	
+public class Proveedor implements Serializable{
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	
+	private String rutempresa; //Primary Key
+	private String nombreempresa;
+	private boolean estado;
+	
+	@OneToOne (mappedBy = "proveedor", cascade = CascadeType.ALL, fetch=FetchType.LAZY)
+	private RepresentanteProveedor representanteProveedor;
 	
 	public String getRutempresa() {
 		return rutempresa;
@@ -24,6 +30,18 @@ public class Proveedor {
 	}
 	public void setNombreempresa(String nombreempresa) {
 		this.nombreempresa = nombreempresa;
+	}
+	public boolean getEstado() {
+		return estado;
+	}
+	public void setEstado(boolean estado) {
+		this.estado = estado;
+	}
+	public RepresentanteProveedor getRepresentanteProveedor() {
+		return representanteProveedor;
+	}
+	public void setRepresentanteProveedor(RepresentanteProveedor representanteProveedor) {
+		this.representanteProveedor = representanteProveedor;
 	}
 	
 	
