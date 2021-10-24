@@ -6,8 +6,7 @@ import com.queue.demo.model.Venta;
 
 public interface VentaService {
 	public List<Venta> buscarTodasLasVentas();
-	public Venta buscarVentaPorId(int id);
-	public void guardar(Venta venta);
+	public Venta buscarVentaPorId(int id); 
 	public void borrarVentaPorId(int id);
-	
+	public void addVenta(Venta venta);
 }

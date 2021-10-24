@@ -23,15 +23,16 @@ public class VentaServiceImpl implements VentaService{
 	@Override
 	public Venta buscarVentaPorId(int id) {
 		return repVenta.findById(id).get();
-	}
-	
-	@Override
-	public void guardar(Venta venta) {
-		repVenta.save(venta);
-	}
+	} 
 	
 	@Override
 	public void borrarVentaPorId(int id) {
 		repVenta.deleteById(id);
+	}
+
+	@Override
+	public void addVenta(Venta venta) {
+		repVenta.save(venta);
+		
 	}
 }
