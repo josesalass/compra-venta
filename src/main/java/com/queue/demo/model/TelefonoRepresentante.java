@@ -21,6 +21,7 @@ public class TelefonoRepresentante implements Serializable{
 	})
 	private RepresentanteProveedor representanteProveedor;
 
+	// metodos getter y setter 
 	
 	public int getTelefono() {
 		return telefono;

@@ -14,10 +14,13 @@ public class Proveedor implements Serializable{
 	
 	private String rutempresa; //Primary Key
 	private String nombreempresa;
+	// variable que utilizamos para la eliminacion logica 
 	private boolean estado;
 	
 	@OneToOne (mappedBy = "proveedor", cascade = CascadeType.ALL, fetch=FetchType.LAZY)
 	private RepresentanteProveedor representanteProveedor;
+	
+	// Metodos getter y setter
 	
 	public String getRutempresa() {
 		return rutempresa;

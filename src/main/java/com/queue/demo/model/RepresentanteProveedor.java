@@ -17,6 +17,7 @@ public class RepresentanteProveedor implements Serializable{
     private String apellido1;
     private String apellido2;
     private String correo;
+    // variable que utilizamos para la elimiancion logica 
     private boolean estado;
     
     @OneToOne (fetch=FetchType.LAZY)
@@ -27,6 +28,7 @@ public class RepresentanteProveedor implements Serializable{
     @OneToMany(mappedBy="representanteProveedor",cascade=CascadeType.ALL)
     private List<TelefonoRepresentante> telefonoRepresentante=new ArrayList<TelefonoRepresentante>();
     
+    // metodos getter y setter 
     
 	public String getRutrep() {
 		return rutrep;
