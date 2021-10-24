@@ -1,6 +1,9 @@
 package com.queue.demo.service;
 
 import java.util.List;
+
+import org.springframework.http.ResponseEntity;
+
 import com.queue.demo.model.Proveedor;
 
 public interface ProveedorService {

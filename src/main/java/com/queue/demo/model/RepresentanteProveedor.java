@@ -2,18 +2,33 @@ package com.queue.demo.model;
 
 import javax.persistence.*;
 
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
+
 @Entity
 @Table(name = "rep_proveedor")
-public class RepresentanteProveedor {
-    private String rutrep;
-    private String rutemp;
+public class RepresentanteProveedor implements Serializable{
+	@Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private String rutrep;	//Primary Key
+    private String rutemp; //Primary key
     private String nombre;
     private String apellido1;
     private String apellido2;
     private String correo;
+    // variable que utilizamos para la elimiancion logica 
+    private boolean estado;
     
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @OneToOne (fetch=FetchType.LAZY)
+    @JoinColumn (name= "rutemp", referencedColumnName="rutempresa",insertable=false, updatable=false)
+	private Proveedor proveedor;
+    
+    
+    @OneToMany(mappedBy="representanteProveedor",cascade=CascadeType.ALL)
+    private List<TelefonoRepresentante> telefonoRepresentante=new ArrayList<TelefonoRepresentante>();
+    
+    // metodos getter y setter 
     
 	public String getRutrep() {
 		return rutrep;
@@ -51,6 +66,14 @@ public class RepresentanteProveedor {
 	public void setCorreo(String correoRepresentante) {
 		this.correo = correoRepresentante;
 	}
+	public boolean getEstado() {
+		return estado;
+	}
+	public void setEstado(boolean estado) {
+		this.estado = estado;
+	}
+	
+	
 }
 
    

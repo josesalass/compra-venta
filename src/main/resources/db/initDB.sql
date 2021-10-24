@@ -2,6 +2,7 @@
 CREATE TABLE PROVEEDOR (
 	rutEmpresa VARCHAR (20),
 	nombreEmpresa VARCHAR (30),
+	estado boolean,
 	PRIMARY KEY (rutEmpresa)
 );
 
@@ -42,6 +43,7 @@ CREATE TABLE REP_PROVEEDOR(
 	apellido1 VARCHAR(20) NOT NULL,
 	apellido2 VARCHAR (20),
 	correo VARCHAR (50),
+	estado boolean,
 	PRIMARY KEY (rutRep, rutEmp),
 	FOREIGN KEY (rutEmp) REFERENCES PROVEEDOR (rutEmpresa)
 );
