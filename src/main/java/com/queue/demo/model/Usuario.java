@@ -5,16 +5,29 @@ import javax.persistence.*;
 @Entity
 @Table(name = "usuario")
 public class Usuario {
+	@Id
+    @Column(name = "rutusuario")
 	private String rutusuario;
+	
+	@Column(name = "nombre")
 	private String nombre;
+	
+	@Column(name = "apellido1")
 	private String apellido1;
+	
+	@Column(name = "apellido2")
 	private String apellido2;
+	
+	@Column(name = "correousuario")
 	private String correousuario;
+	
+	@Column(name = "rolusuario")
 	private int rolusuario;
+	
+	@Column(name = "contrasenia")
 	private String contrasenia;
 	
-	@Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+	
 	public String getRutusuario() {
 		return rutusuario;
 	}
