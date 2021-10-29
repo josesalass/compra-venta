@@ -19,4 +19,8 @@ public class Asociada_VentaServiceImpl implements Asociada_VentaService{
     public List<Asociada_Venta> buscarTodasLasVentasAsociadas() {
         return repAsociada_Venta.findAll();
     }
+    @Override
+    public void saveAsociadaVenta(Asociada_Venta venta) {
+    	repAsociada_Venta.save(venta);
+    }
 }

@@ -5,7 +5,8 @@ import com.queue.demo.model.Producto;
 
 public interface ProductoService {
 	public List<Producto> buscarTodosLosProductos();
-    public Producto buscarProductoPorId(String idproducto);
+	public Producto buscarProductoPorId(int idproducto);
     public void guardarProducto(Producto producto);
     public void borrarProductoPorId(String idproducto);
+    public Producto actualizarProducto(int idproducto, Producto producto);
 }

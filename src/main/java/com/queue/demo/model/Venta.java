@@ -1,6 +1,8 @@
 package com.queue.demo.model;
 
 import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.Collection;
 
 import javax.persistence.*;
 
@@ -30,6 +32,9 @@ public class Venta {
 	@ManyToOne
     @JoinColumn(name = "rutcliente", insertable=false, updatable=false)
     private Cliente cliente;
+	
+	@OneToMany(mappedBy = "venta", cascade = CascadeType.ALL)
+	 private Collection<Asociada_Venta> ventaproductos = new ArrayList<>();
 
 	public int getIdventa() {
 		return idventa;
@@ -85,6 +90,13 @@ public class Venta {
 
 	public void setCliente(Cliente cliente) {
 		this.cliente = cliente;
+	}
+	public Collection<Asociada_Venta> getVentaproductos() {
+		return ventaproductos;
+	}
+
+	public void setVentaproductos(Collection<Asociada_Venta> ventaproductos) {
+		this.ventaproductos = ventaproductos;
 	}
 	
 

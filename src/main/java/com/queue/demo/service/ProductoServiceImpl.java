@@ -21,8 +21,8 @@ public class ProductoServiceImpl implements ProductoService{
 	}
 
 	@Override
-	public Producto buscarProductoPorId(String idproducto) {
-		return repProducto.findById(1).get();
+	public Producto buscarProductoPorId(int idproducto) {
+		return repProducto.findById(idproducto).get();
 	}
 
 	@Override
@@ -34,6 +34,12 @@ public class ProductoServiceImpl implements ProductoService{
 	public void borrarProductoPorId(String idproducto) {
 		repProducto.deleteById(1);
 		
+	}
+	
+	@Override
+	public Producto actualizarProducto(int idproducto, Producto producto) {
+		repProducto.save(producto);
+		return producto;
 	}
 
 }

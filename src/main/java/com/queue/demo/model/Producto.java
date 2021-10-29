@@ -1,10 +1,17 @@
 package com.queue.demo.model;
 
+import java.util.ArrayList;
+import java.util.Collection;
+
 import javax.persistence.*;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 @Table(name = "producto")
 public class Producto {
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int idproducto;
 	private int stock;
 	private int stockmin;
@@ -12,9 +19,10 @@ public class Producto {
 	private int valorventa;
 	private String detalleproducto;
 	
+	@OneToMany(mappedBy = "producto", cascade = CascadeType.ALL)
+	@JsonIgnore
+	private Collection<Asociada_Venta> ventaproductos = new ArrayList<>();
 	
-	 @Id
-	 @GeneratedValue(strategy = GenerationType.IDENTITY)
 	public int getIdproducto() {
 		return idproducto;
 	}
@@ -50,6 +58,12 @@ public class Producto {
 	}
 	public void setDetalleproducto(String detalleproducto) {
 		this.detalleproducto = detalleproducto;
+	}
+	public Collection<Asociada_Venta> getVentaproductos() {
+		return ventaproductos;
+	}
+	public void setVentaproductos(Collection<Asociada_Venta> ventaproductos) {
+		this.ventaproductos = ventaproductos;
 	}
 	
 
