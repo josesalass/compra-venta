@@ -5,4 +5,5 @@ import com.queue.demo.model.PerteneceACompra;
 
 public interface PerteneceACompraService {
 	public List<PerteneceACompra> ListarTodasLasCompras();
+	public void guardarPerteneceACompra(PerteneceACompra perteneceacompra);
 }

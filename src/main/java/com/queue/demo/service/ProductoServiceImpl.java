@@ -41,5 +41,10 @@ public class ProductoServiceImpl implements ProductoService{
 		repProducto.save(producto);
 		return producto;
 	}
+	
+	@Override
+	public void editarStock(int idProducto, int cantidad) {
+		 repProducto.editarStock(idProducto, cantidad);
+	}
 
 }
