@@ -9,4 +9,5 @@ public interface ProductoService {
     public void guardarProducto(Producto producto);
     public void borrarProductoPorId(String idproducto);
     public Producto actualizarProducto(int idproducto, Producto producto);
+    public void editarStock(int idProducto ,int cantidad);
 }

@@ -19,7 +19,11 @@ public class PerteneceACompraServiceImpl implements PerteneceACompraService {
 		return perteneceACompra.findAll();
 	}
 	
-	
+	@Override
+	public void guardarPerteneceACompra(PerteneceACompra perteneceacompra) {
+		perteneceACompra.save(perteneceacompra);
+		
+	}
 
 	
 }

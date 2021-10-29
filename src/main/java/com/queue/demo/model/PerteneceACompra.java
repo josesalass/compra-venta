@@ -4,17 +4,30 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 @Entity
 @Table(name = "pertenece_compra")
 public class PerteneceACompra {
-	private int idcompra;
-	private int idproducto;
-	private int cantidad;
 	
 	@Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+	
+	private int idcompra;
+	private int idproducto;
+	private int cantidad;
+		
+	
+	@ManyToOne
+    @JoinColumn(name = "idcompra",insertable=false,updatable=false)
+    private Compra compra;
+	
+	@ManyToOne
+    @JoinColumn(name = "idproducto",insertable=false,updatable=false)
+    private Producto producto;
+	
 	public int getIdcompra() {
 		return idcompra;
 	}

@@ -1,47 +1,55 @@
 package com.queue.demo.model;
 
+import java.sql.Timestamp;
+import java.util.List;
 import javax.persistence.*;
 
 @Entity
 @Table(name = "compra")
 public class Compra {
-    private int idCompra;
-    private String fecha;
-    private String rutEmpresa;
-    private String rutUsuario;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "idcompra") 
+	
+	private int idcompra;
+    private Timestamp fecha;
+    private String rutempresa;
+    private String rutusuario;
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @OneToMany(mappedBy = "compra")
+    private List<PerteneceACompra> pertenece_compra;
+           
+    
     public int getidCompra() {
-        return idCompra;
+        return idcompra;
     }
 
     public void setidCompra(int idCompra) {
-        this.idCompra = idCompra;
+        this.idcompra = idCompra;
     }
 
-    public String getfecha() {
+    public Timestamp getfecha() {
         return fecha;
     }
 
-    public void setfecha(String fecha) {
+    public void setfecha(Timestamp fecha) {
         this.fecha = fecha;
     }
 
     public String getrutEmpresa() {
-        return rutEmpresa;
+        return rutempresa;
     }
 
     public void setrutEmpresa(String rutEmpresa) {
-        this.rutEmpresa = rutEmpresa;
+        this.rutempresa = rutEmpresa;
     }
 
     public String rutUsuario() {
-        return rutUsuario;
+        return rutusuario;
     }
 
     public void rutUsuario(String rutUsuario) {
-        this.rutUsuario = rutUsuario;
+        this.rutusuario = rutUsuario;
     }
 
    

@@ -2,6 +2,7 @@ package com.queue.demo.model;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 import javax.persistence.*;
 
@@ -22,6 +23,9 @@ public class Producto {
 	@OneToMany(mappedBy = "producto", cascade = CascadeType.ALL)
 	@JsonIgnore
 	private Collection<Asociada_Venta> ventaproductos = new ArrayList<>();
+	
+	@OneToMany(mappedBy = "producto")
+    private List<PerteneceACompra> pertenece_compra;
 	
 	public int getIdproducto() {
 		return idproducto;
