@@ -1,13 +1,15 @@
 package com.queue.demo.service;
 
+import com.queue.demo.model.Asociada_Venta;
+import com.queue.demo.model.Producto;
 import com.queue.demo.model.Venta;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
-
-import java.sql.Timestamp;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.sql.Timestamp;
 import com.queue.demo.repository.*;
 
 @Service
@@ -16,6 +18,9 @@ public class VentaServiceImpl implements VentaService{
 	
 	@Autowired
 	RepositorioVenta repVenta;
+	
+	@Autowired
+	ProductoService productoService;
 	
 	@Override
 	public List<Venta> buscarTodasLasVentas(){
@@ -31,13 +36,28 @@ public class VentaServiceImpl implements VentaService{
 	public void borrarVentaPorId(int id) {
 		repVenta.deleteById(id);
 	}
-
-	@Override
-	public void addVenta(Venta venta) {
-		repVenta.save(venta);
-		
-	}
 	
+	@Override
+	public Venta guardarVenta(Venta venta) {
+		Venta nuevaVenta = new Venta();
+		nuevaVenta.setFecha(venta.getFecha());
+		nuevaVenta.setTipoventa(venta.getTipoventa());
+		nuevaVenta.setMetodopago(venta.getMetodopago());
+		nuevaVenta.setRutusuario(venta.getRutusuario());
+		nuevaVenta.setRutcliente(venta.getRutcliente());
+		nuevaVenta.getVentaproductos().addAll((venta.getVentaproductos()
+				.stream()
+				.map(Asociada_Venta -> {
+					Producto producto = productoService.buscarProductoPorId(Asociada_Venta.getProducto().getIdproducto());
+					Asociada_Venta asociadaVenta = new Asociada_Venta();
+					asociadaVenta.setProducto(producto);
+					asociadaVenta.setVenta(nuevaVenta);
+					asociadaVenta.setCantidad(Asociada_Venta.getCantidad());
+					producto.setStock(producto.getStock()-asociadaVenta.getCantidad());
+					return asociadaVenta;
+				}).collect(Collectors.toList())));
+		return repVenta.save(nuevaVenta);
+	}
 	@Override
 	public void editarFecha(Timestamp fecha, int idVenta) {
 		try{
