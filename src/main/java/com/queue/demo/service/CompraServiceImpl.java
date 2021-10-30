@@ -10,6 +10,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+
+import java.sql.Timestamp;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -24,7 +26,9 @@ public class CompraServiceImpl implements CompraService{
     
     @Autowired
     ProductoService productoService;
-   
+    
+    @Autowired
+    ProveedorService provService;
 
     @Override
     public List<Compra> buscarTodasLasCompras() {
@@ -65,4 +69,22 @@ public class CompraServiceImpl implements CompraService{
 				}).collect(Collectors.toList())));
 		return repCompra.save(nuevaCompra);
 	}
+	
+	@Override
+  	public void editarFecha(Timestamp fecha, int idcompra) {
+  		try{
+  			repCompra.editarFecha(idcompra, fecha);
+  		}catch(NullPointerException e) {
+  		
+  		}
+  	}
+  	
+  	@Override
+  	public void editarRutEmpresa(String rutempresa, int idcompra) {
+  		try{
+  				repCompra.editarRutEmpresa(idcompra, rutempresa);
+  		}catch(NullPointerException e) {
+  			
+  		}
+  	}
 }
