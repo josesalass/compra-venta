@@ -94,9 +94,10 @@ public class ProveedorServiceImpl implements ProveedorService{
 		return repProveedor.findAll();
 	}
 
+
 	@Override
-	// metodo para guardar a un nuevo proveedor 
-	public void guardar(Proveedor proveedor) {
+	public void guardarProveedor(Proveedor proveedor) {
 		repProveedor.save(proveedor);
+		
 	}
 }
