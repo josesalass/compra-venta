@@ -16,7 +16,10 @@ public class IdRepresentanteProveedor implements Serializable {
 		this.rutemp = rutemp;
 	}
 	
+	public IdRepresentanteProveedor() {
 
+	}
+	
 	@Override
 	public int hashCode() {
 		return Objects.hash(rutemp, rutrep);
