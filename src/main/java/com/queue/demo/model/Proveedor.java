@@ -13,7 +13,7 @@ public class Proveedor implements Serializable{
 	
 	@Id
 	@Column(name = "rutempresa")
-	private String rutempresa; //Primary Key
+	private String rutempresa; 
 	
 	@Column(name = "nombreempresa")
 	private String nombreempresa;

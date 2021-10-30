@@ -8,11 +8,14 @@ import java.util.List;
 
 @Entity
 @Table(name = "rep_proveedor")
+@IdClass(IdRepresentanteProveedor.class)
+
 public class RepresentanteProveedor implements Serializable{
 	@Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private String rutrep;	//Primary Key
-    private String rutemp; //Primary key
+    private String rutrep;	
+	@Id
+    private String rutemp;
     private String nombre;
     private String apellido1;
     private String apellido2;
