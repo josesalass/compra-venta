@@ -11,21 +11,35 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 @Entity
 @Table(name = "producto")
 public class Producto {
+	
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int idproducto;
+	
+	@Column(name = "stock")
 	private int stock;
+	
+	@Column(name = "stockmin")
 	private int stockmin;
+	
+	@Column(name = "valorcompra")
 	private int valorcompra;
+	
+	@Column(name = "valorventa")
 	private int valorventa;
+	
+	@Column(name = "detalleproducto")
 	private String detalleproducto;
 	
 	@OneToMany(mappedBy = "producto", cascade = CascadeType.ALL)
 	@JsonIgnore
 	private Collection<Asociada_Venta> ventaproductos = new ArrayList<>();
 	
-	@OneToMany(mappedBy = "producto")
-    private List<PerteneceACompra> pertenece_compra;
+	/* @OneToMany(mappedBy = "producto")
+    private List<PerteneceACompra> pertenece_compra; */
+	
+	@OneToMany(mappedBy = "producto", cascade = CascadeType.ALL)
+	@JsonIgnore
+	private Collection<PerteneceACompra> compraproductos = new ArrayList<>();
 	
 	public int getIdproducto() {
 		return idproducto;
@@ -69,7 +83,13 @@ public class Producto {
 	public void setVentaproductos(Collection<Asociada_Venta> ventaproductos) {
 		this.ventaproductos = ventaproductos;
 	}
+	public Collection<PerteneceACompra> getCompraproductos() {
+		return compraproductos;
+	}
+	public void setCompraproductos(Collection<PerteneceACompra> compraproductos) {
+		this.compraproductos = compraproductos;
+	}
 	
-
+	
 	
 }

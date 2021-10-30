@@ -9,12 +9,17 @@ import javax.persistence.*;
 @Table (name = "proveedor")
 
 public class Proveedor implements Serializable{
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	
+	
+	@Id
+	@Column(name = "rutempresa")
 	private String rutempresa; //Primary Key
+	
+	@Column(name = "nombreempresa")
 	private String nombreempresa;
 	// variable que utilizamos para la eliminacion logica 
+	
+	@Column(name = "estado")
 	private boolean estado;
 	
 	@OneToOne (mappedBy = "proveedor", cascade = CascadeType.ALL, fetch=FetchType.LAZY)
