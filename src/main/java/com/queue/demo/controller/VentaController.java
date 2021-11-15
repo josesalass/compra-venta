@@ -40,21 +40,40 @@ public class VentaController {
 	
 	@PostMapping("/guardarVenta")
     public ResponseEntity<?> saveVenta(@RequestBody Venta venta) {
-        return new ResponseEntity<>(ventaService.guardarVenta(venta), HttpStatus.CREATED);
+		try {
+			return new ResponseEntity<>(ventaService.guardarVenta(venta), HttpStatus.CREATED);
+		}catch(Exception e){
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		}
     }
 	
 	@RequestMapping("/editFecha")
-	public void editarFecha (@RequestParam(value="idventa",required=true) int idventa, @RequestParam(value="fecha",required=true) Timestamp fecha){
-		ventaService.editarFecha(fecha, idventa);
+	public ResponseEntity<Void> editarFecha (@RequestParam(value="idventa",required=true) int idventa, @RequestParam(value="fecha",required=true) Timestamp fecha){
+		boolean edited = ventaService.editarFecha(fecha, idventa);
+		if (edited){
+			return new ResponseEntity<>(HttpStatus.OK);
+		}else{
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		}
 	}
 	
 	@RequestMapping("/editTipo")
-	public void editarTipo (@RequestParam(value="idventa",required=true) int idventa, @RequestParam(value="tipoventa",required=true) String tipoventa){
-		ventaService.editarTipo(tipoventa,idventa);
+	public ResponseEntity<Void> editarTipo (@RequestParam(value="idventa",required=true) int idventa, @RequestParam(value="tipoventa",required=true) String tipoventa){
+		boolean edited = ventaService.editarTipo(tipoventa,idventa);
+		if (edited){
+			return new ResponseEntity<>(HttpStatus.OK);
+		}else{
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		}
 	}
 	
 	@RequestMapping("/editMetodoPago")
-	public void editarMetodoPago (@RequestParam(value="idventa",required=true) int idventa, @RequestParam(value="metodopago",required=true) String metodopago){
-		ventaService.editarMetodoPago(metodopago,idventa);
+	public ResponseEntity<Void> editarMetodoPago (@RequestParam(value="idventa",required=true) int idventa, @RequestParam(value="metodopago",required=true) String metodopago){
+		boolean edited = ventaService.editarMetodoPago(metodopago,idventa);
+		if (edited){
+			return new ResponseEntity<>(HttpStatus.OK);
+		}else{
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		}
 	}
 }

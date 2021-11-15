@@ -59,29 +59,32 @@ public class VentaServiceImpl implements VentaService{
 		return repVenta.save(nuevaVenta);
 	}
 	@Override
-	public void editarFecha(Timestamp fecha, int idVenta) {
+	public boolean editarFecha(Timestamp fecha, int idVenta) {
 		try{
 			repVenta.editarFecha(idVenta, fecha);
+			return true;
 		}catch(NullPointerException e) {
-			
+			return false;
 		}
 	}
 	
 	@Override
-	public void editarTipo(String tipoventa, int idVenta) {
+	public boolean editarTipo(String tipoventa, int idVenta) {
 		try{
 			repVenta.editarTipo(idVenta, tipoventa);
+			return true;
 		}catch(NullPointerException e) {
-			
+			return false;
 		}
 	}
 	
 	@Override
-	public void editarMetodoPago(String metodopago, int idVenta) {
+	public boolean editarMetodoPago(String metodopago, int idVenta) {
 		try{
 			repVenta.editarMetodoPago(idVenta, metodopago);
+			return true;
 		}catch(NullPointerException e) {
-			
+			return false;
 		}
 	}
 }
