@@ -5,6 +5,8 @@ import com.queue.demo.model.Proveedor;
 import com.queue.demo.service.ProveedorService;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -49,8 +51,14 @@ public class ProveedorController {
 	}
 	
 	@PostMapping("/guardarProveedor")
-    public void saveProveedor(@RequestBody Proveedor proveedor) {
-        proveedorService.guardarProveedor(proveedor);
+    public ResponseEntity<Proveedor> saveProveedor(@RequestBody Proveedor proveedor) {
+		try{
+			//proveedorService.guardarProveedor(proveedor);
+			return new ResponseEntity<>(proveedorService.guardarProveedor(proveedor), HttpStatus.CREATED);
+		}catch (Exception e){
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		}
+
        
     }
 

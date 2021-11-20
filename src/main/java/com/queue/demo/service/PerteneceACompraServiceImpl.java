@@ -20,8 +20,11 @@ public class PerteneceACompraServiceImpl implements PerteneceACompraService {
 	}
 	
 	@Override
-	public void guardarPerteneceACompra(PerteneceACompra perteneceacompra) {
-		perteneceACompra.save(perteneceacompra);
+	public PerteneceACompra guardarPerteneceACompra(PerteneceACompra perteneceacompra) throws Exception{
+		if(perteneceacompra==null){
+			throw new Exception();
+		}
+		return perteneceACompra.save(perteneceacompra);
 		
 	}
 
