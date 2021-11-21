@@ -12,6 +12,6 @@ public interface ProveedorService {
 	public List <Proveedor> buscarTodosLosProveedores();
 	void eliminarPorNombre(String nombre);
 	void eliminarPorRut(String rut);
-	public Proveedor guardarProveedor(Proveedor proveedor);
+	public Proveedor guardarProveedor(Proveedor proveedor) throws Exception;
 	
 }

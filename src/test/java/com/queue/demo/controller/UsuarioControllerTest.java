@@ -1,9 +1,7 @@
-package com.queue.demo;
+package com.queue.demo.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.queue.demo.controller.UsuarioController;
 import com.queue.demo.model.Usuario;
-import com.queue.demo.repository.RepositorioUsuario;
 import com.queue.demo.service.UsuarioService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -26,7 +24,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 
 @ExtendWith(MockitoExtension.class)
 public class UsuarioControllerTest {
-    private JacksonTester<Usuario> jsonEmpleado;
+    private JacksonTester<Usuario> jsonUsuario;
     private MockMvc mockMvc;
     @Mock
     private UsuarioService usuarioService;
@@ -39,7 +37,7 @@ public class UsuarioControllerTest {
         mockMvc = MockMvcBuilders.standaloneSetup(usuarioController).build();
     }
     @Test
-    void siInvocoAddUsuarioYFunca()throws Exception{
+    void siInvocoAddUsuarioSeDebeAlmacenarYDevolverElProveedorConStatusCreated()throws Exception{
         // Given
         Usuario usuario = getUsuario();
         given(usuarioService.guardar(any(Usuario.class))).willReturn(usuario);
@@ -47,18 +45,18 @@ public class UsuarioControllerTest {
         // When
         MockHttpServletResponse response = mockMvc.perform(post("/usuarios/guardarusuario")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(jsonEmpleado.write(usuario).getJson())
+                        .content(jsonUsuario.write(usuario).getJson())
                         .accept(MediaType.APPLICATION_JSON))
                 .andReturn()
                 .getResponse();
 
         // Then
         assertEquals(HttpStatus.CREATED.value(),response.getStatus());
-        assertEquals(jsonEmpleado.write(usuario).getJson(),response.getContentAsString());
+        assertEquals(jsonUsuario.write(usuario).getJson(),response.getContentAsString());
 
     }
     @Test
-    void siInvocoCreateUsuarioYNoFunca() throws Exception {
+    void siInvocoCreateUsuarioSeDebeDevolverElStatusBadRequest() throws Exception {
         // Given
         Usuario usuario = getUsuario();
         doThrow(Exception.class).when(usuarioService).guardar(any(Usuario.class));
@@ -66,7 +64,7 @@ public class UsuarioControllerTest {
         // When
         MockHttpServletResponse response = mockMvc.perform(post("/usuarios/guardarusuario")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(jsonEmpleado.write(usuario).getJson())
+                        .content(jsonUsuario.write(usuario).getJson())
                         .accept(MediaType.APPLICATION_JSON))
                 .andReturn()
                 .getResponse();

@@ -1,10 +1,8 @@
-package com.queue.demo;
+package com.queue.demo.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.queue.demo.controller.ProveedorController;
 import com.queue.demo.model.Proveedor;
 import com.queue.demo.model.RepresentanteProveedor;
-import com.queue.demo.model.Usuario;
 import com.queue.demo.service.ProveedorService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -27,7 +25,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 
 @ExtendWith(MockitoExtension.class)
 public class ProveedorControllerTest {
-    private JacksonTester<Proveedor> jsonEmpleado;
+    private JacksonTester<Proveedor> jsonProveedor;
     private MockMvc mockMvc;
     @Mock
     private ProveedorService proveedorService;
@@ -38,9 +36,9 @@ public class ProveedorControllerTest {
     void setup() {
         JacksonTester.initFields(this,new ObjectMapper());
         mockMvc = MockMvcBuilders.standaloneSetup(proveedorController).build();
-    }
+    }/*     //ambos test faltan por finalizar
     @Test
-    void siInvocoSaveProveedorYFunca() throws Exception {
+    void siInvocoSaveProveedorSeDebeAlmacenarYDevolverElProveedorConStatusCreated() throws Exception {
         // Given
         Proveedor proveedor = getProveedor();
         given(proveedorService.guardarProveedor(any(Proveedor.class))).willReturn(proveedor);
@@ -48,17 +46,17 @@ public class ProveedorControllerTest {
         // When
         MockHttpServletResponse response = mockMvc.perform(post("/proveedor/guardarProveedor")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(jsonEmpleado.write(proveedor).getJson())
+                        .content(jsonProveedor.write(proveedor).getJson())
                         .accept(MediaType.APPLICATION_JSON))
                 .andReturn()
                 .getResponse();
 
         // Then
         assertEquals(HttpStatus.CREATED.value(),response.getStatus());
-        assertEquals(jsonEmpleado.write(proveedor).getJson(),response.getContentAsString());
+        assertEquals(jsonProveedor.write(proveedor).getJson(),response.getContentAsString());
     }
     @Test
-    void siInvocoCreateUsuarioYNoFunca() throws Exception {
+    void siInvocoSaveProveedorSeDebeDevolverElStatusBadRequest() throws Exception {
         // Given
         Proveedor proveedor = getProveedor();
         doThrow(Exception.class).when(proveedorService).guardarProveedor(any(Proveedor.class));
@@ -66,14 +64,14 @@ public class ProveedorControllerTest {
         // When
         MockHttpServletResponse response = mockMvc.perform(post("/proveedor/guardarProveedor")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(jsonEmpleado.write(proveedor).getJson())
+                        .content(jsonProveedor.write(proveedor).getJson())
                         .accept(MediaType.APPLICATION_JSON))
                 .andReturn()
                 .getResponse();
 
         // Then
         assertEquals(HttpStatus.BAD_REQUEST.value(),response.getStatus());
-    }
+    }*/
     Proveedor getProveedor(){
         Proveedor proveedor=new Proveedor();
         RepresentanteProveedor representanteProveedor;
