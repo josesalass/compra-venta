@@ -36,7 +36,7 @@ public class ProveedorControllerTest {
     void setup() {
         JacksonTester.initFields(this,new ObjectMapper());
         mockMvc = MockMvcBuilders.standaloneSetup(proveedorController).build();
-    }/*     //ambos test faltan por finalizar
+    }//*     //ambos test faltan por finalizar
     @Test
     void siInvocoSaveProveedorSeDebeAlmacenarYDevolverElProveedorConStatusCreated() throws Exception {
         // Given
@@ -44,7 +44,7 @@ public class ProveedorControllerTest {
         given(proveedorService.guardarProveedor(any(Proveedor.class))).willReturn(proveedor);
 
         // When
-        MockHttpServletResponse response = mockMvc.perform(post("/proveedor/guardarProveedor")
+        MockHttpServletResponse response = mockMvc.perform(post("/proveedores/guardarProveedor")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(jsonProveedor.write(proveedor).getJson())
                         .accept(MediaType.APPLICATION_JSON))
@@ -62,7 +62,7 @@ public class ProveedorControllerTest {
         doThrow(Exception.class).when(proveedorService).guardarProveedor(any(Proveedor.class));
 
         // When
-        MockHttpServletResponse response = mockMvc.perform(post("/proveedor/guardarProveedor")
+        MockHttpServletResponse response = mockMvc.perform(post("/proveedores/guardarProveedor")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(jsonProveedor.write(proveedor).getJson())
                         .accept(MediaType.APPLICATION_JSON))
@@ -71,7 +71,7 @@ public class ProveedorControllerTest {
 
         // Then
         assertEquals(HttpStatus.BAD_REQUEST.value(),response.getStatus());
-    }*/
+    }//*/
     Proveedor getProveedor(){
         Proveedor proveedor=new Proveedor();
         RepresentanteProveedor representanteProveedor;
