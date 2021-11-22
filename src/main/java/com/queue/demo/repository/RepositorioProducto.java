@@ -9,10 +9,4 @@ import org.springframework.transaction.annotation.Transactional;
 
 public interface RepositorioProducto extends JpaRepository <Producto, Integer>{
 
-	@Modifying
-	@Transactional
-	@Query(value = "update producto set stock = (stock+:cantidad) where idproducto = :id" , 
-	  nativeQuery = true)
-	void editarStock(@Param (value= "id")int id , @Param (value= "cantidad") int cantidad);
-	
 }
