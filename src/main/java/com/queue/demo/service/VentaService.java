@@ -9,8 +9,10 @@ public interface VentaService {
 	public List<Venta> buscarTodasLasVentas();
 	public Venta buscarVentaPorId(int id); 
 	public void borrarVentaPorId(int id);
-	public Venta guardarVenta(Venta venta);
-	void editarFecha(Timestamp fecha, int idVenta);
-	void editarTipo(String tipo, int idVenta);
-	void editarMetodoPago(String metodopago, int idVenta);
+	public Venta guardarVenta(Venta venta) throws Exception;
+	boolean editarFecha(Timestamp fecha, int idVenta);
+	boolean editarTipo(String tipo, int idVenta);
+	boolean editarMetodoPago(String metodopago, int idVenta);
+
+	public Venta actualizarVenta(int idventa, Venta venta);
 }
