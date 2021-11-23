@@ -31,58 +31,61 @@ public class ProveedorServiceImpl implements ProveedorService{
 	
 	@Override
 	// metodo en el cual buscamos a los proveedores por su nombre
-	public List <Proveedor> buscarPorNombre (String nombre){
+	public Proveedor buscarPorNombre (String nombre){
 		// utilizamos CriteriaBuilder para buscar a los proveedores mediante una CriteriaQuery  
 		CriteriaBuilder cb = em.getCriteriaBuilder();
 		CriteriaQuery<Proveedor> criteriaQ = cb.createQuery(Proveedor.class);
 		Root<Proveedor> root = criteriaQ.from(Proveedor.class);
 		criteriaQ.select(root).where(cb.equal(root.get("nombreempresa"), nombre));
-		return em.createQuery(criteriaQ).getResultList();
+		return em.createQuery(criteriaQ).getResultList().get(0);
 
 	}
 	
 	@Override
 	// metodo en el cual buscamos a los proveedores por su rut
-	public List <Proveedor> buscarPorRut (String rut){
+	public Proveedor buscarPorRut (String rut){
 		// utilizamos CriteriaBuilder para buscar a los proveedores mediante una CriteriaQuery 
 		CriteriaBuilder cb = em.getCriteriaBuilder();
 		CriteriaQuery<Proveedor> criteriaQ = cb.createQuery(Proveedor.class);
 		Root<Proveedor> root = criteriaQ.from(Proveedor.class);
 		criteriaQ.select(root).where(cb.equal(root.get("rutempresa"), rut));
-		return em.createQuery(criteriaQ).getResultList();
+		return em.createQuery(criteriaQ).getResultList().get(0);
 
 	}
 	
 	@Override
 	// metodo en el cual eliminamos(la eliminacion es de manera logica) a un proveedor por su nombre 
-	public void eliminarPorNombre(String nombre) {
-		
+	public boolean eliminarPorNombre(String nombre) {
 		try{
 			
-			String rut=buscarPorNombre(nombre).get(0).getRutempresa();
+			String rut=buscarPorNombre(nombre).getRutempresa();
 			repRepProveedor.ocultarPorRut(rut);
 			repProveedor.ocultarPorNombre(nombre);
-			
+			return true;
 		}catch(DataAccessException e) {
 			// se comunica con el frontend
+			return false;
 		}catch(IndexOutOfBoundsException e) {
 			// se comunica con el frontend
+			return false;
 		}
 		
 	}
 	@Override
 	// metodo en el cual eliminamos(la eliminacion es de manera logica) a un proveedor por su nombre
-	public void eliminarPorRut(String rut) {
+	public boolean eliminarPorRut(String rut) {
 		
 		try{
 			
 			repRepProveedor.ocultarPorRut(rut);
 			repProveedor.ocultarPorRut(rut);
-			
+			return true;
 		}catch(DataAccessException e) {
 			// se comunica con el frontend
+			return false;
 		}catch(NullPointerException e) {
 			// se comunica con el frontend
+			return false;
 		}
 
 	}
@@ -96,8 +99,11 @@ public class ProveedorServiceImpl implements ProveedorService{
 
 
 	@Override
-	public void guardarProveedor(Proveedor proveedor) {
-		repProveedor.save(proveedor);
+	public Proveedor guardarProveedor(Proveedor proveedor) throws Exception{
+		if(proveedor==null){
+			throw new Exception();
+		}
+		return repProveedor.save(proveedor);
 
 	}
 }
