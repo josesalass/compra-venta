@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("/proveedores")
+	@RequestMapping("/proveedores")
 
 public class ProveedorController {
 	@Autowired
@@ -72,14 +72,13 @@ public class ProveedorController {
 
 	@PostMapping("/guardarProveedor")
 	public ResponseEntity<Proveedor> saveProveedor(@RequestBody Proveedor proveedor) {
-		try{
+		try {
 			return new ResponseEntity<>(proveedorService.guardarProveedor(proveedor), HttpStatus.CREATED);
-		}catch (Exception e){
+		} catch (Exception e) {
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 		}
-
-
 	}
+
 
 }
 		

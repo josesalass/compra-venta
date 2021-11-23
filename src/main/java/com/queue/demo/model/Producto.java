@@ -40,7 +40,20 @@ public class Producto {
 	@OneToMany(mappedBy = "producto", cascade = CascadeType.ALL)
 	@JsonIgnore
 	private Collection<PerteneceACompra> compraproductos = new ArrayList<>();
-	
+
+	public Producto() {
+
+	}
+
+	public Producto(int idproducto, int stock, int stockmin, int valorcompra, int valorventa, String detalleproducto) {
+		this.idproducto = idproducto;
+		this.stock = stock;
+		this.stockmin = stockmin;
+		this.valorcompra = valorcompra;
+		this.valorventa = valorventa;
+		this.detalleproducto = detalleproducto;
+	}
+
 	public int getIdproducto() {
 		return idproducto;
 	}
