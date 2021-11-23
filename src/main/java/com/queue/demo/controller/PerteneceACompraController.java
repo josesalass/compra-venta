@@ -24,16 +24,5 @@ public class PerteneceACompraController {
     public List<PerteneceACompra> list(){
         return PerteneceACompraService.ListarTodasLasCompras();
     }
-	/*
-	@RequestMapping(method=RequestMethod.POST, value="/guardarpcompra")
-    public ResponseEntity<PerteneceACompra> addCompra(@RequestBody PerteneceACompra perteneceacompra) {
-        try{
-            //PerteneceACompra guardaPerteneceACompra= PerteneceACompraService.guardarPerteneceACompra( perteneceacompra);
-            return new ResponseEntity<>(PerteneceACompraService.guardarPerteneceACompra( perteneceacompra), HttpStatus.CREATED);
-        }catch (Exception e){
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        }
 
-
-    }*/
 }
