@@ -9,6 +9,7 @@ import com.queue.demo.model.Venta;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.EntityNotFoundException;
 import javax.transaction.Transactional;
 
 import java.sql.Timestamp;
@@ -51,31 +52,36 @@ public class CompraServiceImpl implements CompraService{
     }
 
 	@Override
-	public Compra guardarCompra(Compra compra) {
-		Compra nuevaCompra = new Compra();
-		nuevaCompra.setFecha(compra.getFecha());
-		nuevaCompra.setRutempresa(compra.getRutempresa());
-		nuevaCompra.setRutusuario(compra.getRutusuario());
-		nuevaCompra.getCompraproductos().addAll((compra.getCompraproductos()
-				.stream()
-				.map (PerteneceACompra -> {
-					Producto producto = productoService.buscarProductoPorId(PerteneceACompra.getProducto().getIdproducto());
-					PerteneceACompra perteneceACompra = new PerteneceACompra();
-					perteneceACompra.setProducto(producto);
-					perteneceACompra.setCompra(nuevaCompra);
-					perteneceACompra.setCantidad(PerteneceACompra.getCantidad());
-					producto.setStock(producto.getStock()+perteneceACompra.getCantidad());
-					return perteneceACompra;
-				}).collect(Collectors.toList())));
-		return repCompra.save(nuevaCompra);
+	public Compra guardarCompra(Compra compra) throws Exception {
+
+			if(compra.getFecha()==null|| compra.getRutempresa()==null|| compra.getRutusuario()==null|| compra.getCompraproductos()==null){
+				throw new Exception();
+			}
+			Compra nuevaCompra = new Compra();
+			nuevaCompra.setFecha(compra.getFecha());
+			nuevaCompra.setRutempresa(compra.getRutempresa());
+			nuevaCompra.setRutusuario(compra.getRutusuario());
+			nuevaCompra.getCompraproductos().addAll((compra.getCompraproductos()
+					.stream()
+					.map(PerteneceACompra -> {
+						Producto producto = productoService.buscarProductoPorId(PerteneceACompra.getProducto().getIdproducto());
+						PerteneceACompra perteneceACompra = new PerteneceACompra();
+						perteneceACompra.setProducto(producto);
+						perteneceACompra.setCompra(nuevaCompra);
+						perteneceACompra.setCantidad(PerteneceACompra.getCantidad());
+						producto.setStock(producto.getStock() + perteneceACompra.getCantidad());
+						return perteneceACompra;
+					}).collect(Collectors.toList())));
+			return repCompra.save(nuevaCompra);
+
 	}
 	
 	@Override
   	public void editarFecha(Timestamp fecha, int idcompra) {
-  		try{
+		try{
   			repCompra.editarFecha(idcompra, fecha);
+
   		}catch(NullPointerException e) {
-  		
   		}
   	}
   	
@@ -87,4 +93,9 @@ public class CompraServiceImpl implements CompraService{
   			
   		}
   	}
+	@Override
+	public Compra actualizarCompra (int idcompra, Compra compra) {
+		repCompra.save(compra);
+		return compra;
+	}
 }
