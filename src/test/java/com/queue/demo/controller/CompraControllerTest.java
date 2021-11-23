@@ -1,4 +1,4 @@
-package com.queue.demo;
+package com.queue.demo.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.queue.demo.controller.CompraController;
 import com.queue.demo.model.Compra;
@@ -33,7 +33,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @ExtendWith(MockitoExtension.class)
-public class CompraRestControllerTest {
+public class CompraControllerTest {
 
     private JacksonTester<Compra> jsompra;
     private MockMvc mockMvc;

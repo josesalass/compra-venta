@@ -1,4 +1,4 @@
-package rest;
+package com.queue.demo.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.queue.demo.controller.ProductoController;
