@@ -159,6 +159,41 @@ public class ProveedorControllerTest {
                 .getResponse();
         assertEquals(HttpStatus.NOT_FOUND.value(),respuesta.getStatus());
     }
+    @Test
+    void siInvocoSaveProveedorSeDebeAlmacenarYDevolverElProveedorConStatusCreated() throws Exception {
+        // Given
+        Proveedor proveedor = getProveedor();
+        given(proveedorService.guardarProveedor(any(Proveedor.class))).willReturn(proveedor);
+
+        // When
+        MockHttpServletResponse response = mockMvc.perform(post("/proveedores/guardarProveedor")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(jsonProveedor.write(proveedor).getJson())
+                        .accept(MediaType.APPLICATION_JSON))
+                .andReturn()
+                .getResponse();
+
+        // Then
+        assertEquals(HttpStatus.CREATED.value(),response.getStatus());
+        assertEquals(jsonProveedor.write(proveedor).getJson(),response.getContentAsString());
+    }
+    @Test
+    void siInvocoSaveProveedorSeDebeDevolverElStatusBadRequest() throws Exception {
+        // Given
+        Proveedor proveedor = getProveedor();
+        doThrow(Exception.class).when(proveedorService).guardarProveedor(any(Proveedor.class));
+
+        // When
+        MockHttpServletResponse response = mockMvc.perform(post("/proveedores/guardarProveedor")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(jsonProveedor.write(proveedor).getJson())
+                        .accept(MediaType.APPLICATION_JSON))
+                .andReturn()
+                .getResponse();
+
+        // Then
+        assertEquals(HttpStatus.BAD_REQUEST.value(),response.getStatus());
+    }//*/
 
     List<Proveedor> getListaProveedores(){
         List<Proveedor> proveedores = new ArrayList<>();

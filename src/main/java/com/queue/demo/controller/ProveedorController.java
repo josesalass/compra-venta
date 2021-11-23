@@ -69,12 +69,17 @@ public class ProveedorController {
 			return new ResponseEntity(HttpStatus.NOT_FOUND);
 		}
 	}
-	
+
 	@PostMapping("/guardarProveedor")
-    public void saveProveedor(@RequestBody Proveedor proveedor) {
-        proveedorService.guardarProveedor(proveedor);
-       
-    }
+	public ResponseEntity<Proveedor> saveProveedor(@RequestBody Proveedor proveedor) {
+		try{
+			return new ResponseEntity<>(proveedorService.guardarProveedor(proveedor), HttpStatus.CREATED);
+		}catch (Exception e){
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		}
+
+
+	}
 
 }
 		
