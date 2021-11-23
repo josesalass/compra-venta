@@ -8,7 +8,6 @@ import javax.persistence.*;
 @Table(name = "telefono_rep")
 public class TelefonoRepresentante implements Serializable{
 	@Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int telefono;
 	private String rutrep;
 	private String rutemp;
