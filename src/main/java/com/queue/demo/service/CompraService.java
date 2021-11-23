@@ -10,7 +10,8 @@ public interface CompraService {
     public Compra buscarCompraPorId(int idCompra);
     public void guardar(Compra compra);
     public void borrarCompraPorId(int idCompra);
-    public Compra guardarCompra(Compra compra);
+    public Compra guardarCompra(Compra compra) throws Exception;
 	void editarRutEmpresa(String rutempresa, int idcompra);
 	void editarFecha(Timestamp fecha, int idcompra);
+    public Compra actualizarCompra(int idcompra, Compra compra);
 }

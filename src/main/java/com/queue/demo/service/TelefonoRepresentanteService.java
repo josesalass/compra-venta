@@ -5,7 +5,7 @@ import com.queue.demo.model.TelefonoRepresentante;
 
 public interface TelefonoRepresentanteService {
 	public List<TelefonoRepresentante> buscarTodosLosTelefonos();
-    public TelefonoRepresentante buscarTelefonoPorRut(String rutRep);
+    public List<TelefonoRepresentante> buscarTelefonoPorRut(String rutRep);
     public void guardar(TelefonoRepresentante telefono);
     public void borrarTelefonoPorRut(String rut);
 }
