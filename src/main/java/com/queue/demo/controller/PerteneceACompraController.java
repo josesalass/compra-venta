@@ -24,7 +24,7 @@ public class PerteneceACompraController {
     public List<PerteneceACompra> list(){
         return PerteneceACompraService.ListarTodasLasCompras();
     }
-	
+	/*
 	@RequestMapping(method=RequestMethod.POST, value="/guardarpcompra")
     public ResponseEntity<PerteneceACompra> addCompra(@RequestBody PerteneceACompra perteneceacompra) {
         try{
@@ -35,5 +35,5 @@ public class PerteneceACompraController {
         }
 
 
-    }
+    }*/
 }
