@@ -26,9 +26,10 @@ public class ProductoServiceImpl implements ProductoService{
 	}
 
 	@Override
-	public void guardarProducto(Producto producto) {
+	public Producto guardarProducto(Producto producto) {
 		repProducto.save(producto);
-	}
+        return producto;
+    }
 
 	@Override
 	public void borrarProductoPorId(String idproducto) {
@@ -41,10 +42,6 @@ public class ProductoServiceImpl implements ProductoService{
 		repProducto.save(producto);
 		return producto;
 	}
-	
-	@Override
-	public void editarStock(int idProducto, int cantidad) {
-		 repProducto.editarStock(idProducto, cantidad);
-	}
+
 
 }

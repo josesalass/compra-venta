@@ -12,7 +12,6 @@ import java.util.List;
 
 public class RepresentanteProveedor implements Serializable{
 	@Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private String rutrep;	
 	@Id
     private String rutemp;

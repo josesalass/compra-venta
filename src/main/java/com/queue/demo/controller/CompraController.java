@@ -1,20 +1,14 @@
 package com.queue.demo.controller;
 
 import com.queue.demo.model.Compra;
-import com.queue.demo.service.CompraService;
-import com.queue.demo.service.PerteneceACompraService;
-import com.queue.demo.service.ProductoService;
+import com.queue.demo.service.*;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+import java.sql.Time;
 import java.sql.Timestamp;
 import java.util.List;
 
@@ -31,24 +25,63 @@ public class CompraController {
     PerteneceACompraService perteneceACompraService;
     
     @GetMapping("")
-    public List<Compra> list(){
-        return compraService.buscarTodasLasCompras();
+    public ResponseEntity<List<Compra>> list(){
+        List<Compra> compras = compraService.buscarTodasLasCompras();
+        	if(!compras.isEmpty()){
+                return new ResponseEntity<>(compras, HttpStatus.OK);
+            }else{
+                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            }
     }
     
     
     @PostMapping("/guardarCompra")
     public ResponseEntity<?> saveCompra(@RequestBody Compra compra) {
-        return new ResponseEntity<>(compraService.guardarCompra(compra), HttpStatus.CREATED);
+        try{
+            compraService.guardarCompra(compra);
+            return new ResponseEntity<>( HttpStatus.CREATED);
+        }catch (Exception e){
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+
+
     }
     
-    
-    @RequestMapping("/editFecha")
-  	public void editarFecha (@RequestParam(value="idcompra",required=true) int idcompra, @RequestParam(value="fecha",required=true) Timestamp fecha){
-  		compraService.editarFecha(fecha, idcompra);
-  	}
-  	    
+
+
+    @PutMapping("/{idcompra}/cambiarFecha/{fecha}")
+    public ResponseEntity<String> cambiarFecha(@PathVariable int idcompra, @PathVariable String fecha) {
+        Compra compra = compraService.buscarCompraPorId(idcompra);
+        try{
+            Timestamp fechaTs = Timestamp.valueOf(fecha);
+            if (compra == null || fechaTs == null) {
+                return new ResponseEntity<>("Debe ingresar un valor a la fecha ",HttpStatus.BAD_REQUEST);
+            }
+            compra.setFecha(fechaTs);
+            compraService.actualizarCompra(idcompra, compra);
+            return new ResponseEntity<>("Cambio exitoso" ,HttpStatus.OK );
+
+        }catch (IllegalArgumentException e){
+            return new ResponseEntity<>("Debe ingresar un formato valido para la fecha",HttpStatus.BAD_REQUEST);
+        }
+
+    }
+
   	@RequestMapping("/editEmpresa")
   	public void editarRutEmpresa (@RequestParam(value="idcompra",required=true) int idcompra, @RequestParam(value="rutempresa",required=true) String rutempresa){
   		compraService.editarRutEmpresa(rutempresa, idcompra);
   	}
+
+    @PutMapping("/{idcompra}/cambiarEmpresa/{rutempresa}")
+    public ResponseEntity<String> cambiarRutEmpresa(@PathVariable int idcompra, @PathVariable String rutempresa) {
+        Compra compra = compraService.buscarCompraPorId(idcompra);
+
+            if (compra == null || rutempresa == null) {
+                return new ResponseEntity<>("Debe ingresar un valor al rut ",HttpStatus.BAD_REQUEST);
+            }
+            compra.setRutempresa(rutempresa);
+            compraService.actualizarCompra(idcompra, compra);
+            return new ResponseEntity<>("Cambio exitoso" ,HttpStatus.OK );
+
+    }
 }

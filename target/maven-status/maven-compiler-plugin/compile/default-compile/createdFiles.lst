@@ -1,6 +1,0 @@
-com\queue\demo\service\ClienteServiceImpl.class
-com\queue\demo\model\Cliente.class
-com\queue\demo\controller\ClienteController.class
-com\queue\demo\service\ClienteService.class
-com\queue\demo\repository\RepositorioCliente.class
-com\queue\demo\CompraVentaApplication.class
