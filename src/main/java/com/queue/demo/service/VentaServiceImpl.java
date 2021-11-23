@@ -38,8 +38,11 @@ public class VentaServiceImpl implements VentaService{
 	}
 	
 	@Override
-	public Venta guardarVenta(Venta venta) {
+	public Venta guardarVenta(Venta venta) throws Exception{
 		Venta nuevaVenta = new Venta();
+		if (venta.getFecha() == null || venta.getMetodopago() == null || venta.getRutusuario() == null || venta.getTipoventa() == null){
+			throw new Exception();
+		}
 		nuevaVenta.setFecha(venta.getFecha());
 		nuevaVenta.setTipoventa(venta.getTipoventa());
 		nuevaVenta.setMetodopago(venta.getMetodopago());
@@ -57,31 +60,41 @@ public class VentaServiceImpl implements VentaService{
 					return asociadaVenta;
 				}).collect(Collectors.toList())));
 		return repVenta.save(nuevaVenta);
+
 	}
 	@Override
-	public void editarFecha(Timestamp fecha, int idVenta) {
+	public boolean editarFecha(Timestamp fecha, int idVenta) {
 		try{
 			repVenta.editarFecha(idVenta, fecha);
+			return true;
 		}catch(NullPointerException e) {
-			
+			return false;
 		}
 	}
 	
 	@Override
-	public void editarTipo(String tipoventa, int idVenta) {
+	public boolean editarTipo(String tipoventa, int idVenta) {
 		try{
 			repVenta.editarTipo(idVenta, tipoventa);
+			return true;
 		}catch(NullPointerException e) {
-			
+			return false;
 		}
 	}
 	
 	@Override
-	public void editarMetodoPago(String metodopago, int idVenta) {
+	public boolean editarMetodoPago(String metodopago, int idVenta) {
 		try{
 			repVenta.editarMetodoPago(idVenta, metodopago);
+			return true;
 		}catch(NullPointerException e) {
-			
+			return false;
 		}
+	}
+
+	@Override
+	public Venta actualizarVenta(int idventa, Venta venta) {
+		repVenta.save(venta);
+		return venta;
 	}
 }
