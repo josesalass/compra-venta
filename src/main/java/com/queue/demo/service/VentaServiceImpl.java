@@ -38,8 +38,11 @@ public class VentaServiceImpl implements VentaService{
 	}
 	
 	@Override
-	public Venta guardarVenta(Venta venta) {
+	public Venta guardarVenta(Venta venta) throws Exception{
 		Venta nuevaVenta = new Venta();
+		if (venta.getFecha() == null || venta.getMetodopago() == null || venta.getRutusuario() == null || venta.getTipoventa() == null){
+			throw new Exception();
+		}
 		nuevaVenta.setFecha(venta.getFecha());
 		nuevaVenta.setTipoventa(venta.getTipoventa());
 		nuevaVenta.setMetodopago(venta.getMetodopago());
@@ -57,6 +60,7 @@ public class VentaServiceImpl implements VentaService{
 					return asociadaVenta;
 				}).collect(Collectors.toList())));
 		return repVenta.save(nuevaVenta);
+
 	}
 	@Override
 	public boolean editarFecha(Timestamp fecha, int idVenta) {
@@ -86,5 +90,11 @@ public class VentaServiceImpl implements VentaService{
 		}catch(NullPointerException e) {
 			return false;
 		}
+	}
+
+	@Override
+	public Venta actualizarVenta(int idventa, Venta venta) {
+		repVenta.save(venta);
+		return venta;
 	}
 }

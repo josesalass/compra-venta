@@ -2,7 +2,6 @@ package com.queue.demo.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.queue.demo.model.Venta;
-import com.queue.demo.repository.RepositorioVenta;
 import com.queue.demo.service.VentaService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -18,13 +17,15 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import java.sql.Timestamp;
-import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.doThrow;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @ExtendWith(MockitoExtension.class)
 public class VentaControllerTest {
@@ -39,6 +40,36 @@ public class VentaControllerTest {
     void setup(){
         JacksonTester.initFields(this,new ObjectMapper());
         mockMvc = MockMvcBuilders.standaloneSetup(ventaController).build();
+    }
+
+    //list caso exitoso
+    @Test
+    void siInvocoListDebeMostrarTodasLasVentas() throws Exception{
+        List<Venta> ventas = getVentas();
+        given(ventaService.buscarTodasLasVentas()).willReturn(ventas);
+
+        MockHttpServletResponse response = mockMvc.perform(get("/ventas")
+                        .accept(MediaType.APPLICATION_JSON))
+                .andReturn()
+                .getResponse();
+
+
+        assertEquals(HttpStatus.OK.value(),response.getStatus());
+    }
+
+    //list con lista vacía
+    @Test
+    void siInvocoListYNoHayVentasDebeRetornarNotFound() throws Exception{
+        List<Venta> ventas = new ArrayList<>();
+        given(ventaService.buscarTodasLasVentas()).willReturn(ventas);
+
+        MockHttpServletResponse response = mockMvc.perform(get("/ventas")
+                        .accept(MediaType.APPLICATION_JSON))
+                .andReturn()
+                .getResponse();
+
+
+        assertEquals(HttpStatus.NOT_FOUND.value(),response.getStatus());
     }
 
     //saveVenta exitoso
@@ -60,12 +91,12 @@ public class VentaControllerTest {
         assertEquals(HttpStatus.CREATED.value(),response.getStatus());
         assertEquals(jsonVenta.write(venta).getJson(),response.getContentAsString());
     }
-    /*
     //saveVenta bad request
     @Test
     void siInvocoSaveVentaSeDebeDevolverElStatusBadRequest() throws Exception{
         //Given
         Venta venta = getVenta();
+        venta.setFecha(null);
         doThrow(Exception.class).when(ventaService).guardarVenta(any(Venta.class));
 
         //When
@@ -80,17 +111,19 @@ public class VentaControllerTest {
         assertEquals(HttpStatus.BAD_REQUEST.value(),response.getStatus());
 
     }
-    */
-    /*
+
     //editarFecha caso exitoso
     @Test
     void siInvocoEditarFechaYNoHayNulosDebeDevolverStatusOk() throws Exception{
         //Given
         Venta venta = getVenta();
-        given(ventaService.editarFecha(Timestamp.valueOf("2005-10-30 00:00:00"),venta.getIdventa())).willReturn(true);
+        Venta vFinal = venta;
+        vFinal.setFecha(Timestamp.valueOf("2005-10-30 00:00:00"));
+        given(ventaService.buscarVentaPorId(venta.getIdventa())).willReturn(venta);
+        given(ventaService.actualizarVenta(venta.getIdventa(),venta)).willReturn(vFinal);
 
         //When
-        MockHttpServletResponse response = mockMvc.perform(put("/editFecha?idventa=1&fecha=2005-10-30 00:00:00")
+        MockHttpServletResponse response = mockMvc.perform(put("/ventas/{idventa}/cambiarFecha/{fecha}",venta.getIdventa(),Timestamp.valueOf("2005-10-30 00:00:00"))
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON))
                 .andReturn()
@@ -101,34 +134,38 @@ public class VentaControllerTest {
 
     }
 
-    //editarFecha caso bad request
+    //editarFecha caso se recibe una fecha en un formato no Timestamp
     @Test
-    void siInvocoEditarFechaYHayNulosDebeDevolverStatusBadRequest() throws Exception{
-        //Given
+    void siInvocoEditarFechaYLaFechaNoEsFormatoTimestampDebeDevolverStatusBadRequest() throws Exception{
         Venta venta = getVenta();
-        doThrow(NullPointerException.class).when(ventaService).editarFecha(Timestamp.valueOf("2005-10-30 00:00:00"),1);
-        //When
-        MockHttpServletResponse response = mockMvc.perform(put("/editFecha?idventa=1&fecha=2005-10-30 00:00:00")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .accept(MediaType.APPLICATION_JSON))
-                .andReturn()
-                .getResponse();
+        given(ventaService.buscarVentaPorId(venta.getIdventa())).willReturn(venta);
+        String noFecha = "Esto claramente no es una fecha";
 
-        //Then
-        assertEquals(HttpStatus.BAD_REQUEST.value(),response.getStatus());
+        mockMvc.perform(put("/ventas/{idventa}/cambiarFecha/{fecha}",venta.getIdventa(),noFecha)).andExpect(status().isBadRequest());
 
     }
-    */
-    /*
+
+    //editarFecha caso no existe la Venta
+    @Test
+    void siInvocoEditarFechaYLaVentaNoExisteDebeDevolverStatusBadRequest() throws Exception{
+        Venta venta = getVenta();
+        given(ventaService.buscarVentaPorId(venta.getIdventa())).willReturn(null);
+
+        mockMvc.perform(put("/ventas/{idventa}/cambiarFecha/{fecha}",venta.getIdventa(),Timestamp.valueOf("2005-10-30 00:00:00"))).andExpect(status().isBadRequest());
+    }
+
     //editarTipo caso OK
     @Test
     void siInvocoEditarTipoYNoHayNulosDebeDevolverStatusOk() throws Exception{
         //Given
         Venta venta = getVenta();
-        given(ventaService.editarTipo("boleta",venta.getIdventa())).willReturn(true);
+        Venta vFinal = venta;
+        vFinal.setTipoventa("boleta");
+        given(ventaService.buscarVentaPorId(venta.getIdventa())).willReturn(venta);
+        given(ventaService.actualizarVenta(venta.getIdventa(),venta)).willReturn(vFinal);
 
         //When
-        MockHttpServletResponse response = mockMvc.perform(put("/editTipo?idventa=1&tipo=boleta")
+        MockHttpServletResponse response = mockMvc.perform(put("/ventas/{idventa}/cambiarTipoPrueba/{tipo}",venta.getIdventa(),"boleta")
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON))
                 .andReturn()
@@ -137,36 +174,31 @@ public class VentaControllerTest {
         //Then
         assertEquals(HttpStatus.OK.value(),response.getStatus());
     }
-    */
-    /*
+
+
     //editarTipo caso Bad Request
     @Test
     void siInvocoEditarTipoYHayNulosDebeDevolverStatusBadRequest() throws Exception{
-        //Given
         Venta venta = getVenta();
-        doThrow(NullPointerException.class).when(ventaService).editarTipo("boleta",1);
-        //When
-        MockHttpServletResponse response = mockMvc.perform(put("/editTipo?idventa=1&tipo=boleta")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .accept(MediaType.APPLICATION_JSON))
-                .andReturn()
-                .getResponse();
+        given(ventaService.buscarVentaPorId(venta.getIdventa())).willReturn(null);
 
-        //Then
-        assertEquals(HttpStatus.BAD_REQUEST.value(),response.getStatus());
+        mockMvc.perform(put("/ventas/{idventa}/cambiarTipoPrueba/{tipo}",venta.getIdventa(),"boleta")).andExpect(status().isBadRequest());
 
     }
-    */
-    /*
+
+
     //editarMetodoPago caso OK
     @Test
     void siInvocoEditarMetodoPagoYNoHayNulosDebeDevolverStatusOK() throws Exception{
         //Given
         Venta venta = getVenta();
-        given(ventaService.editarMetodoPago("efectivo",venta.getIdventa())).willReturn(true);
+        Venta vFinal = venta;
+        vFinal.setMetodopago("efectivo");
+        given(ventaService.buscarVentaPorId(venta.getIdventa())).willReturn(venta);
+        given(ventaService.actualizarVenta(venta.getIdventa(),venta)).willReturn(vFinal);
 
         //When
-        MockHttpServletResponse response = mockMvc.perform(put("/editMetodoPago?idventa=1&metodopago=efectivo")
+        MockHttpServletResponse response = mockMvc.perform(put("/ventas/{idventa}/cambiarMetodoPagoPrueba/{metodo}",venta.getIdventa(),"efectivo")
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON))
                 .andReturn()
@@ -175,31 +207,32 @@ public class VentaControllerTest {
         //Then
         assertEquals(HttpStatus.OK.value(),response.getStatus());
     }
-    */
-    /*
+
     //editarMetodoPago caso BAD REQUEST
     @Test
     void siInvocoEditarMetodoPagoYHayNulosDebeDevolverStatusBADREQUEST() throws Exception{
-        //Given
         Venta venta = getVenta();
-        doThrow(NullPointerException.class).when(ventaService).editarTipo("efectivo",1);
+        given(ventaService.buscarVentaPorId(venta.getIdventa())).willReturn(null);
 
-        //When
-        MockHttpServletResponse response = mockMvc.perform(put("/editMetodoPago?idventa=1&metodopago=efectivo")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .accept(MediaType.APPLICATION_JSON))
-                .andReturn()
-                .getResponse();
-
-        //Then
-        assertEquals(HttpStatus.BAD_REQUEST.value(),response.getStatus());
+        mockMvc.perform(put("/ventas/{idventa}/cambiarMetodoPagoPrueba/{metodo}",venta.getIdventa(),"efectivo")).andExpect(status().isBadRequest());
     }
-    */
     Venta getVenta(){
         Venta venta = new Venta();
         venta.setIdventa(1);
         venta.setRutcliente("123");
 
         return venta;
+    }
+    List<Venta> getVentas(){
+        Venta venta = new Venta();
+        venta.setIdventa(1);
+        venta.setRutcliente("123");
+        List<Venta> ventas = new ArrayList<>();
+        ventas.add(venta);
+        venta = new Venta();
+        venta.setIdventa(2);
+        venta.setRutcliente("543");
+        ventas.add(venta);
+        return ventas;
     }
 }

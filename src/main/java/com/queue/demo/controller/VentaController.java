@@ -8,13 +8,9 @@ import com.queue.demo.service.VentaService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+import java.sql.Time;
 import java.sql.Timestamp;
 import java.util.List;
 
@@ -23,57 +19,100 @@ import java.util.List;
 public class VentaController {
 	@Autowired
 	VentaService ventaService;
-	
+
 	@Autowired
 	ClienteService clienteService;
-	
+
 	@Autowired
 	ProductoService productoService;
-	
+
 	@Autowired
 	Asociada_VentaService aso_ventaService;
-	
+
 	@GetMapping("")
-	public List<Venta> list(){
-		return ventaService.buscarTodasLasVentas();
+	public ResponseEntity<List<Venta>> list() {
+		List<Venta> ventas = ventaService.buscarTodasLasVentas();
+		if (!ventas.isEmpty()){
+			return new ResponseEntity<>(ventas,HttpStatus.OK);
+		}
+		return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 	}
-	
+
 	@PostMapping("/guardarVenta")
-    public ResponseEntity<?> saveVenta(@RequestBody Venta venta) {
+	public ResponseEntity<Venta> saveVenta(@RequestBody Venta venta) {
 		try {
-			return new ResponseEntity<>(ventaService.guardarVenta(venta), HttpStatus.CREATED);
-		}catch(Exception e){
+			return new ResponseEntity<>(ventaService.guardarVenta(venta),HttpStatus.CREATED);
+		} catch (Exception e) {
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 		}
-    }
-	
+	}
+	/*
 	@RequestMapping("/editFecha")
-	public ResponseEntity<Void> editarFecha (@RequestParam(value="idventa",required=true) int idventa, @RequestParam(value="fecha",required=true) Timestamp fecha){
+	public ResponseEntity<Void> editarFecha(@RequestParam(value = "idventa", required = true) int idventa, @RequestParam(value = "fecha", required = true) Timestamp fecha) {
 		boolean edited = ventaService.editarFecha(fecha, idventa);
-		if (edited){
+		if (edited) {
 			return new ResponseEntity<>(HttpStatus.OK);
-		}else{
+		} else {
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 		}
 	}
-	
+
 	@RequestMapping("/editTipo")
-	public ResponseEntity<Void> editarTipo (@RequestParam(value="idventa",required=true) int idventa, @RequestParam(value="tipoventa",required=true) String tipoventa){
-		boolean edited = ventaService.editarTipo(tipoventa,idventa);
-		if (edited){
+	public ResponseEntity<Void> editarTipo(@RequestParam(value = "idventa", required = true) int idventa, @RequestParam(value = "tipoventa", required = true) String tipoventa) {
+		boolean edited = ventaService.editarTipo(tipoventa, idventa);
+		if (edited) {
 			return new ResponseEntity<>(HttpStatus.OK);
-		}else{
+		} else {
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 		}
 	}
-	
+
 	@RequestMapping("/editMetodoPago")
-	public ResponseEntity<Void> editarMetodoPago (@RequestParam(value="idventa",required=true) int idventa, @RequestParam(value="metodopago",required=true) String metodopago){
-		boolean edited = ventaService.editarMetodoPago(metodopago,idventa);
-		if (edited){
+	public ResponseEntity<Void> editarMetodoPago(@RequestParam(value = "idventa", required = true) int idventa, @RequestParam(value = "metodopago", required = true) String metodopago) {
+		boolean edited = ventaService.editarMetodoPago(metodopago, idventa);
+		if (edited) {
 			return new ResponseEntity<>(HttpStatus.OK);
-		}else{
+		} else {
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 		}
+	}
+	*/
+
+	@PutMapping("/{idventa}/cambiarFecha/{fecha}")
+	public ResponseEntity<String> cambioFechaPrueba(@PathVariable int idventa, @PathVariable String fecha) {
+		Venta venta = ventaService.buscarVentaPorId(idventa);
+		try{
+			Timestamp fechaTS = Timestamp.valueOf(fecha);
+			if (venta == null || fechaTS == null){
+				return new ResponseEntity<>("La venta que se quiere editar no existe o falta el valor de la fecha",HttpStatus.BAD_REQUEST);
+			}
+			venta.setFecha(fechaTS);
+			ventaService.actualizarVenta(idventa,venta);
+			return new ResponseEntity<>("Edición exitosa",HttpStatus.OK);
+		}catch(Exception e){
+			return new ResponseEntity<>("El formato de la fecha no corresponde",HttpStatus.BAD_REQUEST);
+		}
+	}
+
+	@PutMapping("/{idventa}/cambiarTipoPrueba/{tipo}")
+	public ResponseEntity<String> cambioTipoPrueba(@PathVariable int idventa, @PathVariable String tipo) {
+		Venta venta = ventaService.buscarVentaPorId(idventa);
+			if (venta == null || tipo == null){
+				return new ResponseEntity<>("La venta que se quiere editar no existe o falta el valor del tipo de venta",HttpStatus.BAD_REQUEST);
+			}
+			venta.setTipoventa(tipo);
+			ventaService.actualizarVenta(idventa,venta);
+			return new ResponseEntity<>("Edición exitosa",HttpStatus.OK);
+	}
+
+	@PutMapping("/{idventa}/cambiarMetodoPagoPrueba/{metodo}")
+	public ResponseEntity<String> cambioMetodoPagoPrueba(@PathVariable int idventa, @PathVariable String metodo) {
+		Venta venta = ventaService.buscarVentaPorId(idventa);
+		if (venta == null || metodo == null){
+			return new ResponseEntity<>("La venta que se quiere editar no existe o falta el valor del metodo de pago de venta",HttpStatus.BAD_REQUEST);
+		}
+		venta.setMetodopago(metodo);
+		ventaService.actualizarVenta(idventa,venta);
+		return new ResponseEntity<>("Edición exitosa",HttpStatus.OK);
 	}
 }
