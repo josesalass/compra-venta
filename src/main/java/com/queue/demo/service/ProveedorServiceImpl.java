@@ -98,6 +98,6 @@ public class ProveedorServiceImpl implements ProveedorService{
 	@Override
 	public void guardarProveedor(Proveedor proveedor) {
 		repProveedor.save(proveedor);
-		
+
 	}
 }

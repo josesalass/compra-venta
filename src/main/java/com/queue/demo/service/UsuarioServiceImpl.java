@@ -41,8 +41,11 @@ public class UsuarioServiceImpl implements UsuarioService{
 		return em.createQuery(criteriaQ).getResultList().get(0);
 	}
 	@Override 
-    public void guardar(Usuario usuario) {
-		repUsuario.save(usuario);
+    public Usuario guardar(Usuario usuario) throws Exception {
+		if(usuario==null){
+			throw new Exception();
+		}
+		return repUsuario.save(usuario);
 	}
 	@Override 
     public void borrarUsuarioPorRut(String rut) {
