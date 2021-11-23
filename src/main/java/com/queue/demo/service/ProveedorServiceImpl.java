@@ -96,11 +96,8 @@ public class ProveedorServiceImpl implements ProveedorService{
 
 
 	@Override
-	public Proveedor guardarProveedor(Proveedor proveedor) throws Exception{
-		if(proveedor==null){
-			throw new Exception();
-		}
-		return repProveedor.save(proveedor);
-		
+	public void guardarProveedor(Proveedor proveedor) {
+		repProveedor.save(proveedor);
+
 	}
 }

@@ -49,18 +49,12 @@ public class ProveedorController {
 		proveedorService.eliminarPorRut(rut);
 		
 	}
-	
-	@PostMapping("/guardarProveedor")
-    public ResponseEntity<Proveedor> saveProveedor(@RequestBody Proveedor proveedor) {
-		try{
-			//proveedorService.guardarProveedor(proveedor);
-			return new ResponseEntity<>(proveedorService.guardarProveedor(proveedor), HttpStatus.CREATED);
-		}catch (Exception e){
-			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-		}
 
-       
-    }
+	@PostMapping("/guardarProveedor")
+	public void saveProveedor(@RequestBody Proveedor proveedor) {
+		proveedorService.guardarProveedor(proveedor);
+
+	}
 
 }
 		
