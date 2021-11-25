@@ -62,4 +62,43 @@ public class ProductoController {
 	 	return new ResponseEntity<>("Cantidad del producto: "+producto.getIdproducto() + " actualizada", HttpStatus.OK);
 	 }
 
+
+	@PutMapping("/{idproducto}/editarStockMin/{stockmin}") //Edita el valor de StockMin del producto
+	public ResponseEntity<String> editarStockMin(@PathVariable int idproducto, @PathVariable int stockmin) {
+		Producto producto = productoService.buscarProductoPorId(idproducto);
+		if (producto==null || stockmin <0){
+			return new ResponseEntity<>("Debe ingresar un valor positivo al stockmin ",HttpStatus.BAD_REQUEST);
+		}
+		producto.setStockmin(stockmin);
+		productoService.actualizarProducto(idproducto,producto);
+		return new ResponseEntity<>("Cambio exitoso" ,HttpStatus.OK );
+
+	}
+
+	@PutMapping("/{idproducto}/editarValorCompra/{valorcompra}") //Edita el valor de Compra del producto
+	public ResponseEntity<String> editarValorCompra(@PathVariable int idproducto, @PathVariable int valorcompra) {
+		Producto producto = productoService.buscarProductoPorId(idproducto);
+		if (producto==null || valorcompra <0){
+			return new ResponseEntity<>("Debe ingresar un valor positivo al valor de compra ",HttpStatus.BAD_REQUEST);
+		}
+		producto.setStockmin(valorcompra);
+		productoService.actualizarProducto(idproducto,producto);
+		return new ResponseEntity<>("Cambio exitoso" ,HttpStatus.OK );
+
+	}
+
+	@PutMapping("/{idproducto}/editarValorVenta/{valorventa}") //Edita el valor de Venta del producto
+	public ResponseEntity<String> editarValorVenta(@PathVariable int idproducto, @PathVariable int valorventa) {
+		Producto producto = productoService.buscarProductoPorId(idproducto);
+		if (producto==null || valorventa <0){
+			return new ResponseEntity<>("Debe ingresar un valor positivo al valor de venta ",HttpStatus.BAD_REQUEST);
+		}
+		producto.setStockmin(valorventa);
+		productoService.actualizarProducto(idproducto,producto);
+		return new ResponseEntity<>("Cambio exitoso" ,HttpStatus.OK );
+
+	}
+
+
+
 }
