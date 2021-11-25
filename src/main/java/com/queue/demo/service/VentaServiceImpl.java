@@ -1,11 +1,14 @@
 package com.queue.demo.service;
 
-import com.queue.demo.model.Asociada_Venta;
-import com.queue.demo.model.Producto;
-import com.queue.demo.model.Venta;
+import com.queue.demo.model.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Root;
 import javax.transaction.Transactional;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -15,7 +18,10 @@ import com.queue.demo.repository.*;
 @Service
 @Transactional
 public class VentaServiceImpl implements VentaService{
-	
+
+	@PersistenceContext
+	private EntityManager em;
+
 	@Autowired
 	RepositorioVenta repVenta;
 	
@@ -96,5 +102,41 @@ public class VentaServiceImpl implements VentaService{
 	public Venta actualizarVenta(int idventa, Venta venta) {
 		repVenta.save(venta);
 		return venta;
+	}
+
+	@Override
+	public List<ViewRegistroVentasResumen> verRegistroVentaResumen(String tipoventa){
+		CriteriaBuilder cb = em.getCriteriaBuilder();
+		CriteriaQuery cq = cb.createQuery();
+		Root root = cq.from(ViewRegistroVentasResumen.class);
+		cq.select(root).where(cb.equal(root.get("tipoventa"), tipoventa));
+		return em.createQuery(cq).getResultList();
+	}
+
+	@Override
+	public List<ViewRegistroVentasResumen> verRegistroVentaResumen(){
+		CriteriaBuilder cb = em.getCriteriaBuilder();
+		CriteriaQuery cq = cb.createQuery();
+		Root root = cq.from(ViewRegistroVentasResumen.class);
+		cq.select(root);
+		return em.createQuery(cq).getResultList();
+	}
+
+	@Override
+	public List<ViewRegistroVentasDetalle> verRegistroVentaDetalle(){
+		CriteriaBuilder cb = em.getCriteriaBuilder();
+		CriteriaQuery cq = cb.createQuery();
+		Root root = cq.from(ViewRegistroVentasDetalle.class);
+		cq.select(root);
+		return em.createQuery(cq).getResultList();
+	}
+
+	@Override
+	public List<ViewRegistroVentasDetalle> verRegistroVentaDetalle(String tipoventa){
+		CriteriaBuilder cb = em.getCriteriaBuilder();
+		CriteriaQuery cq = cb.createQuery();
+		Root root = cq.from(ViewRegistroVentasDetalle.class);
+		cq.select(root).where(cb.equal(root.get("tipoventa"), tipoventa));
+		return em.createQuery(cq).getResultList();
 	}
 }
