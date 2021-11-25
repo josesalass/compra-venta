@@ -111,4 +111,14 @@ public class CompraServiceImpl implements CompraService{
 
 		return em.createQuery(cq).getResultList();
 	}
+
+	@Override
+	public List<ViewRegistroComprasDetalle> verRegistroCompraDetalle(){
+		CriteriaBuilder cb = em.getCriteriaBuilder();
+		CriteriaQuery cq = cb.createQuery();
+		Root root = cq.from(ViewRegistroComprasDetalle.class);
+		cq.select(root);
+
+		return em.createQuery(cq).getResultList();
+	}
 }

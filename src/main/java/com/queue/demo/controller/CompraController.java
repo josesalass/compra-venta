@@ -1,6 +1,7 @@
 package com.queue.demo.controller;
 
 import com.queue.demo.model.Compra;
+import com.queue.demo.model.ViewRegistroComprasDetalle;
 import com.queue.demo.model.ViewRegistroComprasResumen;
 import com.queue.demo.service.*;
 
@@ -88,6 +89,16 @@ public class CompraController {
     @GetMapping("/verRegistroComprasResumen")
     public ResponseEntity<?> verRegistroComprasResumen(){
         List<ViewRegistroComprasResumen> lista = compraService.verRegistroCompraResumen();
+        if (lista.isEmpty()){
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+        return new ResponseEntity<>(lista,HttpStatus.OK);
+
+    }
+
+    @GetMapping("/verRegistroComprasDetalle")
+    public ResponseEntity<?> verRegistroComprasDetalle(){
+        List<ViewRegistroComprasDetalle> lista = compraService.verRegistroCompraDetalle();
         if (lista.isEmpty()){
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
