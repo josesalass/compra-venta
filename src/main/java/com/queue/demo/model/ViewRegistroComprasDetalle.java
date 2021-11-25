@@ -29,6 +29,18 @@ public class ViewRegistroComprasDetalle implements Serializable {
     @Column(name = "proveedor")
     private String proveedor;
 
+    @Column(name = "admindecompras")
+    private String admindecompras;
+
+    @Column(name = "cantidad")
+    private int cantidad;
+
+    @Column(name = "valorcompra")
+    private int valorcompra;
+
+    @Column(name = "valortotal")
+    private int valortotal;
+
     public int getIdcompra() {
         return idcompra;
     }
@@ -47,5 +59,21 @@ public class ViewRegistroComprasDetalle implements Serializable {
 
     public String getProveedor() {
         return proveedor;
+    }
+
+    public String getAdmindecompras() {
+        return admindecompras;
+    }
+
+    public int getCantidad() {
+        return cantidad;
+    }
+
+    public int getValorcompra() {
+        return valorcompra;
+    }
+
+    public int getValortotal() {
+        return valortotal;
     }
 }
