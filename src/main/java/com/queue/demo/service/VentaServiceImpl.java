@@ -1,9 +1,6 @@
 package com.queue.demo.service;
 
-import com.queue.demo.model.Asociada_Venta;
-import com.queue.demo.model.Producto;
-import com.queue.demo.model.Venta;
-import com.queue.demo.model.ViewRegistroVentasResumen;
+import com.queue.demo.model.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -112,6 +109,33 @@ public class VentaServiceImpl implements VentaService{
 		CriteriaBuilder cb = em.getCriteriaBuilder();
 		CriteriaQuery cq = cb.createQuery();
 		Root root = cq.from(ViewRegistroVentasResumen.class);
+		cq.select(root).where(cb.equal(root.get("tipoventa"), tipoventa));
+		return em.createQuery(cq).getResultList();
+	}
+
+	@Override
+	public List<ViewRegistroVentasResumen> verRegistroVentaResumen(){
+		CriteriaBuilder cb = em.getCriteriaBuilder();
+		CriteriaQuery cq = cb.createQuery();
+		Root root = cq.from(ViewRegistroVentasResumen.class);
+		cq.select(root);
+		return em.createQuery(cq).getResultList();
+	}
+
+	@Override
+	public List<ViewRegistroVentasDetalle> verRegistroVentaDetalle(){
+		CriteriaBuilder cb = em.getCriteriaBuilder();
+		CriteriaQuery cq = cb.createQuery();
+		Root root = cq.from(ViewRegistroVentasDetalle.class);
+		cq.select(root);
+		return em.createQuery(cq).getResultList();
+	}
+
+	@Override
+	public List<ViewRegistroVentasDetalle> verRegistroVentaDetalle(String tipoventa){
+		CriteriaBuilder cb = em.getCriteriaBuilder();
+		CriteriaQuery cq = cb.createQuery();
+		Root root = cq.from(ViewRegistroVentasDetalle.class);
 		cq.select(root).where(cb.equal(root.get("tipoventa"), tipoventa));
 		return em.createQuery(cq).getResultList();
 	}

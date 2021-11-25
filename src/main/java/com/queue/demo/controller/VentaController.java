@@ -1,6 +1,7 @@
 package com.queue.demo.controller;
 
 import com.queue.demo.model.Venta;
+import com.queue.demo.model.ViewRegistroVentasDetalle;
 import com.queue.demo.model.ViewRegistroVentasResumen;
 import com.queue.demo.service.Asociada_VentaService;
 import com.queue.demo.service.ClienteService;
@@ -118,8 +119,35 @@ public class VentaController {
 	}
 
 	@GetMapping("/verRegistroVentasResumen")
+	public ResponseEntity<?> verRegistroVentasResumen(){
+		List<ViewRegistroVentasResumen> lista = ventaService.verRegistroVentaResumen();
+		if (lista.isEmpty()){
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		}
+		return new ResponseEntity<>(lista,HttpStatus.OK);
+	}
+
+	@GetMapping("/verRegistroVentasResumenTipo")
 	public ResponseEntity<?> verRegistroVentasResumen(@RequestParam String tipoventa){
 		List<ViewRegistroVentasResumen> lista = ventaService.verRegistroVentaResumen(tipoventa);
+		if (lista.isEmpty()){
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		}
+		return new ResponseEntity<>(lista,HttpStatus.OK);
+	}
+
+	@GetMapping("/verRegistroVentasDetalleTipo")
+	public ResponseEntity<?> verRegistroVentasDetalle(@RequestParam String tipoventa){
+		List<ViewRegistroVentasDetalle> lista = ventaService.verRegistroVentaDetalle(tipoventa);
+		if (lista.isEmpty()){
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		}
+		return new ResponseEntity<>(lista,HttpStatus.OK);
+	}
+
+	@GetMapping("/verRegistroVentasDetalle")
+	public ResponseEntity<?> verRegistroVentasDetalle(){
+		List<ViewRegistroVentasDetalle> lista = ventaService.verRegistroVentaDetalle();
 		if (lista.isEmpty()){
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 		}
