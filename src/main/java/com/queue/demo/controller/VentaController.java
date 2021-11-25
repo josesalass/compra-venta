@@ -1,6 +1,7 @@
 package com.queue.demo.controller;
 
 import com.queue.demo.model.Venta;
+import com.queue.demo.model.ViewRegistroVentasResumen;
 import com.queue.demo.service.Asociada_VentaService;
 import com.queue.demo.service.ClienteService;
 import com.queue.demo.service.ProductoService;
@@ -114,5 +115,14 @@ public class VentaController {
 		venta.setMetodopago(metodo);
 		ventaService.actualizarVenta(idventa,venta);
 		return new ResponseEntity<>("Edición exitosa",HttpStatus.OK);
+	}
+
+	@GetMapping("/verRegistroVentasResumen")
+	public ResponseEntity<?> verRegistroVentasResumen(@RequestParam String tipoventa){
+		List<ViewRegistroVentasResumen> lista = ventaService.verRegistroVentaResumen(tipoventa);
+		if (lista.isEmpty()){
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		}
+		return new ResponseEntity<>(lista,HttpStatus.OK);
 	}
 }
