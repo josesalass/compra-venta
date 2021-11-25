@@ -1,15 +1,15 @@
 package com.queue.demo.service;
 
-import com.queue.demo.model.Asociada_Venta;
-import com.queue.demo.model.Compra;
-import com.queue.demo.model.PerteneceACompra;
-import com.queue.demo.model.Producto;
-import com.queue.demo.model.Venta;
+import com.queue.demo.model.*;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import javax.persistence.EntityNotFoundException;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Root;
 import javax.transaction.Transactional;
 
 import java.sql.Timestamp;
@@ -30,6 +30,9 @@ public class CompraServiceImpl implements CompraService{
     
     @Autowired
     ProveedorService provService;
+
+	@PersistenceContext
+	private EntityManager em;
 
     @Override
     public List<Compra> buscarTodasLasCompras() {
@@ -97,5 +100,15 @@ public class CompraServiceImpl implements CompraService{
 	public Compra actualizarCompra (int idcompra, Compra compra) {
 		repCompra.save(compra);
 		return compra;
+	}
+
+	@Override
+	public List<ViewRegistroComprasResumen> verRegistroCompraResumen(){
+		CriteriaBuilder cb = em.getCriteriaBuilder();
+		CriteriaQuery cq = cb.createQuery();
+		Root root = cq.from(ViewRegistroComprasResumen.class);
+		cq.select(root);
+
+		return em.createQuery(cq).getResultList();
 	}
 }

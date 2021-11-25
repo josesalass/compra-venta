@@ -1,6 +1,7 @@
 package com.queue.demo.controller;
 
 import com.queue.demo.model.Compra;
+import com.queue.demo.model.ViewRegistroComprasResumen;
 import com.queue.demo.service.*;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -82,6 +83,15 @@ public class CompraController {
             compra.setRutempresa(rutempresa);
             compraService.actualizarCompra(idcompra, compra);
             return new ResponseEntity<>("Cambio exitoso" ,HttpStatus.OK );
+
+    }
+    @GetMapping("/verRegistroComprasResumen")
+    public ResponseEntity<?> verRegistroComprasResumen(){
+        List<ViewRegistroComprasResumen> lista = compraService.verRegistroCompraResumen();
+        if (lista.isEmpty()){
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+        return new ResponseEntity<>(lista,HttpStatus.OK);
 
     }
 }
