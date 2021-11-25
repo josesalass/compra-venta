@@ -5,11 +5,11 @@ import javax.persistence.*;
 @Entity
 @Table(name = "telefono_usuario")
 public class TelefonoUsuario {
+	@Id
 	private int telefono;
 	private String rutusuario;
 	
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
+
 	public int getTelefono() {
 		return telefono;
 	}

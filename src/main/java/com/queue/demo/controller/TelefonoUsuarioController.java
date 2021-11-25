@@ -4,9 +4,9 @@ import com.queue.demo.model.TelefonoUsuario;
 import com.queue.demo.service.TelefonoUsuarioService;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -20,4 +20,15 @@ public class TelefonoUsuarioController {
 	public List<TelefonoUsuario> list(){
 		return telefonoUsuarioService.buscarTodosLosTelefonosUsuarios();
 	}
+
+	@RequestMapping(method= RequestMethod.POST,value="/guardartelefono")
+	public ResponseEntity<?> saveTelefono(@RequestBody TelefonoUsuario telefonoUsuario){
+		if (telefonoUsuario !=null && telefonoUsuarioService.buscarTelefonoPorRut(telefonoUsuario.getRutusuario()) !=null){
+			telefonoUsuarioService.guardar(telefonoUsuario);
+			return new ResponseEntity<>(HttpStatus.CREATED);
+		}else{
+			return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+		}
+	}
+
 }

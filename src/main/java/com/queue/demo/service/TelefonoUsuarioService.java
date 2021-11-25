@@ -8,4 +8,5 @@ public interface TelefonoUsuarioService {
 	public TelefonoUsuario buscarTelefonoUsuarioPorId(int id);
 	public void guardar(TelefonoUsuario telefonoU);
 	public void borrarTelefonoUsuarioPorId(int telefonoU);
+	public List<TelefonoUsuario> buscarTelefonoPorRut(String rutUsuario);
 }
