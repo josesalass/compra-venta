@@ -153,4 +153,95 @@ public class ProductoControllerTest {
 
     }
 
+
+    @Test
+    void SiInvocoEditarStockMinDebeActualizarElStockMinDelProducto() throws Exception {
+        int idproducto = 1;
+        Producto producto = new Producto(idproducto,4,2,3,5,"producto1");
+        Producto productoeditado = new Producto(idproducto,4,6,3,5,"producto1");
+        int cantidadAInsertar = 6;
+        given(productoService.buscarProductoPorId(producto.getIdproducto())).willReturn(producto);
+        given(productoService.actualizarProducto(idproducto,producto)).willReturn(productoeditado);
+
+        MockHttpServletResponse response = mockMvc.perform( put("/producto/{idproducto}/editarStockMin/{stockmin}",idproducto,cantidadAInsertar)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON))
+                .andReturn()
+                .getResponse();
+
+        // Then
+        assertEquals(HttpStatus.OK.value(),response.getStatus());
+    }
+
+
+    @Test
+    void SiInvocoEditarStockMinDebeRetornarBadRequest() throws Exception {
+        int idproducto = 1;
+        Producto producto = new Producto(idproducto,4,2,3,5,"producto1");
+        int cantidadAInsertar = -1;
+        given(productoService.buscarProductoPorId(producto.getIdproducto())).willReturn(producto);
+
+        mockMvc.perform( put("/producto/{idproducto}/editarStockMin/{stockmin}",idproducto,cantidadAInsertar)).andExpect(status().isBadRequest());
+
+    }
+
+    @Test
+    void SiInvocoEditarValorCompraDebeActualizarElValorCompraDelProducto() throws Exception {
+        int idproducto = 1;
+        Producto producto = new Producto(idproducto,4,2,3,5,"producto1");
+        Producto productoeditado = new Producto(idproducto,4,2,1000,5,"producto1");
+        int cantidadAInsertar = 1000;
+        given(productoService.buscarProductoPorId(producto.getIdproducto())).willReturn(producto);
+        given(productoService.actualizarProducto(idproducto,producto)).willReturn(productoeditado);
+
+        MockHttpServletResponse response = mockMvc.perform( put("/producto/{idproducto}/editarValorCompra/{valorcompra}",idproducto,cantidadAInsertar)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON))
+                .andReturn()
+                .getResponse();
+
+        // Then
+        assertEquals(HttpStatus.OK.value(),response.getStatus());
+    }
+
+    @Test
+    void SiInvocoeditarValorCompraDebeRetornarBadRequest() throws Exception {
+        int idproducto = 1;
+        Producto producto = new Producto(idproducto,4,2,3,5,"producto1");
+        int cantidadAInsertar = -1;
+        given(productoService.buscarProductoPorId(producto.getIdproducto())).willReturn(producto);
+
+        mockMvc.perform( put("/producto/{idproducto}/editarValorCompra/{valorcompra}",idproducto,cantidadAInsertar)).andExpect(status().isBadRequest());
+
+    }
+
+    @Test
+    void SiInvocoEditarValorVentaDebeActualizarElValorVentaDelProducto() throws Exception {
+        int idproducto = 1;
+        Producto producto = new Producto(idproducto,4,2,3,5,"producto1");
+        Producto productoeditado = new Producto(idproducto,4,2,3,1000,"producto1");
+        int cantidadAInsertar = 1000;
+        given(productoService.buscarProductoPorId(producto.getIdproducto())).willReturn(producto);
+        given(productoService.actualizarProducto(idproducto,producto)).willReturn(productoeditado);
+
+        MockHttpServletResponse response = mockMvc.perform( put("/producto/{idproducto}/editarValorVenta/{valorventa}",idproducto,cantidadAInsertar)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON))
+                .andReturn()
+                .getResponse();
+
+        // Then
+        assertEquals(HttpStatus.OK.value(),response.getStatus());
+    }
+
+    @Test
+    void SiInvocoeditarValorVentaDebeRetornarBadRequest() throws Exception {
+        int idproducto = 1;
+        Producto producto = new Producto(idproducto,4,2,3,5,"producto1");
+        int cantidadAInsertar = -1;
+        given(productoService.buscarProductoPorId(producto.getIdproducto())).willReturn(producto);
+
+        mockMvc.perform( put("/producto/{idproducto}/editarValorVenta/{valorventa}",idproducto,cantidadAInsertar)).andExpect(status().isBadRequest());
+
+    }
 }
