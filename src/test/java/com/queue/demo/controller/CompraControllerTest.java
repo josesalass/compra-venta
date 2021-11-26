@@ -151,7 +151,7 @@ public class CompraControllerTest {
     @Test
     void siInvocoCambioFechaYLaCompraNoExisteDebeDevolverElStatusBadRequest() throws Exception{
         Compra compra = getCompra();
-        given(compraServiceimp.buscarCompraPorId(compra.getIdcompra())).willReturn(null);
+        given(compraServiceimp.buscarCompraPorId(compra.getIdcompra())).willReturn(Optional.empty());
 
         mockMvc.perform(put("/compras/{idcompra}/cambiarFecha/{fecha}",compra.getIdcompra(),"2020-11-23 00:00:00")).andExpect(status().isBadRequest());
     }
@@ -180,15 +180,11 @@ public class CompraControllerTest {
     void siInvocoCambiarRutEmpresaPorIdYNoSePuedeCambiarElRutEmpresaDeLaCompraDebeDevolverElStatusBadRequest() throws Exception {
 
         Compra compra = getCompra();
-        given(compraServiceimp.buscarCompraPorId(compra.getIdcompra())).willReturn(null);
+        given(compraServiceimp.buscarCompraPorId(compra.getIdcompra())).willReturn(Optional.empty());
 
         mockMvc.perform(put("/compras/{idcompra}/cambiarEmpresa/{rutempresa}",compra.getIdcompra(),"792954367")).andExpect(status().isBadRequest());
 
     }
-
-
-
-
 
     //Datos para los test
     List<Compra> getCompras() {

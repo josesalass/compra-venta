@@ -85,24 +85,7 @@ public class CompraServiceImpl implements CompraService{
 			return repCompra.save(nuevaCompra);
 
 	}
-	
-	@Override
-  	public void editarFecha(Timestamp fecha, int idcompra) {
-		try{
-  			repCompra.editarFecha(idcompra, fecha);
 
-  		}catch(NullPointerException e) {
-  		}
-  	}
-  	
-  	@Override
-  	public void editarRutEmpresa(String rutempresa, int idcompra) {
-  		try{
-  				repCompra.editarRutEmpresa(idcompra, rutempresa);
-  		}catch(NullPointerException e) {
-  			
-  		}
-  	}
 	@Override
 	public Compra actualizarCompra (int idcompra, Compra compra) {
 		repCompra.save(compra);

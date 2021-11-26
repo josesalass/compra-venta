@@ -68,11 +68,6 @@ public class CompraController {
 
     }
 
-  	@RequestMapping("/editEmpresa")
-  	public void editarRutEmpresa (@RequestParam(value="idcompra",required=true) int idcompra, @RequestParam(value="rutempresa",required=true) String rutempresa){
-  		compraService.editarRutEmpresa(rutempresa, idcompra);
-  	}
-
     @PutMapping("/{idcompra}/cambiarEmpresa/{rutempresa}")
     public ResponseEntity<String> cambiarRutEmpresa(@PathVariable int idcompra, @PathVariable String rutempresa) {
         Optional<Compra> compra = compraService.buscarCompraPorId(idcompra);
