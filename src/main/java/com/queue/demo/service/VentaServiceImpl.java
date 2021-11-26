@@ -139,4 +139,39 @@ public class VentaServiceImpl implements VentaService{
 		cq.select(root).where(cb.equal(root.get("tipoventa"), tipoventa));
 		return em.createQuery(cq).getResultList();
 	}
+
+	@Override
+	public List<ViewRegistroVentasResumen> verRegistroVentaResumenDia(Timestamp dia){
+		CriteriaBuilder cb = em.getCriteriaBuilder();
+		CriteriaQuery cq = cb.createQuery();
+		Root root = cq.from(ViewRegistroVentasResumen.class);
+		cq.select(root).where(cb.equal(root.get("fecha"), dia));
+		return em.createQuery(cq).getResultList();
+	}
+
+	@Override
+	public List<ViewRegistroVentasResumen> verRegistroVentaResumenEntreDias(Timestamp dia1,Timestamp dia2){
+		CriteriaBuilder cb = em.getCriteriaBuilder();
+		CriteriaQuery cq = cb.createQuery();
+		Root root = cq.from(ViewRegistroVentasResumen.class);
+		cq.select(root).where(cb.between(root.get("fecha"),dia1,dia2));
+		return em.createQuery(cq).getResultList();
+	}
+	@Override
+	public List<ViewRegistroVentasDetalle> verRegistroVentaDetalleDia(Timestamp dia){
+		CriteriaBuilder cb = em.getCriteriaBuilder();
+		CriteriaQuery cq = cb.createQuery();
+		Root root = cq.from(ViewRegistroVentasDetalle.class);
+		cq.select(root).where(cb.equal(root.get("fecha"), dia));
+		return em.createQuery(cq).getResultList();
+	}
+
+	@Override
+	public List<ViewRegistroVentasDetalle> verRegistroVentaDetalleEntreDias(Timestamp dia1,Timestamp dia2){
+		CriteriaBuilder cb = em.getCriteriaBuilder();
+		CriteriaQuery cq = cb.createQuery();
+		Root root = cq.from(ViewRegistroVentasDetalle.class);
+		cq.select(root).where(cb.between(root.get("fecha"),dia1,dia2));
+		return em.createQuery(cq).getResultList();
+	}
 }

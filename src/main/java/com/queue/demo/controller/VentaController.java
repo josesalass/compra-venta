@@ -153,4 +153,40 @@ public class VentaController {
 		}
 		return new ResponseEntity<>(lista,HttpStatus.OK);
 	}
+
+	@GetMapping("/verRegistroVentasResumenDia")
+	public ResponseEntity<?> verRegistroVentasResumen(@RequestParam Timestamp dia){
+		List<ViewRegistroVentasResumen> lista = ventaService.verRegistroVentaResumenDia(dia);
+		if (lista.isEmpty()){
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		}
+		return new ResponseEntity<>(lista,HttpStatus.OK);
+	}
+
+	@GetMapping("/verRegistroVentasResumenEntreDias")
+	public ResponseEntity<?> verRegistroVentasResumen(@RequestParam Timestamp dia1, @RequestParam Timestamp dia2){
+		List<ViewRegistroVentasResumen> lista = ventaService.verRegistroVentaResumenEntreDias(dia1,dia2);
+		if (lista.isEmpty()){
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		}
+		return new ResponseEntity<>(lista,HttpStatus.OK);
+	}
+
+	@GetMapping("/verRegistroVentasDetalleDia")
+	public ResponseEntity<?> verRegistroVentasDetalle(@RequestParam Timestamp dia){
+		List<ViewRegistroVentasDetalle> lista = ventaService.verRegistroVentaDetalleDia(dia);
+		if (lista.isEmpty()){
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		}
+		return new ResponseEntity<>(lista,HttpStatus.OK);
+	}
+
+	@GetMapping("/verRegistroVentasDetalleEntreDias")
+	public ResponseEntity<?> verRegistroVentasDetalle(@RequestParam Timestamp dia1, @RequestParam Timestamp dia2){
+		List<ViewRegistroVentasDetalle> lista = ventaService.verRegistroVentaDetalleEntreDias(dia1,dia2);
+		if (lista.isEmpty()){
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		}
+		return new ResponseEntity<>(lista,HttpStatus.OK);
+	}
 }
