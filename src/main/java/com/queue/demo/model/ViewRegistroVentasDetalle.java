@@ -8,6 +8,7 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import java.io.Serializable;
+import java.sql.Timestamp;
 
 @Entity
 @Immutable
@@ -22,6 +23,9 @@ public class ViewRegistroVentasDetalle implements Serializable {
 
     @Column(name="detalleproducto")
     private String detalleproducto;
+
+    @Column (name="fecha")
+    private Timestamp fecha;
 
     @Column (name="tipoventa")
     private String tipoventa;
@@ -48,6 +52,10 @@ public class ViewRegistroVentasDetalle implements Serializable {
 
     public String getDetalleproducto() {
         return detalleproducto;
+    }
+
+    public Timestamp getFecha() {
+        return fecha;
     }
 
     public String getTipoventa() {

@@ -24,4 +24,12 @@ public interface VentaService {
 	List<ViewRegistroVentasDetalle> verRegistroVentaDetalle();
 
 	List<ViewRegistroVentasDetalle> verRegistroVentaDetalle(String tipoventa);
+
+	List<ViewRegistroVentasResumen> verRegistroVentaResumenDia(Timestamp dia);
+
+	List<ViewRegistroVentasResumen> verRegistroVentaResumenEntreDias(Timestamp dia1,Timestamp dia2);
+
+	List<ViewRegistroVentasDetalle> verRegistroVentaDetalleDia(Timestamp dia);
+
+	List<ViewRegistroVentasDetalle> verRegistroVentaDetalleEntreDias(Timestamp dia1,Timestamp dia2);
 }
