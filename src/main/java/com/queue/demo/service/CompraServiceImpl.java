@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityManager;
+import javax.persistence.EntityNotFoundException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
@@ -14,6 +15,7 @@ import javax.transaction.Transactional;
 
 import java.sql.Timestamp;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import com.queue.demo.repository.*;
@@ -40,18 +42,23 @@ public class CompraServiceImpl implements CompraService{
     }
 
     @Override
-    public Compra buscarCompraPorId(int idCompra) {
-        return repCompra.findById(1).get();
+    public Optional<Compra> buscarCompraPorId(int idCompra) {
+		Optional<Compra> optional = repCompra.findById(idCompra);
+		if (optional.isPresent()){
+			return Optional.of(optional.get());
+		}
+		return Optional.empty();
     }
 
     @Override
-    public void guardar(Compra compra) {
-        repCompra.save(compra);
-    }
-
-    @Override
-    public void borrarCompraPorId(int idCompra) {
-        repCompra.deleteById(1);
+    public boolean borrarCompraPorId(int idCompra) {
+		try{
+			Compra compra = repCompra.getById(idCompra);
+			repCompra.delete(compra);
+			return true;
+		}catch (EntityNotFoundException e){
+			return false;
+		}
     }
 
 	@Override

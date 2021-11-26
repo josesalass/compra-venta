@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import java.sql.Time;
 import java.sql.Timestamp;
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/compras")
@@ -48,19 +49,17 @@ public class CompraController {
 
 
     }
-    
-
 
     @PutMapping("/{idcompra}/cambiarFecha/{fecha}")
     public ResponseEntity<String> cambiarFecha(@PathVariable int idcompra, @PathVariable String fecha) {
-        Compra compra = compraService.buscarCompraPorId(idcompra);
+        Optional<Compra> compra = compraService.buscarCompraPorId(idcompra);
         try{
             Timestamp fechaTs = Timestamp.valueOf(fecha);
-            if (compra == null || fechaTs == null) {
-                return new ResponseEntity<>("Debe ingresar un valor a la fecha ",HttpStatus.BAD_REQUEST);
+            if (!compra.isPresent() || fechaTs == null) {
+                return new ResponseEntity<>("Debe ingresar un valor a la fecha o no se encontró la compra",HttpStatus.BAD_REQUEST);
             }
-            compra.setFecha(fechaTs);
-            compraService.actualizarCompra(idcompra, compra);
+            compra.get().setFecha(fechaTs);
+            compraService.actualizarCompra(idcompra, compra.get());
             return new ResponseEntity<>("Cambio exitoso" ,HttpStatus.OK );
 
         }catch (IllegalArgumentException e){
@@ -76,13 +75,13 @@ public class CompraController {
 
     @PutMapping("/{idcompra}/cambiarEmpresa/{rutempresa}")
     public ResponseEntity<String> cambiarRutEmpresa(@PathVariable int idcompra, @PathVariable String rutempresa) {
-        Compra compra = compraService.buscarCompraPorId(idcompra);
+        Optional<Compra> compra = compraService.buscarCompraPorId(idcompra);
 
-            if (compra == null || rutempresa == null) {
-                return new ResponseEntity<>("Debe ingresar un valor al rut ",HttpStatus.BAD_REQUEST);
+            if (!compra.isPresent() || rutempresa == null) {
+                return new ResponseEntity<>("Debe ingresar un valor al rut o no se encontró la compra",HttpStatus.BAD_REQUEST);
             }
-            compra.setRutempresa(rutempresa);
-            compraService.actualizarCompra(idcompra, compra);
+            compra.get().setRutempresa(rutempresa);
+            compraService.actualizarCompra(idcompra, compra.get());
             return new ResponseEntity<>("Cambio exitoso" ,HttpStatus.OK );
 
     }
