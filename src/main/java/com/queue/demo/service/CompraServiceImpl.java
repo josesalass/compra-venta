@@ -14,6 +14,7 @@ import javax.transaction.Transactional;
 
 import java.sql.Timestamp;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import com.queue.demo.repository.*;
@@ -67,12 +68,12 @@ public class CompraServiceImpl implements CompraService{
 			nuevaCompra.getCompraproductos().addAll((compra.getCompraproductos()
 					.stream()
 					.map(PerteneceACompra -> {
-						Producto producto = productoService.buscarProductoPorId(PerteneceACompra.getProducto().getIdproducto());
+						Optional<Producto> producto = productoService.buscarProductoPorId(PerteneceACompra.getProducto().getIdproducto());
 						PerteneceACompra perteneceACompra = new PerteneceACompra();
-						perteneceACompra.setProducto(producto);
+						perteneceACompra.setProducto(producto.get());
 						perteneceACompra.setCompra(nuevaCompra);
 						perteneceACompra.setCantidad(PerteneceACompra.getCantidad());
-						producto.setStock(producto.getStock() + perteneceACompra.getCantidad());
+						producto.get().setStock(producto.get().getStock() + perteneceACompra.getCantidad());
 						return perteneceACompra;
 					}).collect(Collectors.toList())));
 			return repCompra.save(nuevaCompra);

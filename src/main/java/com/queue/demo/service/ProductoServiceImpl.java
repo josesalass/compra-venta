@@ -1,6 +1,7 @@
 package com.queue.demo.service;
 
 import java.util.List;
+import java.util.Optional;
 import javax.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -21,19 +22,27 @@ public class ProductoServiceImpl implements ProductoService{
 	}
 
 	@Override
-	public Producto buscarProductoPorId(int idproducto) {
-		return repProducto.findById(idproducto).get();
+	public Optional<Producto> buscarProductoPorId(int idproducto) {
+		Optional<Producto> optional = repProducto.findById(idproducto);
+		if (optional.isPresent()) {
+			return Optional.of(optional.get());
+		}
+		return Optional.empty();
 	}
 
 	@Override
-	public Producto guardarProducto(Producto producto) {
+	public Producto guardarProducto(Producto producto) throws Exception {
+		Optional<Producto> OptionalProducto = repProducto.findById(producto.getIdproducto());
+		if(OptionalProducto.isPresent()) {
+			throw new Exception("Producto con id  "+ producto.getIdproducto()+" ya existe");
+		}
 		repProducto.save(producto);
         return producto;
     }
 
 	@Override
-	public void borrarProductoPorId(String idproducto) {
-		repProducto.deleteById(1);
+	public void borrarProductoPorId(int idproducto) {
+		repProducto.deleteById(idproducto);
 		
 	}
 	

@@ -11,6 +11,7 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 import javax.transaction.Transactional;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import java.sql.Timestamp;
 import com.queue.demo.repository.*;
@@ -57,12 +58,12 @@ public class VentaServiceImpl implements VentaService{
 		nuevaVenta.getVentaproductos().addAll((venta.getVentaproductos()
 				.stream()
 				.map(Asociada_Venta -> {
-					Producto producto = productoService.buscarProductoPorId(Asociada_Venta.getProducto().getIdproducto());
+					Optional<Producto> producto = productoService.buscarProductoPorId(Asociada_Venta.getProducto().getIdproducto());
 					Asociada_Venta asociadaVenta = new Asociada_Venta();
-					asociadaVenta.setProducto(producto);
+					asociadaVenta.setProducto(producto.get());
 					asociadaVenta.setVenta(nuevaVenta);
 					asociadaVenta.setCantidad(Asociada_Venta.getCantidad());
-					producto.setStock(producto.getStock()-asociadaVenta.getCantidad());
+					producto.get().setStock(producto.get().getStock()-asociadaVenta.getCantidad());
 					return asociadaVenta;
 				}).collect(Collectors.toList())));
 		return repVenta.save(nuevaVenta);
