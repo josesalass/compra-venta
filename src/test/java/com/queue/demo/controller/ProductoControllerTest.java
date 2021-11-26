@@ -24,6 +24,8 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
+
 import static org.mockito.BDDMockito.given;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -87,7 +89,7 @@ public class ProductoControllerTest {
         Producto producto = new Producto(idproducto,4,2,3,5,"producto1");
         Producto productoeditado = new Producto(idproducto,2,2,3,5,"producto1");
         int cantidadAInsertar = 2;
-        given(productoService.buscarProductoPorId(producto.getIdproducto())).willReturn(producto);
+        given(productoService.buscarProductoPorId(producto.getIdproducto())).willReturn(Optional.of(producto));
         given(productoService.actualizarProducto(idproducto,producto)).willReturn(productoeditado);
 
         MockHttpServletResponse response = mockMvc.perform( put("/producto/{idproducto}/reducirStock/{cantidad}",idproducto,cantidadAInsertar)
@@ -106,7 +108,7 @@ public class ProductoControllerTest {
         int idproducto = 1;
         Producto producto = new Producto(idproducto,4,2,3,5,"producto1");
         int cantidadAInsertar = 5;
-        given(productoService.buscarProductoPorId(producto.getIdproducto())).willReturn(producto);
+        given(productoService.buscarProductoPorId(producto.getIdproducto())).willReturn(Optional.of(producto));
 
         MockHttpServletResponse response = mockMvc.perform( put("/producto/{idproducto}/reducirStock/{cantidad}",idproducto,cantidadAInsertar)
                         .contentType(MediaType.APPLICATION_JSON)
@@ -127,7 +129,7 @@ public class ProductoControllerTest {
         Producto producto = new Producto(idproducto,4,2,3,5,"producto1");
         Producto productoeditado = new Producto(idproducto,8,2,3,5,"producto1");
         int cantidadAInsertar = 4;
-        given(productoService.buscarProductoPorId(producto.getIdproducto())).willReturn(producto);
+        given(productoService.buscarProductoPorId(producto.getIdproducto())).willReturn(Optional.of(producto));
         given(productoService.actualizarProducto(idproducto,producto)).willReturn(productoeditado);
 
         MockHttpServletResponse response = mockMvc.perform( put("/producto/{idproducto}/aumentoDeStock/{cantidad}",idproducto,cantidadAInsertar)
@@ -146,7 +148,7 @@ public class ProductoControllerTest {
         int idproducto = 1;
         Producto producto = new Producto(idproducto,4,2,3,5,"producto1");
         int cantidadAInsertar = -1;
-        given(productoService.buscarProductoPorId(producto.getIdproducto())).willReturn(producto);
+        given(productoService.buscarProductoPorId(producto.getIdproducto())).willReturn(Optional.of(producto));
 
         mockMvc.perform( put("/producto/{idproducto}/aumentoDeStock/{cantidad}",idproducto,cantidadAInsertar)).andExpect(status().isBadRequest());
 
@@ -160,7 +162,7 @@ public class ProductoControllerTest {
         Producto producto = new Producto(idproducto,4,2,3,5,"producto1");
         Producto productoeditado = new Producto(idproducto,4,6,3,5,"producto1");
         int cantidadAInsertar = 6;
-        given(productoService.buscarProductoPorId(producto.getIdproducto())).willReturn(producto);
+        given(productoService.buscarProductoPorId(producto.getIdproducto())).willReturn(Optional.of(producto));
         given(productoService.actualizarProducto(idproducto,producto)).willReturn(productoeditado);
 
         MockHttpServletResponse response = mockMvc.perform( put("/producto/{idproducto}/editarStockMin/{stockmin}",idproducto,cantidadAInsertar)
@@ -179,7 +181,7 @@ public class ProductoControllerTest {
         int idproducto = 1;
         Producto producto = new Producto(idproducto,4,2,3,5,"producto1");
         int cantidadAInsertar = -1;
-        given(productoService.buscarProductoPorId(producto.getIdproducto())).willReturn(producto);
+        given(productoService.buscarProductoPorId(producto.getIdproducto())).willReturn(Optional.of(producto));
 
         mockMvc.perform( put("/producto/{idproducto}/editarStockMin/{stockmin}",idproducto,cantidadAInsertar)).andExpect(status().isBadRequest());
 
@@ -191,7 +193,7 @@ public class ProductoControllerTest {
         Producto producto = new Producto(idproducto,4,2,3,5,"producto1");
         Producto productoeditado = new Producto(idproducto,4,2,1000,5,"producto1");
         int cantidadAInsertar = 1000;
-        given(productoService.buscarProductoPorId(producto.getIdproducto())).willReturn(producto);
+        given(productoService.buscarProductoPorId(producto.getIdproducto())).willReturn(Optional.of(producto));
         given(productoService.actualizarProducto(idproducto,producto)).willReturn(productoeditado);
 
         MockHttpServletResponse response = mockMvc.perform( put("/producto/{idproducto}/editarValorCompra/{valorcompra}",idproducto,cantidadAInsertar)
@@ -209,7 +211,7 @@ public class ProductoControllerTest {
         int idproducto = 1;
         Producto producto = new Producto(idproducto,4,2,3,5,"producto1");
         int cantidadAInsertar = -1;
-        given(productoService.buscarProductoPorId(producto.getIdproducto())).willReturn(producto);
+        given(productoService.buscarProductoPorId(producto.getIdproducto())).willReturn(Optional.of(producto));
 
         mockMvc.perform( put("/producto/{idproducto}/editarValorCompra/{valorcompra}",idproducto,cantidadAInsertar)).andExpect(status().isBadRequest());
 
@@ -221,7 +223,7 @@ public class ProductoControllerTest {
         Producto producto = new Producto(idproducto,4,2,3,5,"producto1");
         Producto productoeditado = new Producto(idproducto,4,2,3,1000,"producto1");
         int cantidadAInsertar = 1000;
-        given(productoService.buscarProductoPorId(producto.getIdproducto())).willReturn(producto);
+        given(productoService.buscarProductoPorId(producto.getIdproducto())).willReturn(Optional.of(producto));
         given(productoService.actualizarProducto(idproducto,producto)).willReturn(productoeditado);
 
         MockHttpServletResponse response = mockMvc.perform( put("/producto/{idproducto}/editarValorVenta/{valorventa}",idproducto,cantidadAInsertar)
@@ -239,7 +241,7 @@ public class ProductoControllerTest {
         int idproducto = 1;
         Producto producto = new Producto(idproducto,4,2,3,5,"producto1");
         int cantidadAInsertar = -1;
-        given(productoService.buscarProductoPorId(producto.getIdproducto())).willReturn(producto);
+        given(productoService.buscarProductoPorId(producto.getIdproducto())).willReturn(Optional.of(producto));
 
         mockMvc.perform( put("/producto/{idproducto}/editarValorVenta/{valorventa}",idproducto,cantidadAInsertar)).andExpect(status().isBadRequest());
 
