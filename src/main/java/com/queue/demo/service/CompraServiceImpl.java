@@ -67,6 +67,7 @@ public class CompraServiceImpl implements CompraService{
 			if(compra.getFecha()==null|| compra.getRutempresa()==null|| compra.getRutusuario()==null|| compra.getCompraproductos()==null){
 				throw new Exception();
 			}
+
 			Compra nuevaCompra = new Compra();
 			nuevaCompra.setFecha(compra.getFecha());
 			nuevaCompra.setRutempresa(compra.getRutempresa());

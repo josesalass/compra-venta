@@ -46,8 +46,6 @@ public class CompraController {
         }catch (Exception e){
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
-
-
     }
 
     @PutMapping("/{idcompra}/cambiarFecha/{fecha}")
