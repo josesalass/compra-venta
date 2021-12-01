@@ -28,10 +28,7 @@ public class CompraServiceImpl implements CompraService{
     RepositorioCompra repCompra;
     
     @Autowired
-    ProductoService productoService;
-    
-    @Autowired
-    ProveedorService provService;
+    ProductoService productoService; 
 
 	@PersistenceContext
 	private EntityManager em;
