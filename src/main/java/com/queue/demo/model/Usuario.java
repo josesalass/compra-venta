@@ -26,8 +26,20 @@ public class Usuario {
 	
 	@Column(name = "contrasenia")
 	private String contrasenia;
-	
-	
+
+	public Usuario(String rutusuario, String nombre, String apellido1, String apellido2, String correousuario, int rolusuario, String contrasenia) {
+		this.rutusuario = rutusuario;
+		this.nombre = nombre;
+		this.apellido1 = apellido1;
+		this.apellido2 = apellido2;
+		this.correousuario = correousuario;
+		this.rolusuario = rolusuario;
+		this.contrasenia = contrasenia;
+	}
+
+	public Usuario() {
+	}
+
 	public String getRutusuario() {
 		return rutusuario;
 	}

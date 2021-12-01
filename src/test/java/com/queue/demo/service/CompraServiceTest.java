@@ -139,7 +139,7 @@ public class CompraServiceTest {
         producto.setStock(producto.getStock()+perteneceACompra.getCantidad());
         Compra resultado;
 
-        when(productoService.buscarProductoPorId(1)).thenReturn(producto);
+        when(productoService.buscarProductoPorId(1)).thenReturn(Optional.of(producto));
         when(repositorioCompra.save(any(Compra.class))).thenReturn(compra);
 
         resultado = compraService.guardarCompra(compra);
