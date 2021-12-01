@@ -12,15 +12,4 @@ import org.springframework.transaction.annotation.Transactional;
 
 
 public interface RepositorioCompra extends JpaRepository <Compra, Integer>{
-	  	@Modifying
-	  	@Transactional
-	  	@Query(value = "update compra set fecha = :fecha where idcompra = :idcompra" , 
-	  	      nativeQuery = true)
-	  	    void editarFecha(@Param (value= "idcompra")int idcompra , @Param (value= "fecha") Timestamp fecha); 
-	  	
-	  	@Modifying
-	  	@Transactional
-	  	@Query(value = "update compra set rutempresa = :rutempresa where idcompra = :idcompra" , 
-	  	      nativeQuery = true)
-	  	    void editarRutEmpresa(@Param (value= "idcompra")int idcompra , @Param (value= "rutempresa") String rutempresa); 
 }

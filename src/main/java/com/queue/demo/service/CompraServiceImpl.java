@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityManager;
+import javax.persistence.EntityNotFoundException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
@@ -27,10 +28,7 @@ public class CompraServiceImpl implements CompraService{
     RepositorioCompra repCompra;
     
     @Autowired
-    ProductoService productoService;
-    
-    @Autowired
-    ProveedorService provService;
+    ProductoService productoService; 
 
 	@PersistenceContext
 	private EntityManager em;
@@ -41,18 +39,23 @@ public class CompraServiceImpl implements CompraService{
     }
 
     @Override
-    public Compra buscarCompraPorId(int idCompra) {
-        return repCompra.findById(1).get();
+    public Optional<Compra> buscarCompraPorId(int idCompra) {
+		Optional<Compra> optional = repCompra.findById(idCompra);
+		if (optional.isPresent()){
+			return Optional.of(optional.get());
+		}
+		return Optional.empty();
     }
 
     @Override
-    public void guardar(Compra compra) {
-        repCompra.save(compra);
-    }
-
-    @Override
-    public void borrarCompraPorId(int idCompra) {
-        repCompra.deleteById(1);
+    public boolean borrarCompraPorId(int idCompra) {
+		try{
+			Compra compra = repCompra.getById(idCompra);
+			repCompra.delete(compra);
+			return true;
+		}catch (EntityNotFoundException e){
+			return false;
+		}
     }
 
 	@Override
@@ -61,6 +64,7 @@ public class CompraServiceImpl implements CompraService{
 			if(compra.getFecha()==null|| compra.getRutempresa()==null|| compra.getRutusuario()==null|| compra.getCompraproductos()==null){
 				throw new Exception();
 			}
+
 			Compra nuevaCompra = new Compra();
 			nuevaCompra.setFecha(compra.getFecha());
 			nuevaCompra.setRutempresa(compra.getRutempresa());
@@ -79,24 +83,7 @@ public class CompraServiceImpl implements CompraService{
 			return repCompra.save(nuevaCompra);
 
 	}
-	
-	@Override
-  	public void editarFecha(Timestamp fecha, int idcompra) {
-		try{
-  			repCompra.editarFecha(idcompra, fecha);
 
-  		}catch(NullPointerException e) {
-  		}
-  	}
-  	
-  	@Override
-  	public void editarRutEmpresa(String rutempresa, int idcompra) {
-  		try{
-  				repCompra.editarRutEmpresa(idcompra, rutempresa);
-  		}catch(NullPointerException e) {
-  			
-  		}
-  	}
 	@Override
 	public Compra actualizarCompra (int idcompra, Compra compra) {
 		repCompra.save(compra);
