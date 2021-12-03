@@ -56,8 +56,7 @@ public class RepresentanteProveedorServiceImpl implements RepresentanteProveedor
     
     @Override
     public void eliminarRepresentanteProveedorPorRut(String rutRep){
-    	Optional<RepresentanteProveedor> representanteProveedor= buscarRepresentantePorRut(rutRep);
 
-        repRepresentanteProveedor.deleteById(1);
+        repRepresentanteProveedor.deleteByrutrep(rutRep);
     }
 }

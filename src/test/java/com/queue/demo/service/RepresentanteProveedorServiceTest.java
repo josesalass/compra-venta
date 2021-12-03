@@ -105,7 +105,7 @@ public class RepresentanteProveedorServiceTest {
 
         verify(repositorioRepresentanteProveedor, never()).save(any(RepresentanteProveedor.class));
     }
-    /*@Test
+    @Test
     void SiInvodoBorrarRepProveedorPorIdDebeEliminarElRepProveedor() {
         // Arrange + Act
         String rutrep= getRepProveedor().get(0).getRutrep();
@@ -116,7 +116,7 @@ public class RepresentanteProveedorServiceTest {
         verify(repositorioRepresentanteProveedor, times(2)).deleteByrutrep(rutrep);
     }
 
-    */
+
 
     @Test
      void siInvocoBuscarRepProveedorPorRutYEncuentraUnRepProveedorDebeRetornarlo() throws Exception {
@@ -144,7 +144,7 @@ public class RepresentanteProveedorServiceTest {
     }
 
     @Test
-    void siInvocoBuscarRepProveedorPorRutYNoEncuentraUnRepProveedorDebeRetornarlo() throws Exception {
+    void siInvocoBuscarRepProveedorPorRutYNoEncuentraUnRepProveedorDebeRetornarnull() throws Exception {
         Optional <RepresentanteProveedor> respuesta;
 
         List<RepresentanteProveedor> mocklist = new ArrayList<>();
@@ -162,12 +162,10 @@ public class RepresentanteProveedorServiceTest {
 
         respuesta=representanteProveedorService.buscarRepresentantePorRut(getRepProveedor().get(0).getRutrep());
 
-        assertThrows(Exception.class,() -> {
-            assertEquals(null,respuesta.get().getRutrep());
-        });
+        assertNotNull(respuesta);
+        assertTrue(respuesta.isEmpty());
 
     }
-
 
 
     // datos para los test
