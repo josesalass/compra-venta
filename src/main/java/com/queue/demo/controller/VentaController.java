@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 import java.sql.Time;
 import java.sql.Timestamp;
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/ventas")
@@ -82,14 +83,14 @@ public class VentaController {
 
 	@PutMapping("/{idventa}/cambiarFecha/{fecha}")
 	public ResponseEntity<String> cambioFechaPrueba(@PathVariable int idventa, @PathVariable String fecha) {
-		Venta venta = ventaService.buscarVentaPorId(idventa);
+		Optional<Venta> venta = ventaService.buscarVentaPorId(idventa);
 		try{
 			Timestamp fechaTS = Timestamp.valueOf(fecha);
 			if (venta == null || fechaTS == null){
 				return new ResponseEntity<>("La venta que se quiere editar no existe o falta el valor de la fecha",HttpStatus.BAD_REQUEST);
 			}
-			venta.setFecha(fechaTS);
-			ventaService.actualizarVenta(idventa,venta);
+			venta.get().setFecha(fechaTS);
+			ventaService.actualizarVenta(idventa,venta.get());
 			return new ResponseEntity<>("Edición exitosa",HttpStatus.OK);
 		}catch(Exception e){
 			return new ResponseEntity<>("El formato de la fecha no corresponde",HttpStatus.BAD_REQUEST);
@@ -98,23 +99,23 @@ public class VentaController {
 
 	@PutMapping("/{idventa}/cambiarTipoPrueba/{tipo}")
 	public ResponseEntity<String> cambioTipoPrueba(@PathVariable int idventa, @PathVariable String tipo) {
-		Venta venta = ventaService.buscarVentaPorId(idventa);
+		Optional<Venta> venta = ventaService.buscarVentaPorId(idventa);
 			if (venta == null || tipo == null){
 				return new ResponseEntity<>("La venta que se quiere editar no existe o falta el valor del tipo de venta",HttpStatus.BAD_REQUEST);
 			}
-			venta.setTipoventa(tipo);
-			ventaService.actualizarVenta(idventa,venta);
+			venta.get().setTipoventa(tipo);
+			ventaService.actualizarVenta(idventa,venta.get());
 			return new ResponseEntity<>("Edición exitosa",HttpStatus.OK);
 	}
 
 	@PutMapping("/{idventa}/cambiarMetodoPagoPrueba/{metodo}")
 	public ResponseEntity<String> cambioMetodoPagoPrueba(@PathVariable int idventa, @PathVariable String metodo) {
-		Venta venta = ventaService.buscarVentaPorId(idventa);
+		Optional<Venta> venta = ventaService.buscarVentaPorId(idventa);
 		if (venta == null || metodo == null){
 			return new ResponseEntity<>("La venta que se quiere editar no existe o falta el valor del metodo de pago de venta",HttpStatus.BAD_REQUEST);
 		}
-		venta.setMetodopago(metodo);
-		ventaService.actualizarVenta(idventa,venta);
+		venta.get().setMetodopago(metodo);
+		ventaService.actualizarVenta(idventa,venta.get());
 		return new ResponseEntity<>("Edición exitosa",HttpStatus.OK);
 	}
 

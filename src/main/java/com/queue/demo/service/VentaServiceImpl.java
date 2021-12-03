@@ -5,12 +5,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityManager;
+import javax.persistence.EntityNotFoundException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 import javax.transaction.Transactional;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import java.sql.Timestamp;
 import com.queue.demo.repository.*;
@@ -34,13 +36,23 @@ public class VentaServiceImpl implements VentaService{
 	}
 	
 	@Override
-	public Venta buscarVentaPorId(int id) {
-		return repVenta.findById(id).get();
+	public Optional<Venta> buscarVentaPorId(int id) {
+		Optional<Venta> optional=repVenta.findById(id);
+		if(optional.isPresent()){
+			return Optional.of(optional.get());
+		}
+		return Optional.empty();
 	} 
 	
 	@Override
-	public void borrarVentaPorId(int id) {
-		repVenta.deleteById(id);
+	public boolean borrarVentaPorId(int id) {
+		try {
+			Venta venta = repVenta.getById(id);
+			repVenta.deleteById(id);
+			return true;
+		}catch (EntityNotFoundException e){
+			return false;
+		}
 	}
 	
 	@Override
@@ -57,17 +69,19 @@ public class VentaServiceImpl implements VentaService{
 		nuevaVenta.getVentaproductos().addAll((venta.getVentaproductos()
 				.stream()
 				.map(Asociada_Venta -> {
-					Producto producto = productoService.buscarProductoPorId(Asociada_Venta.getProducto().getIdproducto());
+					Optional<Producto> producto = Optional.ofNullable(productoService.buscarProductoPorId(Asociada_Venta.getProducto().getIdproducto()));
 					Asociada_Venta asociadaVenta = new Asociada_Venta();
-					asociadaVenta.setProducto(producto);
+					asociadaVenta.setProducto(producto.get());
 					asociadaVenta.setVenta(nuevaVenta);
 					asociadaVenta.setCantidad(Asociada_Venta.getCantidad());
-					producto.setStock(producto.getStock()-asociadaVenta.getCantidad());
+					producto.get().setStock(producto.get().getStock()-asociadaVenta.getCantidad());
 					return asociadaVenta;
 				}).collect(Collectors.toList())));
 		return repVenta.save(nuevaVenta);
 
 	}
+
+/*
 	@Override
 	public boolean editarFecha(Timestamp fecha, int idVenta) {
 		try{
@@ -97,7 +111,7 @@ public class VentaServiceImpl implements VentaService{
 			return false;
 		}
 	}
-
+*/
 	@Override
 	public Venta actualizarVenta(int idventa, Venta venta) {
 		repVenta.save(venta);
