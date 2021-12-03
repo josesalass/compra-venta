@@ -1,6 +1,5 @@
 package com.queue.demo.controller;
 
-import com.queue.demo.model.RepresentanteProveedor;
 import com.queue.demo.model.TelefonoRepresentante;
 import com.queue.demo.service.RepresentanteProveedorService;
 import com.queue.demo.service.TelefonoRepresentanteService;
@@ -20,8 +19,13 @@ public class TelefonoRepresentanteController {
 	RepresentanteProveedorService representanteProveedorService;
 	
 	@GetMapping("")
-	public List<TelefonoRepresentante> list(){
-		return telefonoRepService.buscarTodosLosTelefonos();
+	public ResponseEntity<List<TelefonoRepresentante>> list(){
+		List<TelefonoRepresentante> telefonos = telefonoRepService.buscarTodosLosTelefonos();
+		if(!telefonos.isEmpty()){
+			return new ResponseEntity<>(telefonos, HttpStatus.OK);
+		}else{
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+		}
 	}
 
 	@RequestMapping(method= RequestMethod.POST,value="/guardartelefono")
