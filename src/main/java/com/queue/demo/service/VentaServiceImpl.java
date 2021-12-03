@@ -69,6 +69,7 @@ public class VentaServiceImpl implements VentaService{
 		nuevaVenta.getVentaproductos().addAll((venta.getVentaproductos()
 				.stream()
 				.map(Asociada_Venta -> {
+					//corregir linea de abajo
 					Optional<Producto> producto = Optional.ofNullable(productoService.buscarProductoPorId(Asociada_Venta.getProducto().getIdproducto()));
 					Asociada_Venta asociadaVenta = new Asociada_Venta();
 					asociadaVenta.setProducto(producto.get());

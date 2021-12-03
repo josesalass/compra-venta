@@ -1,9 +1,6 @@
 package com.queue.demo.service;
 
-import com.queue.demo.model.Asociada_Venta;
-import com.queue.demo.model.Cliente;
-import com.queue.demo.model.Producto;
-import com.queue.demo.model.Venta;
+import com.queue.demo.model.*;
 import com.queue.demo.repository.RepositorioVenta;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -13,8 +10,11 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityNotFoundException;
+import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Root;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -38,6 +38,12 @@ public class VentaServiceTest {
     private CriteriaBuilder criteriaBuilder;
     @Mock
     private CriteriaQuery criteriaQuery=mock(CriteriaQuery.class);
+    @Mock
+    private Root root;
+
+    @Mock
+    private TypedQuery typedQuery = mock(TypedQuery.class);
+
     @InjectMocks
     private VentaServiceImpl ventaService;
 
@@ -130,10 +136,7 @@ public class VentaServiceTest {
         verify(repositorioVenta).save(any(Venta.class));
 
     }*/
-    @Test
-    void GuardarVentaYNoFunca(){
 
-    }
     @Test
     void ActualizarVentaYFunca(){
         Venta venta = getListaVentas().get(0);
@@ -144,10 +147,150 @@ public class VentaServiceTest {
         assertNotNull(ventaFinal);
         verify(repositorioVenta).save(any(Venta.class));
     }
-    @Test
-    void ActualizarVentaYNoFunca(){
 
+    @Test
+    void siInvocoVerRegistroVentaResumenYFunca(){
+        List<ViewRegistroVentasResumen> registro;
+        List<ViewRegistroVentasResumen> mocklist = new ArrayList<>();
+        mocklist.add(getViewRegistroVentasResumen());
+
+        when(entityManager.getCriteriaBuilder()).thenReturn(criteriaBuilder);
+        when(criteriaBuilder.createQuery()).thenReturn(criteriaQuery);
+        when(criteriaQuery.from(ViewRegistroVentasResumen.class)).thenReturn(root);
+        when(criteriaQuery.select(root)).thenReturn(criteriaQuery);
+        when(entityManager.createQuery(criteriaQuery)).thenReturn(typedQuery);
+        when(typedQuery.getResultList()).thenReturn(mocklist);
+        registro = ventaService.verRegistroVentaResumen();
+
+        assertNotNull(registro);
+        assertEquals(mocklist.get(0),registro.get(0));
     }
+    //aaa
+    @Test
+    void siInvocoVerRegistroVentaResumenYFunca(String tipo){
+        List<ViewRegistroVentasResumen> registro;
+        List<ViewRegistroVentasResumen> mocklist = new ArrayList<>();
+        mocklist.add(getViewRegistroVentasResumen());
+
+        when(entityManager.getCriteriaBuilder()).thenReturn(criteriaBuilder);
+        when(criteriaBuilder.createQuery()).thenReturn(criteriaQuery);
+        when(criteriaQuery.from(ViewRegistroVentasResumen.class)).thenReturn(root);
+        when(criteriaQuery.select(root)).thenReturn(criteriaQuery);
+        when(entityManager.createQuery(criteriaQuery)).thenReturn(typedQuery);
+        when(typedQuery.getResultList()).thenReturn(mocklist);
+        registro = ventaService.verRegistroVentaResumen();
+
+        assertNotNull(registro);
+        assertEquals(mocklist.get(0),registro.get(0));
+    }
+    @Test
+    void siInvocoVerRegistroVentaDetalleYFunca(){
+        List<ViewRegistroVentasDetalle> registro;
+        List<ViewRegistroVentasDetalle> mocklist = new ArrayList<>();
+        mocklist.add(getViewRegistroVentasDetalle());
+
+        when(entityManager.getCriteriaBuilder()).thenReturn(criteriaBuilder);
+        when(criteriaBuilder.createQuery()).thenReturn(criteriaQuery);
+        when(criteriaQuery.from(ViewRegistroVentasDetalle.class)).thenReturn(root);
+        when(criteriaQuery.select(root)).thenReturn(criteriaQuery);
+        when(entityManager.createQuery(criteriaQuery)).thenReturn(typedQuery);
+        when(typedQuery.getResultList()).thenReturn(mocklist);
+        registro = ventaService.verRegistroVentaDetalle();
+
+        assertNotNull(registro);
+        assertEquals(mocklist.get(0),registro.get(0));
+    }
+    //aaa
+    @Test
+    void siInvocoVerRegistroVentaDetalleYFunca(String tipoventa){
+        List<ViewRegistroVentasDetalle> registro;
+        List<ViewRegistroVentasDetalle> mocklist = new ArrayList<>();
+        mocklist.add(getViewRegistroVentasDetalle());
+
+        when(entityManager.getCriteriaBuilder()).thenReturn(criteriaBuilder);
+        when(criteriaBuilder.createQuery()).thenReturn(criteriaQuery);
+        when(criteriaQuery.from(ViewRegistroVentasDetalle.class)).thenReturn(root);
+        when(criteriaQuery.select(root)).thenReturn(criteriaQuery);
+        when(entityManager.createQuery(criteriaQuery)).thenReturn(typedQuery);
+        when(typedQuery.getResultList()).thenReturn(mocklist);
+        registro = ventaService.verRegistroVentaDetalle();
+
+        assertNotNull(registro);
+        assertEquals(mocklist.get(0),registro.get(0));
+    }
+    //aaa
+    @Test
+    void siInvocoVerRegistroVentaResumenDiaYFunca(Timestamp dia){
+        List<ViewRegistroVentasDetalle> registro;
+        List<ViewRegistroVentasDetalle> mocklist = new ArrayList<>();
+        mocklist.add(getViewRegistroVentasDetalle());
+
+        when(entityManager.getCriteriaBuilder()).thenReturn(criteriaBuilder);
+        when(criteriaBuilder.createQuery()).thenReturn(criteriaQuery);
+        when(criteriaQuery.from(ViewRegistroVentasDetalle.class)).thenReturn(root);
+        when(criteriaQuery.select(root)).thenReturn(criteriaQuery);
+        when(entityManager.createQuery(criteriaQuery)).thenReturn(typedQuery);
+        when(typedQuery.getResultList()).thenReturn(mocklist);
+        registro = ventaService.verRegistroVentaDetalle();
+
+        assertNotNull(registro);
+        assertEquals(mocklist.get(0),registro.get(0));
+    }
+    //aaa
+    @Test
+    void siInvocoVerRegistroVentaResumenEntreDiasYFunca(Timestamp dia1, Timestamp dia2){
+        List<ViewRegistroVentasDetalle> registro;
+        List<ViewRegistroVentasDetalle> mocklist = new ArrayList<>();
+        mocklist.add(getViewRegistroVentasDetalle());
+
+        when(entityManager.getCriteriaBuilder()).thenReturn(criteriaBuilder);
+        when(criteriaBuilder.createQuery()).thenReturn(criteriaQuery);
+        when(criteriaQuery.from(ViewRegistroVentasDetalle.class)).thenReturn(root);
+        when(criteriaQuery.select(root)).thenReturn(criteriaQuery);
+        when(entityManager.createQuery(criteriaQuery)).thenReturn(typedQuery);
+        when(typedQuery.getResultList()).thenReturn(mocklist);
+        registro = ventaService.verRegistroVentaDetalle();
+
+        assertNotNull(registro);
+        assertEquals(mocklist.get(0),registro.get(0));
+    }
+    //aaa
+    @Test
+    void siInvocoVerRegistroVentaDetalleDiaYFunca(Timestamp dia1){
+        List<ViewRegistroVentasDetalle> registro;
+        List<ViewRegistroVentasDetalle> mocklist = new ArrayList<>();
+        mocklist.add(getViewRegistroVentasDetalle());
+
+        when(entityManager.getCriteriaBuilder()).thenReturn(criteriaBuilder);
+        when(criteriaBuilder.createQuery()).thenReturn(criteriaQuery);
+        when(criteriaQuery.from(ViewRegistroVentasDetalle.class)).thenReturn(root);
+        when(criteriaQuery.select(root)).thenReturn(criteriaQuery);
+        when(entityManager.createQuery(criteriaQuery)).thenReturn(typedQuery);
+        when(typedQuery.getResultList()).thenReturn(mocklist);
+        registro = ventaService.verRegistroVentaDetalle();
+
+        assertNotNull(registro);
+        assertEquals(mocklist.get(0),registro.get(0));
+    }
+    //aaa
+    @Test
+    void siInvocoVerRegistroVentaDetalleEntreDiasYFunca(Timestamp dia1, Timestamp dia2){
+        List<ViewRegistroVentasDetalle> registro;
+        List<ViewRegistroVentasDetalle> mocklist = new ArrayList<>();
+        mocklist.add(getViewRegistroVentasDetalle());
+
+        when(entityManager.getCriteriaBuilder()).thenReturn(criteriaBuilder);
+        when(criteriaBuilder.createQuery()).thenReturn(criteriaQuery);
+        when(criteriaQuery.from(ViewRegistroVentasDetalle.class)).thenReturn(root);
+        when(criteriaQuery.select(root)).thenReturn(criteriaQuery);
+        when(entityManager.createQuery(criteriaQuery)).thenReturn(typedQuery);
+        when(typedQuery.getResultList()).thenReturn(mocklist);
+        registro = ventaService.verRegistroVentaDetalle();
+
+        assertNotNull(registro);
+        assertEquals(mocklist.get(0),registro.get(0));
+    }
+
     private List<Venta>getListaVentas(){
         List<Venta> ventas=new ArrayList<>();
         Venta venta=new Venta();
@@ -186,5 +329,15 @@ public class VentaServiceTest {
         p.setValorcompra(10);
         p.setValorventa(20);
         return p;
+    }
+    private ViewRegistroVentasResumen getViewRegistroVentasResumen(){
+        ViewRegistroVentasResumen v = new ViewRegistroVentasResumen();
+        v.setIdventa(1);
+        return v;
+    }
+    private ViewRegistroVentasDetalle getViewRegistroVentasDetalle(){
+        ViewRegistroVentasDetalle v = new ViewRegistroVentasDetalle();
+        v.setIdventa(1);
+        return v;
     }
 }
