@@ -25,7 +25,7 @@ public class TelefonoRepresentanteController {
 	}
 
 	@RequestMapping(method= RequestMethod.POST,value="/guardartelefono")
-	public ResponseEntity<?> saveTelefono(@RequestBody TelefonoRepresentante telefonoRepresentante){
+	public ResponseEntity<?> saveTelefono(@RequestBody TelefonoRepresentante telefonoRepresentante) throws Exception {
 		if (telefonoRepresentante !=null && representanteProveedorService.buscarRepresentantePorRut(telefonoRepresentante.getRutrep()) !=null){
 			telefonoRepService.guardar(telefonoRepresentante);
 			return new ResponseEntity<>(HttpStatus.CREATED);
