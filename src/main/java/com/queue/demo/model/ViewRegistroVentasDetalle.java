@@ -81,4 +81,11 @@ public class ViewRegistroVentasDetalle implements Serializable {
     public void setIdventa(int idventa) {
         this.idventa = idventa;
     }
+    public void setTipoventa(String tipoventa) {
+        this.tipoventa = tipoventa;
+    }
+
+    public void setFecha(Timestamp fecha) {
+        this.fecha = fecha;
+    }
 }

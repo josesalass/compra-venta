@@ -151,8 +151,8 @@ public class VentaServiceTest {
     @Test
     void siInvocoVerRegistroVentaResumenYFunca(){
         List<ViewRegistroVentasResumen> registro;
-        List<ViewRegistroVentasResumen> mocklist = new ArrayList<>();
-        mocklist.add(getViewRegistroVentasResumen());
+        List<ViewRegistroVentasResumen> mocklist = getViewRegistroVentasResumen();
+        //mocklist.add(getViewRegistroVentasResumen());
 
         when(entityManager.getCriteriaBuilder()).thenReturn(criteriaBuilder);
         when(criteriaBuilder.createQuery()).thenReturn(criteriaQuery);
@@ -167,27 +167,28 @@ public class VentaServiceTest {
     }
     //aaa
     @Test
-    void siInvocoVerRegistroVentaResumenYFunca(String tipo){
+    void siInvocoVerRegistroVentaResumenConTipoYFunca(){
         List<ViewRegistroVentasResumen> registro;
-        List<ViewRegistroVentasResumen> mocklist = new ArrayList<>();
-        mocklist.add(getViewRegistroVentasResumen());
+        List<ViewRegistroVentasResumen> mocklist = getViewRegistroVentasResumen();
+
 
         when(entityManager.getCriteriaBuilder()).thenReturn(criteriaBuilder);
         when(criteriaBuilder.createQuery()).thenReturn(criteriaQuery);
         when(criteriaQuery.from(ViewRegistroVentasResumen.class)).thenReturn(root);
         when(criteriaQuery.select(root)).thenReturn(criteriaQuery);
+        //when(criteriaQuery.where(criteriaBuilder.equal(root.get("tipoventa"), getListaVentas().get(0).getTipoventa()))).thenReturn(criteriaQuery);
         when(entityManager.createQuery(criteriaQuery)).thenReturn(typedQuery);
         when(typedQuery.getResultList()).thenReturn(mocklist);
         registro = ventaService.verRegistroVentaResumen();
 
         assertNotNull(registro);
-        assertEquals(mocklist.get(0),registro.get(0));
+        assertEquals(mocklist.get(0).getTipoventa(),registro.get(0).getTipoventa());
     }
     @Test
     void siInvocoVerRegistroVentaDetalleYFunca(){
         List<ViewRegistroVentasDetalle> registro;
-        List<ViewRegistroVentasDetalle> mocklist = new ArrayList<>();
-        mocklist.add(getViewRegistroVentasDetalle());
+        List<ViewRegistroVentasDetalle> mocklist = getViewRegistroVentasDetalle();
+
 
         when(entityManager.getCriteriaBuilder()).thenReturn(criteriaBuilder);
         when(criteriaBuilder.createQuery()).thenReturn(criteriaQuery);
@@ -202,90 +203,100 @@ public class VentaServiceTest {
     }
     //aaa
     @Test
-    void siInvocoVerRegistroVentaDetalleYFunca(String tipoventa){
+    void siInvocoVerRegistroVentaDetalleConTipoYFunca(){
         List<ViewRegistroVentasDetalle> registro;
-        List<ViewRegistroVentasDetalle> mocklist = new ArrayList<>();
-        mocklist.add(getViewRegistroVentasDetalle());
+        List<ViewRegistroVentasDetalle> mocklist = getViewRegistroVentasDetalle();
+
 
         when(entityManager.getCriteriaBuilder()).thenReturn(criteriaBuilder);
         when(criteriaBuilder.createQuery()).thenReturn(criteriaQuery);
         when(criteriaQuery.from(ViewRegistroVentasDetalle.class)).thenReturn(root);
         when(criteriaQuery.select(root)).thenReturn(criteriaQuery);
+        when(criteriaQuery.where(criteriaBuilder.equal(root.get("tipoventa"), getListaVentas().get(0).getTipoventa()))).thenReturn(criteriaQuery);
         when(entityManager.createQuery(criteriaQuery)).thenReturn(typedQuery);
         when(typedQuery.getResultList()).thenReturn(mocklist);
-        registro = ventaService.verRegistroVentaDetalle();
+        registro = ventaService.verRegistroVentaDetalle(getListaVentas().get(0).getTipoventa());
 
         assertNotNull(registro);
         assertEquals(mocklist.get(0),registro.get(0));
     }
     //aaa
     @Test
-    void siInvocoVerRegistroVentaResumenDiaYFunca(Timestamp dia){
-        List<ViewRegistroVentasDetalle> registro;
-        List<ViewRegistroVentasDetalle> mocklist = new ArrayList<>();
-        mocklist.add(getViewRegistroVentasDetalle());
+    void siInvocoVerRegistroVentaResumenDiaYFunca(){
+        List<ViewRegistroVentasResumen> registro;
+        List<ViewRegistroVentasResumen> mocklist = getViewRegistroVentasResumen();
 
         when(entityManager.getCriteriaBuilder()).thenReturn(criteriaBuilder);
         when(criteriaBuilder.createQuery()).thenReturn(criteriaQuery);
-        when(criteriaQuery.from(ViewRegistroVentasDetalle.class)).thenReturn(root);
+        when(criteriaQuery.from(ViewRegistroVentasResumen.class)).thenReturn(root);
         when(criteriaQuery.select(root)).thenReturn(criteriaQuery);
+        when(criteriaQuery.where(criteriaBuilder.equal(root.get("fecha"), getListaVentas().get(0).getFecha()))).thenReturn(criteriaQuery);
+
         when(entityManager.createQuery(criteriaQuery)).thenReturn(typedQuery);
         when(typedQuery.getResultList()).thenReturn(mocklist);
-        registro = ventaService.verRegistroVentaDetalle();
+
+        registro = ventaService.verRegistroVentaResumenDia(getListaVentas().get(0).getFecha());
 
         assertNotNull(registro);
         assertEquals(mocklist.get(0),registro.get(0));
     }
     //aaa
     @Test
-    void siInvocoVerRegistroVentaResumenEntreDiasYFunca(Timestamp dia1, Timestamp dia2){
-        List<ViewRegistroVentasDetalle> registro;
-        List<ViewRegistroVentasDetalle> mocklist = new ArrayList<>();
-        mocklist.add(getViewRegistroVentasDetalle());
+    void siInvocoVerRegistroVentaResumenEntreDiasYFunca(){
+        List<ViewRegistroVentasResumen> registro;
+        List<ViewRegistroVentasResumen> mocklist = getViewRegistroVentasResumen();
+
 
         when(entityManager.getCriteriaBuilder()).thenReturn(criteriaBuilder);
         when(criteriaBuilder.createQuery()).thenReturn(criteriaQuery);
-        when(criteriaQuery.from(ViewRegistroVentasDetalle.class)).thenReturn(root);
+        when(criteriaQuery.from(ViewRegistroVentasResumen.class)).thenReturn(root);
         when(criteriaQuery.select(root)).thenReturn(criteriaQuery);
+
+        when(criteriaQuery.where(criteriaBuilder.between(root.get("fecha"), getListaVentas().get(0).getFecha(),getListaVentas().get(0).getFecha()))).thenReturn(criteriaQuery);
+
         when(entityManager.createQuery(criteriaQuery)).thenReturn(typedQuery);
         when(typedQuery.getResultList()).thenReturn(mocklist);
-        registro = ventaService.verRegistroVentaDetalle();
+        registro = ventaService.verRegistroVentaResumenEntreDias(getListaVentas().get(0).getFecha(), getListaVentas().get(0).getFecha());
 
         assertNotNull(registro);
         assertEquals(mocklist.get(0),registro.get(0));
     }
     //aaa
     @Test
-    void siInvocoVerRegistroVentaDetalleDiaYFunca(Timestamp dia1){
+    void siInvocoVerRegistroVentaDetalleDiaYFunca(){
         List<ViewRegistroVentasDetalle> registro;
-        List<ViewRegistroVentasDetalle> mocklist = new ArrayList<>();
-        mocklist.add(getViewRegistroVentasDetalle());
+        List<ViewRegistroVentasDetalle> mocklist = getViewRegistroVentasDetalle();
 
         when(entityManager.getCriteriaBuilder()).thenReturn(criteriaBuilder);
         when(criteriaBuilder.createQuery()).thenReturn(criteriaQuery);
         when(criteriaQuery.from(ViewRegistroVentasDetalle.class)).thenReturn(root);
         when(criteriaQuery.select(root)).thenReturn(criteriaQuery);
+
+        when(criteriaQuery.where(criteriaBuilder.equal(root.get("fecha"), getListaVentas().get(0).getFecha()))).thenReturn(criteriaQuery);
+
         when(entityManager.createQuery(criteriaQuery)).thenReturn(typedQuery);
         when(typedQuery.getResultList()).thenReturn(mocklist);
-        registro = ventaService.verRegistroVentaDetalle();
+        registro = ventaService.verRegistroVentaDetalleDia(getListaVentas().get(0).getFecha());
 
         assertNotNull(registro);
         assertEquals(mocklist.get(0),registro.get(0));
     }
     //aaa
     @Test
-    void siInvocoVerRegistroVentaDetalleEntreDiasYFunca(Timestamp dia1, Timestamp dia2){
+    void siInvocoVerRegistroVentaDetalleEntreDiasYFunca(){
         List<ViewRegistroVentasDetalle> registro;
-        List<ViewRegistroVentasDetalle> mocklist = new ArrayList<>();
-        mocklist.add(getViewRegistroVentasDetalle());
+        List<ViewRegistroVentasDetalle> mocklist = getViewRegistroVentasDetalle();
 
         when(entityManager.getCriteriaBuilder()).thenReturn(criteriaBuilder);
         when(criteriaBuilder.createQuery()).thenReturn(criteriaQuery);
         when(criteriaQuery.from(ViewRegistroVentasDetalle.class)).thenReturn(root);
         when(criteriaQuery.select(root)).thenReturn(criteriaQuery);
+
+        when(criteriaQuery.where(criteriaBuilder.between(root.get("fecha"), getListaVentas().get(0).getFecha(),getListaVentas().get(0).getFecha()))).thenReturn(criteriaQuery);
+
         when(entityManager.createQuery(criteriaQuery)).thenReturn(typedQuery);
         when(typedQuery.getResultList()).thenReturn(mocklist);
-        registro = ventaService.verRegistroVentaDetalle();
+        registro = ventaService.verRegistroVentaDetalleEntreDias(getListaVentas().get(0).getFecha(),getListaVentas().get(0).getFecha());
 
         assertNotNull(registro);
         assertEquals(mocklist.get(0),registro.get(0));
@@ -330,14 +341,32 @@ public class VentaServiceTest {
         p.setValorventa(20);
         return p;
     }
-    private ViewRegistroVentasResumen getViewRegistroVentasResumen(){
-        ViewRegistroVentasResumen v = new ViewRegistroVentasResumen();
-        v.setIdventa(1);
-        return v;
+    private List<ViewRegistroVentasResumen> getViewRegistroVentasResumen(){
+        List<ViewRegistroVentasResumen> viewRegistroVentasResumenList=new ArrayList<>();
+        ViewRegistroVentasResumen v1 = new ViewRegistroVentasResumen();
+        v1.setIdventa(1);
+        v1.setTipoventa("boleta");
+        v1.setFecha(Timestamp.valueOf("2020-11-23 00:00:00"));
+        viewRegistroVentasResumenList.add(v1);
+        ViewRegistroVentasResumen v2 = new ViewRegistroVentasResumen();
+        v2.setIdventa(2);
+        v2.setTipoventa("factura");
+        v2.setFecha(Timestamp.valueOf("2020-11-24 00:00:00"));
+        viewRegistroVentasResumenList.add(v2);
+        return viewRegistroVentasResumenList;
     }
-    private ViewRegistroVentasDetalle getViewRegistroVentasDetalle(){
-        ViewRegistroVentasDetalle v = new ViewRegistroVentasDetalle();
-        v.setIdventa(1);
-        return v;
+    private List<ViewRegistroVentasDetalle> getViewRegistroVentasDetalle(){
+        List<ViewRegistroVentasDetalle> viewRegistroVentasDetalleList=new ArrayList<>();
+        ViewRegistroVentasDetalle v1 = new ViewRegistroVentasDetalle();
+        v1.setIdventa(1);
+        v1.setTipoventa("boleta");
+        v1.setFecha(Timestamp.valueOf("2020-11-23 00:00:00"));
+        viewRegistroVentasDetalleList.add(v1);
+        ViewRegistroVentasDetalle v2 = new ViewRegistroVentasDetalle();
+        v2.setIdventa(2);
+        v2.setTipoventa("factura");
+        v2.setFecha(Timestamp.valueOf("2020-11-24 00:00:00"));
+        viewRegistroVentasDetalleList.add(v2);
+        return viewRegistroVentasDetalleList;
     }
 }
