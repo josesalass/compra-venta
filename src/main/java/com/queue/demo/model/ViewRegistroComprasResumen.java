@@ -46,4 +46,8 @@ public class ViewRegistroComprasResumen implements Serializable {
     public BigInteger getValorTotal() {
         return valorTotal;
     }
+
+    public void setIdCompra(int id){
+        idcompra=id;
+    }
 }

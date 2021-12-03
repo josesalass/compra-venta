@@ -15,9 +15,5 @@ public interface RepositorioRepresentanteProveedor extends JpaRepository <Repres
 	int deleteByrutemp(String rut);
 	int deleteByrutrep(String rut);
 	
-	@Modifying
-	@Transactional
-	@Query(value = "update rep_proveedor set estado = false where rutemp = :rutemp" , 
-	      nativeQuery = true)
-	    void ocultarPorRut(@Param (value= "rutemp") String rutemp);
+
 }

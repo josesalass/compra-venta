@@ -4,6 +4,7 @@ import com.queue.demo.controller.CompraController;
 import com.queue.demo.model.Compra;
 import com.queue.demo.service.CompraException;
 import com.queue.demo.service.CompraServiceImpl;
+import org.checkerframework.checker.nullness.Opt;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -26,6 +27,7 @@ import java.sql.Time;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.BDDMockito.given;
@@ -119,8 +121,8 @@ public class CompraControllerTest {
         Compra compra = getCompra();
         Compra compraf= compra;
         compraf.setFecha(Timestamp.valueOf("2020-11-23 00:00:00"));
-        given(compraServiceimp.buscarCompraPorId(compra.getIdcompra())).willReturn(compra);
-        given(compraServiceimp.actualizarCompra(compra.getIdcompra(),compra)).willReturn(compraf);
+        given(compraServiceimp.buscarCompraPorId(compra.getIdcompra())).willReturn(Optional.of(compra));
+        given(compraServiceimp.actualizarCompra(compra.getIdcompra(),compra)).willReturn(compra);
 
         // When
         MockHttpServletResponse response = mockMvc.perform(put("/compras/{idcompra}/cambiarFecha/{fecha}",compra.getIdcompra(),"2020-11-23 00:00:00")
@@ -139,7 +141,7 @@ public class CompraControllerTest {
         // Given
         Compra compra = getCompra();
         String fechan= "lo que sea";
-        given(compraServiceimp.buscarCompraPorId(compra.getIdcompra())).willReturn(compra);
+        given(compraServiceimp.buscarCompraPorId(compra.getIdcompra())).willReturn(Optional.of(compra));
 
 
         // When
@@ -149,7 +151,7 @@ public class CompraControllerTest {
     @Test
     void siInvocoCambioFechaYLaCompraNoExisteDebeDevolverElStatusBadRequest() throws Exception{
         Compra compra = getCompra();
-        given(compraServiceimp.buscarCompraPorId(compra.getIdcompra())).willReturn(null);
+        given(compraServiceimp.buscarCompraPorId(compra.getIdcompra())).willReturn(Optional.empty());
 
         mockMvc.perform(put("/compras/{idcompra}/cambiarFecha/{fecha}",compra.getIdcompra(),"2020-11-23 00:00:00")).andExpect(status().isBadRequest());
     }
@@ -160,7 +162,7 @@ public class CompraControllerTest {
         Compra compra = getCompra();
         Compra compraf= compra;
         compraf.setRutempresa("792954367");
-        given(compraServiceimp.buscarCompraPorId(compra.getIdcompra())).willReturn(compra);
+        given(compraServiceimp.buscarCompraPorId(compra.getIdcompra())).willReturn(Optional.of(compra));
         given(compraServiceimp.actualizarCompra(compra.getIdcompra(),compra)).willReturn(compraf);
 
         // When
@@ -178,15 +180,11 @@ public class CompraControllerTest {
     void siInvocoCambiarRutEmpresaPorIdYNoSePuedeCambiarElRutEmpresaDeLaCompraDebeDevolverElStatusBadRequest() throws Exception {
 
         Compra compra = getCompra();
-        given(compraServiceimp.buscarCompraPorId(compra.getIdcompra())).willReturn(null);
+        given(compraServiceimp.buscarCompraPorId(compra.getIdcompra())).willReturn(Optional.empty());
 
         mockMvc.perform(put("/compras/{idcompra}/cambiarEmpresa/{rutempresa}",compra.getIdcompra(),"792954367")).andExpect(status().isBadRequest());
 
     }
-
-
-
-
 
     //Datos para los test
     List<Compra> getCompras() {

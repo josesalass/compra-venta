@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 	@RequestMapping("/proveedores")
@@ -33,19 +34,19 @@ public class ProveedorController {
 	}
 	
 	@GetMapping("/findNombre")
-	public ResponseEntity<Proveedor> buscarPorNombre (@RequestParam(value="nombre",required=true) String nombre){
-		Proveedor resultado = proveedorService.buscarPorNombre(nombre);
-		if(resultado!=null){
+	public ResponseEntity<Optional> buscarPorNombre (@RequestParam(value="nombre",required=true) String nombre){
+		Optional<Proveedor> resultado = proveedorService.buscarPorNombre(nombre);
+		if(resultado.isPresent()){
 			return new ResponseEntity<>(resultado,HttpStatus.OK);
-		}else{
-			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 		}
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+
 	}
 	
 	@GetMapping("/findRut")
-	public ResponseEntity<Proveedor> buscarPorRut (@RequestParam(value="rut",required=true) String rut){
-		Proveedor resultado = proveedorService.buscarPorRut(rut);
-		if(resultado!=null){
+	public ResponseEntity<Optional> buscarPorRut (@RequestParam(value="rut",required=true) String rut){
+		Optional<Proveedor> resultado = proveedorService.buscarPorRut(rut);
+		if(resultado.isPresent()){
 			return new ResponseEntity<>(resultado,HttpStatus.OK);
 		}else{
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);

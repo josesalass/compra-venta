@@ -14,16 +14,19 @@ public interface RepositorioProveedor extends JpaRepository <Proveedor,Integer> 
 	
 	int deleteBynombreempresa(String nombre);
 	int deleteByrutempresa(String rut);
-	
+
+	/*
 	@Modifying
 	@Transactional
-	@Query(value = "update proveedor set estado = false where nombreempresa = :nombreempresa" , 
+	@Query(value = "update proveedor set estado = false where nombreempresa = :nombreempresa" ,
 	      nativeQuery = true)
 	    void ocultarPorNombre(@Param (value= "nombreempresa") String nombreempresa);
-	
+
 	@Modifying
 	@Transactional
-	@Query(value = "update proveedor set estado = false where rutempresa = :rutempresa" , 
+	@Query(value = "update proveedor set estado = false where rutempresa = :rutempresa" ,
 	      nativeQuery = true)
 	    void ocultarPorRut(@Param (value= "rutempresa") String rutempresa);
+
+	 */
 }

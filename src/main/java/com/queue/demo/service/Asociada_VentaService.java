@@ -7,5 +7,5 @@ import com.queue.demo.model.Asociada_Venta;
 public interface Asociada_VentaService {
     public List<Asociada_Venta> buscarTodasLasVentasAsociadas();
     
-	void saveAsociadaVenta(Asociada_Venta venta);
+	Asociada_Venta saveAsociadaVenta(Asociada_Venta venta) throws Exception;
 }

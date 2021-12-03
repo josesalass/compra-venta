@@ -48,7 +48,7 @@ public class VentaServiceTest {
     private VentaServiceImpl ventaService;
 
     @Test
-    void buscarTodasLasVentasYFunca(){
+    void buscarTodasLasVentasDebeRetornarVentaList(){
         List<Venta> resultado;
         List<Venta> ventas=getListaVentas();
         when(repositorioVenta.findAll()).thenReturn(ventas);
@@ -59,7 +59,7 @@ public class VentaServiceTest {
         assertEquals(ventas.size(),resultado.size());
     }
     @Test
-    void buscarTodasLasVentasYNoFunca(){
+    void buscarTodasLasVentasYNoExistenComprasDebeRetornarVentaListVacia(){
         List<Venta> resultado;
         List<Venta> ventas=new ArrayList<>();
         when(repositorioVenta.findAll()).thenReturn(ventas);
@@ -69,9 +69,8 @@ public class VentaServiceTest {
         assertNotNull(resultado);
         assertEquals(0,resultado.size());
     }
-    //*
     @Test
-    void BuscarVentaPorIdYFunca(){
+    void BuscarVentaPorIdYExisteUnaVentaConEseIdDebeRetornarVenta(){
         Optional<Venta> resultado;
         Venta venta=getListaVentas().get(0);
         when(repositorioVenta.findById(1)).thenReturn(Optional.of(venta));
@@ -82,7 +81,7 @@ public class VentaServiceTest {
         assertTrue(resultado.isPresent());
     }
     @Test
-    void BuscarVentaPorIdYNoFunca(){
+    void BuscarVentaPorIdYNoExisteUnaVentaConEseIdDebeRetornarOptionalVacio(){
         Optional<Venta> resultado;
         when(repositorioVenta.findById(1)).thenReturn(Optional.empty());
 
@@ -92,7 +91,7 @@ public class VentaServiceTest {
         assertTrue(resultado.isEmpty());
     }
     @Test
-    void BorrarVentaPorIdYFunca(){
+    void BorrarVentaPorIdYExisteLaVentaDebeBorrarlaYRetornarTrue(){
         Venta venta=getListaVentas().get(0);
         boolean resultado;
         when(repositorioVenta.getById(1)).thenReturn(venta);
@@ -102,7 +101,7 @@ public class VentaServiceTest {
         assertTrue(resultado);
     }
     @Test
-    void BorrarVentaPorIdYNoFunca(){
+    void BorrarVentaPorIdYNoExisteLaVentaDebeRetornarFalse(){
         boolean resultado;
         doThrow(EntityNotFoundException.class).when(repositorioVenta).getById(1);
 
@@ -110,11 +109,9 @@ public class VentaServiceTest {
 
         assertNotNull(resultado);
         assertFalse(resultado);
-    }/*
+    }
     @Test
-    void GuardarVentaYFunca() throws Exception {
-        /*Venta venta=getListaVentas();
-        when(repositorioVenta.findById(1)).thenReturn(Optional.empty());* /
+    void GuardarVentaDebeRetornarLaVentaGuardada() throws Exception {
         Venta venta= getListaVentas().get(0);
         Producto producto= getProducto();
         Asociada_Venta asociadaVenta=new Asociada_Venta();
@@ -135,10 +132,10 @@ public class VentaServiceTest {
         assertEquals(venta.getIdventa(),resultado.getIdventa());
         verify(repositorioVenta).save(any(Venta.class));
 
-    }*/
+    }
 
     @Test
-    void ActualizarVentaYFunca(){
+    void siInvocoActualizarVentaDebeRetornarLaVentaActualizada(){
         Venta venta = getListaVentas().get(0);
         given(repositorioVenta.save(venta)).willReturn(venta);
 
@@ -149,10 +146,9 @@ public class VentaServiceTest {
     }
 
     @Test
-    void siInvocoVerRegistroVentaResumenYFunca(){
+    void siInvocoVerRegistroVentaResumenDebeRetornarViewRegistroVentaResumenList(){
         List<ViewRegistroVentasResumen> registro;
         List<ViewRegistroVentasResumen> mocklist = getViewRegistroVentasResumen();
-        //mocklist.add(getViewRegistroVentasResumen());
 
         when(entityManager.getCriteriaBuilder()).thenReturn(criteriaBuilder);
         when(criteriaBuilder.createQuery()).thenReturn(criteriaQuery);
@@ -165,9 +161,8 @@ public class VentaServiceTest {
         assertNotNull(registro);
         assertEquals(mocklist.get(0),registro.get(0));
     }
-    //aaa
     @Test
-    void siInvocoVerRegistroVentaResumenConTipoYFunca(){
+    void siInvocoVerRegistroVentaResumenConTipoDebeRetornarViewRegistroVentaResumenListFiltradoPorTipo(){
         List<ViewRegistroVentasResumen> registro;
         List<ViewRegistroVentasResumen> mocklist = getViewRegistroVentasResumen();
 
@@ -176,16 +171,16 @@ public class VentaServiceTest {
         when(criteriaBuilder.createQuery()).thenReturn(criteriaQuery);
         when(criteriaQuery.from(ViewRegistroVentasResumen.class)).thenReturn(root);
         when(criteriaQuery.select(root)).thenReturn(criteriaQuery);
-        //when(criteriaQuery.where(criteriaBuilder.equal(root.get("tipoventa"), getListaVentas().get(0).getTipoventa()))).thenReturn(criteriaQuery);
+        when(criteriaQuery.where(criteriaBuilder.equal(root.get("tipoventa"), getListaVentas().get(0).getTipoventa()))).thenReturn(criteriaQuery);
         when(entityManager.createQuery(criteriaQuery)).thenReturn(typedQuery);
         when(typedQuery.getResultList()).thenReturn(mocklist);
-        registro = ventaService.verRegistroVentaResumen();
+        registro = ventaService.verRegistroVentaResumen(getListaVentas().get(0).getTipoventa());
 
         assertNotNull(registro);
         assertEquals(mocklist.get(0).getTipoventa(),registro.get(0).getTipoventa());
     }
     @Test
-    void siInvocoVerRegistroVentaDetalleYFunca(){
+    void siInvocoVerRegistroVentaDetalleYFuncaDebeRetornarViewRegistroVentaDetalleList(){
         List<ViewRegistroVentasDetalle> registro;
         List<ViewRegistroVentasDetalle> mocklist = getViewRegistroVentasDetalle();
 
@@ -201,9 +196,8 @@ public class VentaServiceTest {
         assertNotNull(registro);
         assertEquals(mocklist.get(0),registro.get(0));
     }
-    //aaa
     @Test
-    void siInvocoVerRegistroVentaDetalleConTipoYFunca(){
+    void siInvocoVerRegistroVentaDetalleConTipoDebeRetornarViewRegistroVentaDetaleListConFiltradoPorTipo(){
         List<ViewRegistroVentasDetalle> registro;
         List<ViewRegistroVentasDetalle> mocklist = getViewRegistroVentasDetalle();
 
@@ -220,9 +214,8 @@ public class VentaServiceTest {
         assertNotNull(registro);
         assertEquals(mocklist.get(0),registro.get(0));
     }
-    //aaa
     @Test
-    void siInvocoVerRegistroVentaResumenDiaYFunca(){
+    void siInvocoVerRegistroVentaResumenDiaDebeRetornarViewRegistroVentaResumenListConFiltradoPorFechaEntregada(){
         List<ViewRegistroVentasResumen> registro;
         List<ViewRegistroVentasResumen> mocklist = getViewRegistroVentasResumen();
 
@@ -240,9 +233,8 @@ public class VentaServiceTest {
         assertNotNull(registro);
         assertEquals(mocklist.get(0),registro.get(0));
     }
-    //aaa
     @Test
-    void siInvocoVerRegistroVentaResumenEntreDiasYFunca(){
+    void siInvocoVerRegistroVentaResumenEntreDiasDebeRetornarViewRegistroVentaResumenListConFiltradoPorFechasEntregadas(){
         List<ViewRegistroVentasResumen> registro;
         List<ViewRegistroVentasResumen> mocklist = getViewRegistroVentasResumen();
 
@@ -261,9 +253,8 @@ public class VentaServiceTest {
         assertNotNull(registro);
         assertEquals(mocklist.get(0),registro.get(0));
     }
-    //aaa
     @Test
-    void siInvocoVerRegistroVentaDetalleDiaYFunca(){
+    void siInvocoVerRegistroVentaDetalleDiaDebeRetornarViewRegistroVentaDetalleListConFiltradoPorFechaEntregada(){
         List<ViewRegistroVentasDetalle> registro;
         List<ViewRegistroVentasDetalle> mocklist = getViewRegistroVentasDetalle();
 
@@ -281,9 +272,8 @@ public class VentaServiceTest {
         assertNotNull(registro);
         assertEquals(mocklist.get(0),registro.get(0));
     }
-    //aaa
     @Test
-    void siInvocoVerRegistroVentaDetalleEntreDiasYFunca(){
+    void siInvocoVerRegistroVentaDetalleEntreDiasDebeRetornarViewRegistroVentaDetalleListConFiltradoPorFechasEntregadas(){
         List<ViewRegistroVentasDetalle> registro;
         List<ViewRegistroVentasDetalle> mocklist = getViewRegistroVentasDetalle();
 
@@ -306,14 +296,13 @@ public class VentaServiceTest {
         List<Venta> ventas=new ArrayList<>();
         Venta venta=new Venta();
         venta.setIdventa(1);
-        //venta.setFecha();
+        venta.setFecha(Timestamp.valueOf("2020-11-24 00:00:00"));
         venta.setMetodopago("efectivo");
         venta.setRutusuario("12345678-9");
         venta.setRutcliente("12345678-9");
         venta.setTipoventa("factura");
 
-
-        //List<Cliente> clientes=new ArrayList<>();
+        
         Cliente cliente=new Cliente();
         cliente.setRutcliente("12345678-9");
         cliente.setNombre("rrgthcfgj");
@@ -323,7 +312,6 @@ public class VentaServiceTest {
         cliente.setComuna("gtahjgvd");
         cliente.setCalle("ashfdv");
         cliente.setNumerocalle(321);
-        //clientes.add(cliente);
 
         venta.setCliente(cliente);
 

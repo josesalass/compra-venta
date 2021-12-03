@@ -4,6 +4,7 @@ package com.queue.demo.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.queue.demo.model.Proveedor;
 import com.queue.demo.service.ProveedorService;
+import org.checkerframework.checker.nullness.Opt;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -16,9 +17,13 @@ import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+
+import javax.swing.text.html.Option;
+
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -72,7 +77,7 @@ public class ProveedorControllerTest {
     @Test
     void SiInvocoBuscarPorNombreYExisteUnProveedorRetornarStatusOK() throws Exception {
         Proveedor proveedor=getProveedor();
-        given(proveedorService.buscarPorNombre("Iansa")).willReturn(proveedor);
+        given(proveedorService.buscarPorNombre("Iansa")).willReturn(Optional.of(proveedor));
 
         MockHttpServletResponse respuesta= mockMvc.perform(get("/proveedores/findNombre?nombre=Iansa")
                         .accept(MediaType.APPLICATION_JSON))
@@ -84,7 +89,7 @@ public class ProveedorControllerTest {
     @Test
     void SiInvocoBuscarPorNombreYNoExisteUnProveedorRetornarStatusNotFound() throws Exception {
         Proveedor proveedor=new Proveedor();
-        given(proveedorService.buscarPorNombre("Iansa")).willReturn(null);
+        given(proveedorService.buscarPorNombre("Iansa")).willReturn(Optional.empty());
 
         MockHttpServletResponse respuesta= mockMvc.perform(get("/proveedores/findNombre?nombre=Iansa")
                         .accept(MediaType.APPLICATION_JSON))
@@ -96,7 +101,7 @@ public class ProveedorControllerTest {
     @Test
     void SiInvocoBuscarPorRutYExisteUnProveedorConEseRutRetornaStatusOK() throws Exception {
         Proveedor proveedor=getProveedor();
-        given(proveedorService.buscarPorRut(proveedor.getRutempresa())).willReturn(proveedor);
+        given(proveedorService.buscarPorRut(proveedor.getRutempresa())).willReturn(Optional.of(proveedor));
 
         MockHttpServletResponse respuesta= mockMvc.perform(get("/proveedores/findRut?rut=1")
                         .accept(MediaType.APPLICATION_JSON))
@@ -108,7 +113,7 @@ public class ProveedorControllerTest {
     @Test
     void SiInvocoBuscarPorRutYNoExisteUnProveedorRetornarStatusNotFound() throws Exception {
         Proveedor proveedor=new Proveedor();
-        given(proveedorService.buscarPorRut("1")).willReturn(null);
+        given(proveedorService.buscarPorRut("1")).willReturn(Optional.empty());
 
         MockHttpServletResponse respuesta= mockMvc.perform(get("/proveedores/findRut?rut=1")
                         .accept(MediaType.APPLICATION_JSON))

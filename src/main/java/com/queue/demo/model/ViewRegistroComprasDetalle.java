@@ -76,4 +76,7 @@ public class ViewRegistroComprasDetalle implements Serializable {
     public int getValortotal() {
         return valortotal;
     }
+    public void setIdCompra(int id){
+        idcompra=id;
+    }
 }

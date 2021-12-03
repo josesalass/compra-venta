@@ -1,13 +1,13 @@
 package com.queue.demo.service;
 
-import com.queue.demo.model.Cliente;
-import com.queue.demo.model.Proveedor;
 import com.queue.demo.model.RepresentanteProveedor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
+
 import com.queue.demo.repository.*;
 
 import javax.persistence.EntityManager;
@@ -32,23 +32,31 @@ public class RepresentanteProveedorServiceImpl implements RepresentanteProveedor
     }
 
     @Override
-    public RepresentanteProveedor buscarRepresentantePorRut(String rut) {
+    public Optional<RepresentanteProveedor> buscarRepresentantePorRut(String rut) {
         // utilizamos CriteriaBuilder para buscar a los representantes mediante una CriteriaQuery
         CriteriaBuilder cb = em.getCriteriaBuilder();
         CriteriaQuery<RepresentanteProveedor> criteriaQ = cb.createQuery(RepresentanteProveedor.class);
         Root<RepresentanteProveedor> root = criteriaQ.from(RepresentanteProveedor.class);
         criteriaQ.select(root).where(cb.equal(root.get("rutrep"), rut));
-        return em.createQuery(criteriaQ).getResultList().get(0);
+        List<RepresentanteProveedor> reppro=em.createQuery(criteriaQ).getResultList();
+        if(!reppro.isEmpty()){
+           return Optional.of(reppro.get(0));
+        }
+        return Optional.empty();
     }
 
     @Override
-    public void guardar(RepresentanteProveedor RepresentanteProveedor) {
-    	repRepresentanteProveedor.save(RepresentanteProveedor);
+    public RepresentanteProveedor guardar(RepresentanteProveedor representanteProveedor) throws Exception {
+        if(representanteProveedor==null){
+            throw new Exception();
+        }
+    	return repRepresentanteProveedor.save(representanteProveedor);
     }
 
     
     @Override
     public void eliminarRepresentanteProveedorPorRut(String rutRep){
-    	repRepresentanteProveedor.deleteById(1);
+
+        repRepresentanteProveedor.deleteByrutrep(rutRep);
     }
 }
