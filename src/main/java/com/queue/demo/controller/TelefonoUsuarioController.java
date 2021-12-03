@@ -1,6 +1,6 @@
 package com.queue.demo.controller;
 
-import com.queue.demo.model.TelefonoUsuario; 
+import com.queue.demo.model.TelefonoUsuario;
 import com.queue.demo.service.TelefonoUsuarioService;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,8 +17,13 @@ public class TelefonoUsuarioController {
 	TelefonoUsuarioService telefonoUsuarioService;
 	
 	@GetMapping("")
-	public List<TelefonoUsuario> list(){
-		return telefonoUsuarioService.buscarTodosLosTelefonosUsuarios();
+	public ResponseEntity<List<TelefonoUsuario>> list(){
+		List<TelefonoUsuario> tfs = telefonoUsuarioService.buscarTodosLosTelefonosUsuarios();
+		if(!tfs.isEmpty()){
+			return new ResponseEntity<>(tfs, HttpStatus.OK);
+		}else{
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+		}
 	}
 
 	@RequestMapping(method= RequestMethod.POST,value="/guardartelefono")
