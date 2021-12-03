@@ -15,7 +15,7 @@ import com.queue.demo.repository.*;
 
 @Service
 @Transactional
-public class TelefonoUsuarioImpl implements TelefonoUsuarioService{
+public class TelefonoUsuarioServiceImpl implements TelefonoUsuarioService{
 
 	@PersistenceContext
 	private EntityManager em;
