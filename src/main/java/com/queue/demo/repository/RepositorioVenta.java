@@ -11,6 +11,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.transaction.annotation.Transactional;
 
 public interface RepositorioVenta extends JpaRepository <Venta, Integer>{
+	/*
 	@Modifying
 	@Transactional
 	@Query(value = "update venta set fecha = :fecha where idventa = :idventa" , 
@@ -29,5 +30,5 @@ public interface RepositorioVenta extends JpaRepository <Venta, Integer>{
 	      nativeQuery = true)
 	    void editarMetodoPago(@Param (value= "idventa")int idventa , @Param (value= "metodopago") String metodopago); 
 	
-
+	*/
 }

@@ -55,4 +55,15 @@ public class ViewRegistroVentasResumen implements Serializable {
     public int getValortotal() {
         return valortotal;
     }
+
+    public void setIdventa(int idventa) {
+        this.idventa = idventa;
+    }
+
+    public void setTipoventa(String tipoventa) {
+        this.tipoventa = tipoventa;
+    }
+    public void setFecha(Timestamp fecha) {
+        this.fecha = fecha;
+    }
 }

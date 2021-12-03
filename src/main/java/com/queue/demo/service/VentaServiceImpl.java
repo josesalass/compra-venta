@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityManager;
+import javax.persistence.EntityNotFoundException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
@@ -35,13 +36,23 @@ public class VentaServiceImpl implements VentaService{
 	}
 	
 	@Override
-	public Venta buscarVentaPorId(int id) {
-		return repVenta.findById(id).get();
+	public Optional<Venta> buscarVentaPorId(int id) {
+		Optional<Venta> optional=repVenta.findById(id);
+		if(optional.isPresent()){
+			return Optional.of(optional.get());
+		}
+		return Optional.empty();
 	} 
 	
 	@Override
-	public void borrarVentaPorId(int id) {
-		repVenta.deleteById(id);
+	public boolean borrarVentaPorId(int id) {
+		try {
+			Venta venta = repVenta.getById(id);
+			repVenta.deleteById(id);
+			return true;
+		}catch (EntityNotFoundException e){
+			return false;
+		}
 	}
 	
 	@Override
@@ -69,6 +80,8 @@ public class VentaServiceImpl implements VentaService{
 		return repVenta.save(nuevaVenta);
 
 	}
+
+/*
 	@Override
 	public boolean editarFecha(Timestamp fecha, int idVenta) {
 		try{
@@ -98,7 +111,7 @@ public class VentaServiceImpl implements VentaService{
 			return false;
 		}
 	}
-
+*/
 	@Override
 	public Venta actualizarVenta(int idventa, Venta venta) {
 		repVenta.save(venta);

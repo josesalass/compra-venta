@@ -119,7 +119,7 @@ public class VentaControllerTest {
         Venta venta = getVenta();
         Venta vFinal = venta;
         vFinal.setFecha(Timestamp.valueOf("2005-10-30 00:00:00"));
-        given(ventaService.buscarVentaPorId(venta.getIdventa())).willReturn(venta);
+        given(ventaService.buscarVentaPorId(venta.getIdventa())).willReturn(java.util.Optional.of(venta));
         given(ventaService.actualizarVenta(venta.getIdventa(),venta)).willReturn(vFinal);
 
         //When
@@ -138,7 +138,7 @@ public class VentaControllerTest {
     @Test
     void siInvocoEditarFechaYLaFechaNoEsFormatoTimestampDebeDevolverStatusBadRequest() throws Exception{
         Venta venta = getVenta();
-        given(ventaService.buscarVentaPorId(venta.getIdventa())).willReturn(venta);
+        given(ventaService.buscarVentaPorId(venta.getIdventa())).willReturn(java.util.Optional.of(venta));
         String noFecha = "Esto claramente no es una fecha";
 
         mockMvc.perform(put("/ventas/{idventa}/cambiarFecha/{fecha}",venta.getIdventa(),noFecha)).andExpect(status().isBadRequest());
@@ -161,7 +161,7 @@ public class VentaControllerTest {
         Venta venta = getVenta();
         Venta vFinal = venta;
         vFinal.setTipoventa("boleta");
-        given(ventaService.buscarVentaPorId(venta.getIdventa())).willReturn(venta);
+        given(ventaService.buscarVentaPorId(venta.getIdventa())).willReturn(java.util.Optional.of(venta));
         given(ventaService.actualizarVenta(venta.getIdventa(),venta)).willReturn(vFinal);
 
         //When
@@ -194,7 +194,7 @@ public class VentaControllerTest {
         Venta venta = getVenta();
         Venta vFinal = venta;
         vFinal.setMetodopago("efectivo");
-        given(ventaService.buscarVentaPorId(venta.getIdventa())).willReturn(venta);
+        given(ventaService.buscarVentaPorId(venta.getIdventa())).willReturn(java.util.Optional.of(venta));
         given(ventaService.actualizarVenta(venta.getIdventa(),venta)).willReturn(vFinal);
 
         //When
