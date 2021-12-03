@@ -20,7 +20,10 @@ public class Asociada_VentaServiceImpl implements Asociada_VentaService{
         return repAsociada_Venta.findAll();
     }
     @Override
-    public void saveAsociadaVenta(Asociada_Venta venta) {
-    	repAsociada_Venta.save(venta);
+    public Asociada_Venta saveAsociadaVenta(Asociada_Venta venta) throws  Exception{
+        if(venta==null){
+            throw new Exception();
+        }
+    	return repAsociada_Venta.save(venta);
     }
 }
