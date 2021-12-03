@@ -26,21 +26,6 @@ public class ClienteServiceTest {
     @Mock
     RepositorioCliente repositorioCliente;
 
-    @Mock
-    private EntityManager entityManager;
-
-    @Mock
-    private CriteriaBuilder criteriaBuilder;
-
-    @Mock
-    private CriteriaQuery criteriaQuery=mock(CriteriaQuery.class);
-
-    @Mock
-    private Root root;
-
-    @Mock
-    private TypedQuery typedQuery = mock(TypedQuery.class);
-
     @InjectMocks
     ClienteServiceImpl clienteService;
 
@@ -76,34 +61,21 @@ public class ClienteServiceTest {
     @Test
     void siInvocoBuscarClientePorRutYExisteUnClienteConEseRutDebeRetornarCliente(){
         Optional<Cliente> resultado;
-        List<Cliente> clientes = getClientes();
-
-        when(entityManager.getCriteriaBuilder()).thenReturn(criteriaBuilder);
-        when(criteriaBuilder.createQuery(Cliente.class)).thenReturn(criteriaQuery);
-        when(criteriaQuery.from(Cliente.class)).thenReturn(root);
-        when(criteriaQuery.select(root)).thenReturn(criteriaQuery);
-        when(entityManager.createQuery(criteriaQuery)).thenReturn(typedQuery);
-        when(typedQuery.getResultList()).thenReturn(clientes);
+        Optional<Cliente> cliente = Optional.of(getClientes().get(0));
+        when(repositorioCliente.findById("1")).thenReturn(cliente);
 
         resultado = clienteService.buscarClientePorRut("1");
 
         assertNotNull(resultado);
-        assertEquals(clientes.get(0).getRutcliente(),resultado.get().getRutcliente());
-
+        assertEquals(cliente.get().getRutcliente(),resultado.get().getRutcliente());
     }
 
     //buscarClientePorRut caso no existe cliente con ese rut
     @Test
     void siInvocoBuscarClientePorRutYNoExisteUnClienteConEseRutDebeRetornarOptionalVacio(){
         Optional<Cliente> resultado;
-        List<Cliente> clientes = new ArrayList<>();
-
-        when(entityManager.getCriteriaBuilder()).thenReturn(criteriaBuilder);
-        when(criteriaBuilder.createQuery(Cliente.class)).thenReturn(criteriaQuery);
-        when(criteriaQuery.from(Cliente.class)).thenReturn(root);
-        when(criteriaQuery.select(root)).thenReturn(criteriaQuery);
-        when(entityManager.createQuery(criteriaQuery)).thenReturn(typedQuery);
-        when(typedQuery.getResultList()).thenReturn(clientes);
+        Optional<Cliente> cliente = Optional.empty();
+        when(repositorioCliente.findById("1")).thenReturn(cliente);
 
         resultado = clienteService.buscarClientePorRut("1");
 
@@ -118,6 +90,7 @@ public class ClienteServiceTest {
         Optional<Cliente> resultado;
         Optional<Cliente> cliente = Optional.of(getClientes().get(0));
 
+        when(repositorioCliente.findById(cliente.get().getRutcliente())).thenReturn(Optional.empty());
         when(repositorioCliente.save(any(Cliente.class))).thenReturn(cliente.get());
 
         resultado = clienteService.guardar(cliente.get());
@@ -127,27 +100,49 @@ public class ClienteServiceTest {
         verify(repositorioCliente).save(any(Cliente.class));
     }
 
+    //guardar caso el cliente ya existe
+    @Test
+    void siInvocoGuardarYElClienteYaExisteDebeRetornarOptionalVacio(){
+        Optional<Cliente> resultado;
+        Optional<Cliente> cliente = Optional.of(getClientes().get(0));
+
+        when(repositorioCliente.findById(cliente.get().getRutcliente())).thenReturn(cliente);
+
+        resultado = clienteService.guardar(cliente.get());
+
+        assertNotNull(resultado);
+        assertTrue(resultado.isEmpty());
+    }
+
     //borrarClientePorRut caso exitoso
     @Test
     void siInvocoBorrarClientePorRutYElClienteExisteDebeBorrarloYRetornarTrue(){
-        Cliente cliente = getClientes().get(0);
-        List<Cliente> clientes = getClientes();
         boolean resultado;
+        Optional<Cliente> cliente = Optional.of(getClientes().get(0));
 
-        when(entityManager.getCriteriaBuilder()).thenReturn(criteriaBuilder);
-        when(criteriaBuilder.createQuery(Cliente.class)).thenReturn(criteriaQuery);
-        when(criteriaQuery.from(Cliente.class)).thenReturn(root);
-        when(criteriaQuery.select(root)).thenReturn(criteriaQuery);
-        when(entityManager.createQuery(criteriaQuery)).thenReturn(typedQuery);
-        when(typedQuery.getResultList()).thenReturn(clientes);
+        when(repositorioCliente.findById(cliente.get().getRutcliente())).thenReturn(cliente);
 
-        when(clienteService.buscarClientePorRut("1")).thenReturn(Optional.of(cliente));
 
-        resultado = clienteService.borrarClientePorRut("1");
+        resultado = clienteService.borrarClientePorRut(cliente.get().getRutcliente());
 
         assertTrue(resultado);
 
     }
+
+    //borrarClientePorRut caso no existe el cliente
+    @Test
+    void siInvocoBorrarClientePorRutYElClienteNoExisteDebeRetornarFalse(){
+        boolean resultado;
+        Optional<Cliente> cliente = Optional.of(getClientes().get(0));
+
+        when(repositorioCliente.findById(cliente.get().getRutcliente())).thenReturn(Optional.empty());
+
+
+        resultado = clienteService.borrarClientePorRut(cliente.get().getRutcliente());
+
+        assertFalse(resultado);
+    }
+
     public List<Cliente> getClientes(){
         Cliente cliente = new Cliente();
         List<Cliente> clientes = new ArrayList<>();
