@@ -14,11 +14,6 @@ public interface VentaService {
 	public Optional<Venta> buscarVentaPorId(int id);
 	public boolean borrarVentaPorId(int id);
 	public Venta guardarVenta(Venta venta) throws Exception;
-/*
-	boolean editarFecha(Timestamp fecha, int idVenta);
-	boolean editarTipo(String tipo, int idVenta);
-	boolean editarMetodoPago(String metodopago, int idVenta);
-*/
 	public Venta actualizarVenta(int idventa, Venta venta);
 	List<ViewRegistroVentasResumen> verRegistroVentaResumen(String tipo);
 

@@ -49,40 +49,9 @@ public class VentaController {
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 		}
 	}
-	/*
-	@RequestMapping("/editFecha")
-	public ResponseEntity<Void> editarFecha(@RequestParam(value = "idventa", required = true) int idventa, @RequestParam(value = "fecha", required = true) Timestamp fecha) {
-		boolean edited = ventaService.editarFecha(fecha, idventa);
-		if (edited) {
-			return new ResponseEntity<>(HttpStatus.OK);
-		} else {
-			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-		}
-	}
-
-	@RequestMapping("/editTipo")
-	public ResponseEntity<Void> editarTipo(@RequestParam(value = "idventa", required = true) int idventa, @RequestParam(value = "tipoventa", required = true) String tipoventa) {
-		boolean edited = ventaService.editarTipo(tipoventa, idventa);
-		if (edited) {
-			return new ResponseEntity<>(HttpStatus.OK);
-		} else {
-			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-		}
-	}
-
-	@RequestMapping("/editMetodoPago")
-	public ResponseEntity<Void> editarMetodoPago(@RequestParam(value = "idventa", required = true) int idventa, @RequestParam(value = "metodopago", required = true) String metodopago) {
-		boolean edited = ventaService.editarMetodoPago(metodopago, idventa);
-		if (edited) {
-			return new ResponseEntity<>(HttpStatus.OK);
-		} else {
-			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-		}
-	}
-	*/
 
 	@PutMapping("/{idventa}/cambiarFecha/{fecha}")
-	public ResponseEntity<String> cambioFechaPrueba(@PathVariable int idventa, @PathVariable String fecha) {
+	public ResponseEntity<String> cambioFecha(@PathVariable int idventa, @PathVariable String fecha) {
 		Optional<Venta> venta = ventaService.buscarVentaPorId(idventa);
 		try{
 			Timestamp fechaTS = Timestamp.valueOf(fecha);
@@ -98,7 +67,7 @@ public class VentaController {
 	}
 
 	@PutMapping("/{idventa}/cambiarTipoPrueba/{tipo}")
-	public ResponseEntity<String> cambioTipoPrueba(@PathVariable int idventa, @PathVariable String tipo) {
+	public ResponseEntity<String> cambioTipo(@PathVariable int idventa, @PathVariable String tipo) {
 		Optional<Venta> venta = ventaService.buscarVentaPorId(idventa);
 			if (venta == null || tipo == null){
 				return new ResponseEntity<>("La venta que se quiere editar no existe o falta el valor del tipo de venta",HttpStatus.BAD_REQUEST);
@@ -109,7 +78,7 @@ public class VentaController {
 	}
 
 	@PutMapping("/{idventa}/cambiarMetodoPagoPrueba/{metodo}")
-	public ResponseEntity<String> cambioMetodoPagoPrueba(@PathVariable int idventa, @PathVariable String metodo) {
+	public ResponseEntity<String> cambioMetodoPago(@PathVariable int idventa, @PathVariable String metodo) {
 		Optional<Venta> venta = ventaService.buscarVentaPorId(idventa);
 		if (venta == null || metodo == null){
 			return new ResponseEntity<>("La venta que se quiere editar no existe o falta el valor del metodo de pago de venta",HttpStatus.BAD_REQUEST);
