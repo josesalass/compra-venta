@@ -28,7 +28,7 @@ public class RepresentanteProveedor implements Serializable{
     
     
     @OneToMany(mappedBy="representanteProveedor",cascade=CascadeType.ALL)
-    private List<TelefonoRepresentante> telefonoRepresentante=new ArrayList<TelefonoRepresentante>();
+    private List<TelefonoRepresentante> telefonosRepresentante=new ArrayList<TelefonoRepresentante>();
     
     // metodos getter y setter 
     
@@ -74,8 +74,13 @@ public class RepresentanteProveedor implements Serializable{
 	public void setEstado(boolean estado) {
 		this.estado = estado;
 	}
-	
-	
+
+	public void setTelefonosRepresentante(List<TelefonoRepresentante> telefonosRepresentante) {
+		this.telefonosRepresentante = telefonosRepresentante;
+	}
+	public List<TelefonoRepresentante> getTelefonosRepresentante() {
+		return telefonosRepresentante;
+	}
 }
 
    
