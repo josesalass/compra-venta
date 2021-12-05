@@ -38,49 +38,45 @@ public class RepresentanteProveedorServiceTest {
     private CriteriaBuilder criteriaBuilder;
 
     @Mock
-    private CriteriaQuery criteriaQuery=mock(CriteriaQuery.class);
+    private CriteriaQuery criteriaQuery = mock(CriteriaQuery.class);
 
     @Mock
-    private CriteriaQuery criteriaQueryAll=mock(CriteriaQuery.class);
+    private CriteriaQuery criteriaQueryAll = mock(CriteriaQuery.class);
 
     @Mock
     private Root<RepresentanteProveedor> root;
 
     @Mock
-    private TypedQuery typedQuery=mock(TypedQuery.class);
+    private TypedQuery typedQuery = mock(TypedQuery.class);
 
     @InjectMocks
     private RepresentanteProveedorServiceImpl representanteProveedorService;
 
     @Test
-    void siInvocoListarTodosLosRepProveedorYExistenRepProveedorListaDebeRetornarUnaListaConLosRepProveedor(){
+    void siInvocoListarTodosLosRepProveedorYExistenRepProveedorListaDebeRetornarUnaListaConLosRepProveedor() {
         //Arrage
         List<RepresentanteProveedor> resultado;
-        List<RepresentanteProveedor> repProveedor= getRepProveedor();
+        List<RepresentanteProveedor> repProveedor = getRepProveedor();
         when(representanteProveedorService.buscarTodosLosRepresentanteProveedor()).thenReturn(repProveedor);
         //Act
-        resultado= representanteProveedorService.buscarTodosLosRepresentanteProveedor();
+        resultado = representanteProveedorService.buscarTodosLosRepresentanteProveedor();
         //Assert
         assertNotNull(resultado);
-        assertEquals(repProveedor.size(),resultado.size());
+        assertEquals(repProveedor.size(), resultado.size());
     }
+
     @Test
-    void siInvocoListarTodosLosRepProveedorYNoExistenDebeRetornarUnaListaUnaListaVacia(){
+    void siInvocoListarTodosLosRepProveedorYNoExistenDebeRetornarUnaListaUnaListaVacia() {
         //Arrage
         List<RepresentanteProveedor> resultado;
+        List<RepresentanteProveedor> rep = new ArrayList<>();
+        when(representanteProveedorService.buscarTodosLosRepresentanteProveedor()).thenReturn(rep);
         //Act
-        resultado= representanteProveedorService.buscarTodosLosRepresentanteProveedor();
+        resultado = representanteProveedorService.buscarTodosLosRepresentanteProveedor();
         //Act
         assertNotNull(resultado);
-        assertEquals(0,resultado.size());
+        assertEquals(0, resultado.size());
     }
-
-/*
-    @Test
-    void siInvocoBuscarRepProveedorPorRutYExisteElRepProveedorDebeRetornarElRepProveedor(){
-
-    }
-*/
 
     @Test
     void siInvocoSaveAsociadaVentaYSeGuardaSatisfactoriamente() throws Exception{

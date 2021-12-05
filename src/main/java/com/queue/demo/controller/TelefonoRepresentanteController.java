@@ -31,10 +31,10 @@ public class TelefonoRepresentanteController {
 	@RequestMapping(method= RequestMethod.POST,value="/guardartelefono")
 	public ResponseEntity<?> saveTelefono(@RequestBody TelefonoRepresentante telefonoRepresentante) throws Exception {
 		if (telefonoRepresentante !=null && representanteProveedorService.buscarRepresentantePorRut(telefonoRepresentante.getRutrep()) !=null){
-			telefonoRepService.guardar(telefonoRepresentante);
-			return new ResponseEntity<>(HttpStatus.CREATED);
+			TelefonoRepresentante a =telefonoRepService.guardar(telefonoRepresentante);
+			return new ResponseEntity<>(a,HttpStatus.CREATED);
 		}else{
-			return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 		}
 	}
 }
