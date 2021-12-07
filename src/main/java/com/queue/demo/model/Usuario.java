@@ -1,6 +1,8 @@
 package com.queue.demo.model;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "usuario")
@@ -27,6 +29,9 @@ public class Usuario {
 	@Column(name = "contrasenia")
 	private String contrasenia;
 
+	@OneToMany(mappedBy="usuario",cascade=CascadeType.ALL)
+	private List<TelefonoUsuario> telefonosusuario=new ArrayList<TelefonoUsuario>();
+
 	public Usuario(String rutusuario, String nombre, String apellido1, String apellido2, String correousuario, int rolusuario, String contrasenia) {
 		this.rutusuario = rutusuario;
 		this.nombre = nombre;
@@ -36,6 +41,8 @@ public class Usuario {
 		this.rolusuario = rolusuario;
 		this.contrasenia = contrasenia;
 	}
+
+
 
 	public Usuario() {
 	}
@@ -82,8 +89,11 @@ public class Usuario {
 	public void setContrasenia(String contrasenia) {
 		this.contrasenia = contrasenia;
 	}
-	
 
-	
-	
+	public List<TelefonoUsuario> getTelefonosusuario() {
+		return telefonosusuario;
+	}
+	public void setTelefonosusuario(List<TelefonoUsuario> telefonosusuario) {
+		this.telefonosusuario = telefonosusuario;
+	}
 }

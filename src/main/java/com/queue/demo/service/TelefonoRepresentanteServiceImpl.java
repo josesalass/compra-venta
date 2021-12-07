@@ -1,11 +1,16 @@
 package com.queue.demo.service;
 
+import com.queue.demo.model.RepresentanteProveedor;
 import com.queue.demo.model.TelefonoRepresentante;
+import com.queue.demo.model.TelefonoUsuario;
+import com.queue.demo.model.Usuario;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
+
 import com.queue.demo.repository.*;
 
 import javax.persistence.EntityManager;
@@ -22,25 +27,45 @@ public class TelefonoRepresentanteServiceImpl implements TelefonoRepresentanteSe
 
 	@Autowired
 	RepositorioTelefonoRepresentante repTelefonoRep;
+	@Autowired
+	RepositorioRepresentanteProveedor repositorioRepresentanteProveedor;
+	@Autowired
+	RepresentanteProveedorServiceImpl 	representanteProveedorService;
 	
 	@Override
 	public List<TelefonoRepresentante> buscarTodosLosTelefonos(){
 		return repTelefonoRep.findAll();
 	}
 	@Override
-    public List<TelefonoRepresentante> buscarTelefonoPorRut(String rutRep) {
-		CriteriaBuilder cb = em.getCriteriaBuilder();
-		CriteriaQuery<TelefonoRepresentante> criteriaQ = cb.createQuery(TelefonoRepresentante.class);
-		Root<TelefonoRepresentante> root = criteriaQ.from(TelefonoRepresentante.class);
-		criteriaQ.select(root).where(cb.equal(root.get("rutrep"), rutRep));
-		return em.createQuery(criteriaQ).getResultList();
+    public List<TelefonoRepresentante> buscarTelefonoPorRut(String rutRep) throws Exception {
+		if(rutRep==null){
+			throw new Exception("Rut Representante es NULL");
+		}
+		Optional<RepresentanteProveedor> u =representanteProveedorService.buscarRepresentantePorRut(rutRep);
+		if (u.isEmpty()){
+			throw new Exception("No se encontro Representante con ese RUT");
+		}
+		return u.get().getTelefonosRepresentante();
     }
 	@Override
-    public void guardar(TelefonoRepresentante telefono) {
-		repTelefonoRep.save(telefono);
+    public TelefonoRepresentante guardar(TelefonoRepresentante telefono) throws Exception {
+		if(telefono==null){
+			throw new Exception("Los datos ingresados son NULL");
+		}
+		String rutrep= telefono.getRutrep();
+		List<TelefonoRepresentante> tsf=buscarTelefonoPorRut(rutrep);
+		List<TelefonoRepresentante> telefonoexist= buscarTodosLosTelefonos();
+		if(telefonoexist.contains(telefono.getTelefono())){
+			throw new Exception("El Telefono ya existe");
+		}
+		Optional<RepresentanteProveedor> u =representanteProveedorService.buscarRepresentantePorRut(rutrep);
+		if (u.isEmpty()){
+			throw new Exception("No se encontro usuario con ese RUT");
+		}
+		return repTelefonoRep.save(telefono);
     }
 	@Override
     public void borrarTelefonoPorRut(String rut) {
-		repTelefonoRep.deleteById(1);
+		repTelefonoRep.deleteByrutrep(rut);
     }
 }

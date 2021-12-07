@@ -8,7 +8,12 @@ public class TelefonoUsuario {
 	@Id
 	private int telefono;
 	private String rutusuario;
-	
+
+	@ManyToOne
+	@JoinColumns({
+			@JoinColumn(name="rutusuario", referencedColumnName="rutusuario",insertable=false, updatable=false)
+	})
+	private Usuario usuario;
 
 	public int getTelefono() {
 		return telefono;
