@@ -102,4 +102,29 @@ CREATE TABLE TELEFONO_REP(
 );
 
 
+CREATE OR REPLACE VIEW RegistroComprasDetalle AS
+SELECT idcompra,idproducto,detalleproducto,fecha,nombreempresa AS proveedor,nombre||' '||apellido1 AS admindecompras,
+				cantidad,valorcompra,(cantidad*valorcompra) AS valortotal 
+FROM compra NATURAL JOIN pertenece_compra NATURAL JOIN producto NATURAL JOIN proveedor NATURAL JOIN usuario
+ORDER BY fecha;
 
+CREATE OR REPLACE  VIEW RegistroVentasDetalle AS
+SELECT idventa,idproducto,detalleproducto,fecha,tipoventa,usuario.nombre||' '||usuario.apellido1 AS admindeventas,
+				cantidad, valorventa, (cantidad*valorventa) AS valortotal
+FROM venta NATURAL JOIN asociada_venta NATURAL JOIN producto NATURAL JOIN usuario
+ORDER BY fecha;
+
+CREATE OR REPLACE  VIEW RegistroComprasResumen AS
+SELECT idcompra,fecha,nombreempresa AS proveedor, usuario.nombre || ' ' || usuario.apellido1 AS admindecompras, SUM(cantidad*valorcompra) AS valortotal
+FROM compra NATURAL JOIN pertenece_compra NATURAL JOIN producto NATURAL JOIN proveedor NATURAL JOIN usuario 
+GROUP BY idcompra,fecha,proveedor,admindecompras
+ORDER BY fecha;
+
+
+CREATE OR REPLACE VIEW RegistroVentasResumen AS
+SELECT idventa,fecha,cliente.nombre ||' '||cliente.apellido1 AS cliente,tipoventa,usuario.nombre || ' ' || usuario.apellido1 AS admindeventas, SUM(cantidad*valorventa) AS valortotal 
+FROM venta LEFT OUTER JOIN cliente ON venta.rutcliente = (cliente.rutcliente)
+JOIN usuario ON usuario.rutusuario = venta.rutusuario
+NATURAL JOIN asociada_venta 
+NATURAL JOIN producto 
+GROUP BY idventa,fecha,cliente,tipoventa,admindeventas;

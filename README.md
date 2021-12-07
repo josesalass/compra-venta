@@ -1,2 +1,12 @@
-2021-10-15: Las entidades de la base de datos están implementadas como servicios REST.
-2021-10-02: Se ha creado el esqueleto de la Rest API Spring Boot.
+# Proyecto Compra-Venta
+### Este proyecto consiste en la implementación backend de un sistema de compras y ventas genérico por medio de Spring Framework.
+
+El proyecto es desarrollado con:
+
+```
+java version "1.8.0_311"
+Apache Maven 3.8.2
+Spring Boot 2.5.5
+Mockito 3.7.0
+PostgreSQL 14
+```
