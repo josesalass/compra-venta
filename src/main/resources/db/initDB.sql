@@ -129,6 +129,6 @@ NATURAL JOIN producto
 GROUP BY idventa,fecha,cliente,tipoventa,admindeventas;
 
 CREATE OR REPLACE VIEW promedioventasmes AS
-select to_char(fecha,'yyyy-mm') AS año_mes,CAST(AVG(ALL valortotal) as int) AS promedio_mensual
+select to_char(fecha,'yyyy-mm') AS anio_mes,CAST(AVG(ALL valortotal) as int) AS promedio_mensual
 from registroventasresumen
 GROUP BY to_char(fecha,'yyyy-mm') ORDER BY to_char(fecha,'yyyy-mm');

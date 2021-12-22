@@ -13,25 +13,25 @@ import java.io.Serializable;
 @Table(name="promedioventasmes")
 public class ViewPromedioVentasMes implements Serializable {
     @Id
-    @Column(name="año_mes")
-    private String fecha;
+    @Column(name="anio_mes")
+    private String anio_mes;
 
     @Column(name="promedio_mensual")
-    private int promedio;
+    private int promedio_mensual;
 
-    public String getFecha() {
-        return fecha;
+    public String getAnio_mes() {
+        return anio_mes;
     }
 
-    public void setFecha(String fecha) {
-        this.fecha = fecha;
+    public void setAnio_mes(String anio_mes) {
+        this.anio_mes = anio_mes;
     }
 
-    public int getPromedio() {
-        return promedio;
+    public int getPromedio_mensual() {
+        return promedio_mensual;
     }
 
-    public void setPromedio(int promedio) {
-        this.promedio = promedio;
+    public void setPromedio_mensual(int promedio_mensual) {
+        this.promedio_mensual = promedio_mensual;
     }
 }
