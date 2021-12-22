@@ -26,4 +26,12 @@ public class ViewEgresosPorMes implements Serializable {
     public int getEgresos() {
         return egresos;
     }
+
+    public void setMes(String mes) {
+        this.mes = mes;
+    }
+
+    public void setEgresos(int egresos) {
+        this.egresos = egresos;
+    }
 }

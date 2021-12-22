@@ -28,4 +28,12 @@ public class ViewIngresosPorMes implements Serializable {
     public int getIngresos() {
         return ingresos;
     }
+
+    public void setMes(String mes) {
+        this.mes = mes;
+    }
+
+    public void setIngresos(int ingresos) {
+        this.ingresos = ingresos;
+    }
 }

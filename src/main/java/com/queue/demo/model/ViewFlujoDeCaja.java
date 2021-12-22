@@ -41,4 +41,20 @@ public class ViewFlujoDeCaja implements Serializable {
     public int getFlujo() {
         return flujo;
     }
+
+    public void setMes(String mes) {
+        this.mes = mes;
+    }
+
+    public void setIngresos(int ingresos) {
+        this.ingresos = ingresos;
+    }
+
+    public void setEgresos(int egresos) {
+        this.egresos = egresos;
+    }
+
+    public void setFlujo(int flujo) {
+        this.flujo = flujo;
+    }
 }
