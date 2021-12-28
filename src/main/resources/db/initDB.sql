@@ -120,7 +120,6 @@ FROM compra NATURAL JOIN pertenece_compra NATURAL JOIN producto NATURAL JOIN pro
 GROUP BY idcompra,fecha,proveedor,admindecompras
 ORDER BY fecha;
 
-
 CREATE OR REPLACE VIEW RegistroVentasResumen AS
 SELECT idventa,fecha,cliente.nombre ||' '||cliente.apellido1 AS cliente,tipoventa,usuario.nombre || ' ' || usuario.apellido1 AS admindeventas, SUM(cantidad*valorventa) AS valortotal 
 FROM venta LEFT OUTER JOIN cliente ON venta.rutcliente = (cliente.rutcliente)
@@ -128,3 +127,8 @@ JOIN usuario ON usuario.rutusuario = venta.rutusuario
 NATURAL JOIN asociada_venta 
 NATURAL JOIN producto 
 GROUP BY idventa,fecha,cliente,tipoventa,admindeventas;
+
+CREATE OR REPLACE VIEW promedioventasmes AS
+select to_char(fecha,'yyyy-mm') AS anio_mes,CAST(AVG(ALL valortotal) as int) AS promedio_mensual
+from registroventasresumen
+GROUP BY to_char(fecha,'yyyy-mm') ORDER BY to_char(fecha,'yyyy-mm');
