@@ -1,7 +1,9 @@
 package com.queue.demo.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.queue.demo.model.Usuario;
 import com.queue.demo.model.Venta;
+import com.queue.demo.service.AuthException;
 import com.queue.demo.service.VentaService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -91,6 +93,24 @@ public class VentaControllerTest {
         assertEquals(HttpStatus.CREATED.value(),response.getStatus());
         assertEquals(jsonVenta.write(venta).getJson(),response.getContentAsString());
     }
+    //saveVenta unauthorized
+    @Test
+    void siInvocoSaveVentaYElUsuarioNoEsAdminDeVentasDebeRetornarStatusUnauthorized() throws Exception{
+        Venta venta = getVenta();
+        Usuario usuario = getUsuario();
+        doThrow(AuthException.class).when(ventaService).guardarVenta(any(Venta.class));
+
+        MockHttpServletResponse response = mockMvc.perform(post("/ventas/guardarVenta")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(jsonVenta.write(venta).getJson())
+                        .accept(MediaType.APPLICATION_JSON))
+                .andReturn()
+                .getResponse();
+
+        assertEquals(HttpStatus.UNAUTHORIZED.value(),response.getStatus());
+    }
+
+
     //saveVenta bad request
     @Test
     void siInvocoSaveVentaSeDebeDevolverElStatusBadRequest() throws Exception{
@@ -220,6 +240,9 @@ public class VentaControllerTest {
         Venta venta = new Venta();
         venta.setIdventa(1);
         venta.setRutcliente("123");
+        venta.setMetodopago("a");
+        venta.setTipoventa("a");
+        venta.setFecha(Timestamp.valueOf("2020-10-02 00:00:00"));
 
         return venta;
     }
@@ -234,5 +257,9 @@ public class VentaControllerTest {
         venta.setRutcliente("543");
         ventas.add(venta);
         return ventas;
+    }
+    private Usuario getUsuario() {
+        Usuario usuario = new Usuario("123","jose","apellido1","tres","ada@gmail.com",Usuario.ADMIN_VENTAS,"producto1");
+        return  usuario;
     }
 }

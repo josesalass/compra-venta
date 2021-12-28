@@ -29,6 +29,9 @@ public class VentaServiceImpl implements VentaService{
 	
 	@Autowired
 	ProductoService productoService;
+
+	@Autowired
+	UsuarioService usuarioService;
 	
 	@Override
 	public List<Venta> buscarTodasLasVentas(){
@@ -57,6 +60,13 @@ public class VentaServiceImpl implements VentaService{
 	
 	@Override
 	public Venta guardarVenta(Venta venta) throws Exception{
+		Optional<Usuario> usuario = usuarioService.buscarUsuarioPorRut(venta.getRutusuario());
+		if(usuario.isEmpty()){
+			throw new Exception("El usuario asignado a la venta no existe.");
+		}
+		if (usuario.get().getRolusuario()!=Usuario.ADMIN_VENTAS){
+			throw new AuthException("Usuario no autorizado para cometer la acción.");
+		}
 		Venta nuevaVenta = new Venta();
 		if (venta.getFecha() == null || venta.getMetodopago() == null || venta.getRutusuario() == null || venta.getTipoventa() == null){
 			throw new Exception();

@@ -1,12 +1,10 @@
 package com.queue.demo.controller;
 
+import com.queue.demo.model.Usuario;
 import com.queue.demo.model.Venta;
 import com.queue.demo.model.ViewRegistroVentasDetalle;
 import com.queue.demo.model.ViewRegistroVentasResumen;
-import com.queue.demo.service.Asociada_VentaService;
-import com.queue.demo.service.ClienteService;
-import com.queue.demo.service.ProductoService;
-import com.queue.demo.service.VentaService;
+import com.queue.demo.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -42,9 +40,11 @@ public class VentaController {
 	}
 
 	@PostMapping("/guardarVenta")
-	public ResponseEntity<Venta> saveVenta(@RequestBody Venta venta) {
+	public ResponseEntity<?> saveVenta(@RequestBody Venta venta) {
 		try {
 			return new ResponseEntity<>(ventaService.guardarVenta(venta),HttpStatus.CREATED);
+		} catch(AuthException e){
+			return new ResponseEntity<>(e.getMessage(),HttpStatus.UNAUTHORIZED);
 		} catch (Exception e) {
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 		}

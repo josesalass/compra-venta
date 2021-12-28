@@ -4,6 +4,7 @@ import java.sql.Timestamp;
 import java.util.List;
 import java.util.Optional;
 
+import com.queue.demo.model.Usuario;
 import com.queue.demo.model.Venta;
 import com.queue.demo.model.ViewRegistroVentasDetalle;
 import com.queue.demo.model.ViewRegistroVentasResumen;
