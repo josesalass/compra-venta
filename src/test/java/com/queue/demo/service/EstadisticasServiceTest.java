@@ -1,5 +1,6 @@
 package com.queue.demo.service;
 
+import com.queue.demo.model.ViewProductoMasVendidoPorMes;
 import com.queue.demo.model.ViewProductoMenosVendidoPorMes;
 import com.queue.demo.model.ViewPromedioVentasMes;
 import org.junit.jupiter.api.Test;
@@ -83,6 +84,28 @@ public class EstadisticasServiceTest {
         assertEquals(resultado.get(0),mocklist.get(0));
     }
 
+    @Test
+    void siInvocoVerProductoMasVendidoDebeRetornarViewProductoMasVendidoList(){
+        List<ViewProductoMasVendidoPorMes> resultado;
+        List<ViewProductoMasVendidoPorMes> mocklist = getProductoMasVendidoPorMes();
+        String comparar = "2021%";
+
+        when(entityManager.getCriteriaBuilder()).thenReturn(criteriaBuilder);
+        when(criteriaBuilder.createQuery()).thenReturn(criteriaQuery);
+        when(criteriaQuery.from(ViewProductoMasVendidoPorMes.class)).thenReturn(root);
+        when(criteriaQuery.select(root)).thenReturn(criteriaQuery);
+        when(criteriaQuery.where(criteriaBuilder.like(root.get("fecha"),comparar))).thenReturn(criteriaQuery);
+
+
+        when(entityManager.createQuery(criteriaQuery)).thenReturn(typedQuery);
+        when(typedQuery.getResultList()).thenReturn(mocklist);
+
+        resultado = estadisticasService.verProductoMasVendido(2021);
+
+        assertNotNull(resultado);
+        assertEquals(resultado.get(0),mocklist.get(0));
+    }
+
     private List<ViewPromedioVentasMes> getViewPromedioVentasMes() {
         List<ViewPromedioVentasMes> p = new ArrayList<>();
         ViewPromedioVentasMes v = new ViewPromedioVentasMes();
@@ -107,5 +130,15 @@ public class EstadisticasServiceTest {
         p.add(v);
         return p;
     }
+    private List<ViewProductoMasVendidoPorMes> getProductoMasVendidoPorMes() {
+        List<ViewProductoMasVendidoPorMes> p= new ArrayList<>();
+        ViewProductoMasVendidoPorMes v= new ViewProductoMasVendidoPorMes();
+        v.setCantidad(120);
+        v.setFecha("2021-09");
+        v.setDetalleproducto("Harina");
+        p.add(v);
+        return p;
+    }
+
 
 }

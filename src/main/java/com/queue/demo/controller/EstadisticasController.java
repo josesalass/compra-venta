@@ -1,5 +1,6 @@
 package com.queue.demo.controller;
 
+import com.queue.demo.model.*;
 import com.queue.demo.model.ViewPromedioVentasMes;
 import com.queue.demo.model.ViewProductoMenosVendidoPorMes;
 import com.queue.demo.service.EstadisticasService;
@@ -34,4 +35,14 @@ public class EstadisticasController {
         }
         return new ResponseEntity<>(lista,HttpStatus.OK);
     }
+
+    @GetMapping("/productomasvendido")
+    public ResponseEntity<?> getProductoMasVendido(@RequestParam(value = "año",required = true)int año){
+        List<ViewProductoMasVendidoPorMes> lista = estadisticasService.verProductoMasVendido(año);
+        if (lista.isEmpty()) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+        return new ResponseEntity<>(lista, HttpStatus.OK);
+    }
+
 }

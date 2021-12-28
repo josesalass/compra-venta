@@ -2,6 +2,7 @@ package com.queue.demo.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.queue.demo.model.Venta;
+import com.queue.demo.model.ViewProductoMasVendidoPorMes;
 import com.queue.demo.model.ViewPromedioVentasMes;
 import com.queue.demo.model.ViewProductoMenosVendidoPorMes;
 import com.queue.demo.service.EstadisticasService;
@@ -89,8 +90,29 @@ public class EstadisticasControllerTest {
                 .getResponse();
         assertEquals(HttpStatus.BAD_REQUEST.value(),respuesta.getStatus());
     }
+    @Test
+    void siInvocoGetproductoMasVendidoPorMesDebeDevolverStatusOK() throws Exception{
+        List<ViewProductoMasVendidoPorMes> lista = getProductoMasVendidoPorMes();
+        given(estadisticasService.verProductoMasVendido(2021)).willReturn(lista);
 
-    private List<ViewPromedioVentasMes> getViewPromedioVentasMes() {
+        MockHttpServletResponse respuesta = mockMvc.perform(get("/estadisticas/productomasvendido?año=2021")
+                        .accept(MediaType.APPLICATION_JSON))
+                .andReturn()
+                .getResponse();
+        assertEquals(HttpStatus.OK.value(),respuesta.getStatus());
+    }
+    @Test
+    void siInvocoGetProductoMasVendidoPorMesYLaListaEsVaciaDebeDevolverStatusBadRequest() throws Exception{
+        List<ViewProductoMasVendidoPorMes> lista = new ArrayList<>();
+        given(estadisticasService.verProductoMasVendido(2021)).willReturn(lista);
+        MockHttpServletResponse respuesta = mockMvc.perform(get("/estadisticas/productomasvendido?año=2021")
+                        .accept(MediaType.APPLICATION_JSON))
+                .andReturn()
+                .getResponse();
+        assertEquals(HttpStatus.BAD_REQUEST.value(),respuesta.getStatus());
+    }
+
+        private List<ViewPromedioVentasMes> getViewPromedioVentasMes() {
         List<ViewPromedioVentasMes> p = new ArrayList<>();
         ViewPromedioVentasMes v = new ViewPromedioVentasMes();
         v.setAnio_mes("2021-01");
@@ -114,4 +136,15 @@ public class EstadisticasControllerTest {
         p.add(v);
         return p;
     }
+
+    private List<ViewProductoMasVendidoPorMes> getProductoMasVendidoPorMes() {
+        List<ViewProductoMasVendidoPorMes> p= new ArrayList<>();
+        ViewProductoMasVendidoPorMes v= new ViewProductoMasVendidoPorMes();
+        v.setCantidad(120);
+        v.setFecha("2021-09");
+        v.setDetalleproducto("Harina");
+        p.add(v);
+        return p;
+    }
+
 }
