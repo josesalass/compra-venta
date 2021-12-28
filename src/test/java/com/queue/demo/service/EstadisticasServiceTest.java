@@ -1,5 +1,6 @@
 package com.queue.demo.service;
 
+import com.queue.demo.model.ViewProductoMenosVendidoPorMes;
 import com.queue.demo.model.ViewPromedioVentasMes;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -60,14 +61,49 @@ public class EstadisticasServiceTest {
         assertEquals(resultado.get(0),mocklist.get(0));
     }
 
+    @Test
+    void siInvocoVerProductoMenosVendidoDebeRetornarViewProductoMenosVendidoList(){
+        List<ViewProductoMenosVendidoPorMes> resultado;
+        List<ViewProductoMenosVendidoPorMes> mocklist = getViewVerminimo();
+        String comparar = "2021%";
+
+        when(entityManager.getCriteriaBuilder()).thenReturn(criteriaBuilder);
+        when(criteriaBuilder.createQuery()).thenReturn(criteriaQuery);
+        when(criteriaQuery.from(ViewProductoMenosVendidoPorMes.class)).thenReturn(root);
+        when(criteriaQuery.select(root)).thenReturn(criteriaQuery);
+        when(criteriaQuery.where(criteriaBuilder.like(root.get("fecha"),comparar))).thenReturn(criteriaQuery);
+
+
+        when(entityManager.createQuery(criteriaQuery)).thenReturn(typedQuery);
+        when(typedQuery.getResultList()).thenReturn(mocklist);
+
+        resultado = estadisticasService.verProductoMenosVendido(2021);
+
+        assertNotNull(resultado);
+        assertEquals(resultado.get(0),mocklist.get(0));
+    }
+
     private List<ViewPromedioVentasMes> getViewPromedioVentasMes() {
         List<ViewPromedioVentasMes> p = new ArrayList<>();
         ViewPromedioVentasMes v = new ViewPromedioVentasMes();
         v.setAnio_mes("2021-01");
-        v.setPromedio_mensual(30000);
+        v.setPromedio_mensual(3000);
         p.add(v);
         v.setAnio_mes("2021-02");
         v.setPromedio_mensual(1000);
+        p.add(v);
+        return p;
+    }
+    private List<ViewProductoMenosVendidoPorMes> getViewVerminimo() {
+        List<ViewProductoMenosVendidoPorMes> p = new ArrayList<>();
+        ViewProductoMenosVendidoPorMes v = new ViewProductoMenosVendidoPorMes();
+        v.setFecha("2021-01");
+        v.setCantidad(30000);
+        v.setDetalleproducto("ahjgdsb");
+        p.add(v);
+        v.setFecha("2021-02");
+        v.setCantidad(1000);
+        v.setDetalleproducto("ajshdkjasbfkhasb");
         p.add(v);
         return p;
     }

@@ -1,6 +1,7 @@
 package com.queue.demo.service;
 
 import com.queue.demo.model.ViewPromedioVentasMes;
+import com.queue.demo.model.ViewProductoMenosVendidoPorMes;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityManager;
@@ -23,6 +24,14 @@ public class EstadisticasServiceImpl implements EstadisticasService{
         CriteriaQuery cq = cb.createQuery();
         Root root = cq.from(ViewPromedioVentasMes.class);
         cq.select(root).where(cb.like(root.get("anio_mes"),comparar));
+        return em.createQuery(cq).getResultList();
+    }
+    public List<ViewProductoMenosVendidoPorMes> verProductoMenosVendido(int año){
+        String comparar = String.valueOf(año) + "%";
+        CriteriaBuilder cb = em.getCriteriaBuilder();
+        CriteriaQuery cq = cb.createQuery();
+        Root root = cq.from(ViewProductoMenosVendidoPorMes.class);
+        cq.select(root).where(cb.like(root.get("fecha"),comparar));
         return em.createQuery(cq).getResultList();
     }
 }

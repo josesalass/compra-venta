@@ -1,6 +1,7 @@
 package com.queue.demo.controller;
 
 import com.queue.demo.model.ViewPromedioVentasMes;
+import com.queue.demo.model.ViewProductoMenosVendidoPorMes;
 import com.queue.demo.service.EstadisticasService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -19,6 +20,15 @@ public class EstadisticasController {
     @GetMapping("/promedioventas")
     public ResponseEntity<?> getPromedioVentas(@RequestParam(value="año",required = true) int año){
         List<ViewPromedioVentasMes> lista = estadisticasService.verPromedioVentas(año);
+        if (lista.isEmpty()){
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+        return new ResponseEntity<>(lista,HttpStatus.OK);
+    }
+
+    @GetMapping("/verproductomenosvendido")
+    public ResponseEntity<?> getProductoMenosVendido(@RequestParam(value="año",required = true) int año){
+        List<ViewProductoMenosVendidoPorMes> lista = estadisticasService.verProductoMenosVendido(año);
         if (lista.isEmpty()){
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
