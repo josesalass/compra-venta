@@ -5,40 +5,56 @@ import com.queue.demo.service.UsuarioService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/usuarios")
 public class UsuarioController {
 	@Autowired
 	UsuarioService usuarioService;
-	
+
+
 	@GetMapping("")
 	public List <Usuario> list(){
 		return usuarioService.buscarTodosLosUsuarios();
 	}
-	
+
 	@RequestMapping(method=RequestMethod.POST, value="/guardarusuario")
-	public ResponseEntity<Usuario> addUsuario(@RequestBody Usuario usuario) {
+	public ResponseEntity<String> addUsuario(@RequestBody Usuario usuario) {
 		try {
-			/*if (usuarioService.buscarUsuarioPorRut( usuario.getRutusuario() ) == null) {
+			if (usuarioService.buscarUsuarioPorRut( usuario.getRutusuario() ) == null) {
 				//El usuario no existe, por lo que se puede crear
-				//return usuarioService.guardar(usuario);*/
-				return new ResponseEntity<>(usuarioService.guardar(usuario), HttpStatus.CREATED);
-/*
+				usuarioService.guardar(usuario);
+				return new ResponseEntity<>("Usuario creado", HttpStatus.CREATED);
+
 			}else {//El usuario existe así que no se puede crear
-				System.err.println("El usuario ya existe"); //Debe comunicarse con front ends para informar
-				return null;
-			}*/
+				return new ResponseEntity<>("Usuario ya existente",HttpStatus.BAD_REQUEST);
+			}
 		}catch (Exception e){
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 		}
 
+	}
+
+	@PutMapping("/login")
+	public ResponseEntity<String> login(@PathVariable String rutusuario, @PathVariable String contrasenia){
+		Optional<Usuario> us= usuarioService.buscarUsuarioPorRut(rutusuario);
+		if (!us.isEmpty()){
+			if(us.get().getContrasenia().equals(contrasenia)){
+				us.get().setContadorlogin(0);
+				return new ResponseEntity<>("Login Exitoso",HttpStatus.ACCEPTED);
+			}else{
+				if (us.get().getContadorlogin()<5){
+					return new ResponseEntity<>("Contraseña incorrecta, tiene:"+(5-us.get().getContadorlogin())+"intentos",HttpStatus.BAD_REQUEST);
+				}else{
+					return new ResponseEntity<>("Cuenta bloqueada, contacte con el administrador",HttpStatus.BAD_REQUEST);
+				}
+			}
+		}else{
+			return new ResponseEntity<>("El rut de usuario no existe",HttpStatus.BAD_REQUEST);
+		}
 	}
 }
