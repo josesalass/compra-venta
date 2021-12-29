@@ -4,14 +4,15 @@ package com.queue.demo.service;
 
 
 import com.queue.demo.model.Usuario;
+import com.queue.demo.util.Encriptador;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
+import java.security.Key;
 import java.util.List;
 import java.util.Optional;
 
 import com.queue.demo.repository.RepositorioUsuario;
-
 
 
 
@@ -42,6 +43,9 @@ public class UsuarioServiceImpl implements UsuarioService{
 		if(usuario==null){
 			throw new Exception();
 		}
+		Key key = Encriptador.generateKey();
+		String contraseniaEncriptada = Encriptador.encrypt(usuario.getContrasenia(),key);
+		usuario.setContrasenia(contraseniaEncriptada);
 		return repUsuario.save(usuario);
 	}
 
