@@ -32,6 +32,8 @@ public class CompraServiceTest {
     @Mock
     private ProductoServiceImpl productoService;
     @Mock
+    private UsuarioServiceImpl usuarioService;
+    @Mock
     private EntityManager entityManager;
 
     @Mock
@@ -130,6 +132,7 @@ public class CompraServiceTest {
     @Test
     void siInvocoGuardarCompraDebeRetornarLaCompraGuardada() throws Exception {
         Compra compra = getCompras().get(0);
+        Usuario usuario = getUsuario();
         Producto producto = getProducto();
         PerteneceACompra perteneceACompra = new PerteneceACompra();
         perteneceACompra.setCompra(compra);
@@ -139,6 +142,7 @@ public class CompraServiceTest {
         producto.setStock(producto.getStock()+perteneceACompra.getCantidad());
         Compra resultado;
 
+        when(usuarioService.buscarUsuarioPorRut(any(String.class))).thenReturn(Optional.of(usuario));
         when(productoService.buscarProductoPorId(1)).thenReturn(Optional.of(producto));
         when(repositorioCompra.save(any(Compra.class))).thenReturn(compra);
 
@@ -147,6 +151,54 @@ public class CompraServiceTest {
         assertNotNull(resultado);
         assertEquals(compra.getIdcompra(),resultado.getIdcompra());
         verify(repositorioCompra).save(any(Compra.class));
+    }
+
+    //guardarCompra caso usuario no existe
+    @Test
+    void siInvocoGuardarCompraYElUsuarioNoExisteDebeRetornarException() throws Exception {
+        Compra compra = getCompras().get(0);
+        Producto producto = getProducto();
+        PerteneceACompra perteneceACompra = new PerteneceACompra();
+        perteneceACompra.setCompra(compra);
+        perteneceACompra.setProducto(producto);
+        perteneceACompra.setCantidad(10);
+        compra.getCompraproductos().add(perteneceACompra);
+        producto.setStock(producto.getStock()+perteneceACompra.getCantidad());
+        Compra resultado;
+        boolean thrown = false;
+
+        when(usuarioService.buscarUsuarioPorRut(any(String.class))).thenReturn(Optional.empty());
+        try {
+            resultado = compraService.guardarCompra(compra);
+        }catch(Exception e){
+            thrown=true;
+        }
+        assertTrue(thrown);
+    }
+
+    //guardarCompra caso unauthorized
+    @Test
+    void siInvocoGuardarCompraDebeRetornarLaCompraGuardadaa() throws Exception {
+        Compra compra = getCompras().get(0);
+        Usuario usuario = getUsuario();
+        usuario.setRolusuario(Usuario.ADMIN_VENTAS);
+        Producto producto = getProducto();
+        PerteneceACompra perteneceACompra = new PerteneceACompra();
+        perteneceACompra.setCompra(compra);
+        perteneceACompra.setProducto(producto);
+        perteneceACompra.setCantidad(10);
+        compra.getCompraproductos().add(perteneceACompra);
+        producto.setStock(producto.getStock()+perteneceACompra.getCantidad());
+        Compra resultado;
+        boolean thrown = false;
+
+        when(usuarioService.buscarUsuarioPorRut(any(String.class))).thenReturn(Optional.of(usuario));
+        try {
+            resultado = compraService.guardarCompra(compra);
+        }catch(AuthException e){
+            thrown=true;
+        }
+        assertTrue(thrown);
     }
 
     //actualizarCompra caso exitoso
@@ -237,4 +289,8 @@ public class CompraServiceTest {
         return v;
     }
 
+    private Usuario getUsuario() {
+        Usuario usuario = new Usuario("123","jose","apellido1","tres","ada@gmail.com",Usuario.ADMIN_COMPRAS,"producto1");
+        return  usuario;
+    }
 }

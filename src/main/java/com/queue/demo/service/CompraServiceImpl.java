@@ -67,7 +67,7 @@ public class CompraServiceImpl implements CompraService{
 			if(usuario.isEmpty()){
 				throw new Exception("El usuario asignado a la venta no existe.");
 			}
-			if (usuario.get().getRolusuario()!=Usuario.ADMIN_COMPRAS || usuario.get().getRolusuario()!=Usuario.ADMIN){
+			if (usuario.get().getRolusuario()!=Usuario.ADMIN_COMPRAS && usuario.get().getRolusuario()!=Usuario.ADMIN){
 				throw new AuthException("Usuario no autorizado para cometer la acción.");
 			}
 

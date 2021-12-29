@@ -2,6 +2,7 @@ package com.queue.demo.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.queue.demo.controller.CompraController;
 import com.queue.demo.model.Compra;
+import com.queue.demo.service.AuthException;
 import com.queue.demo.service.CompraException;
 import com.queue.demo.service.CompraServiceImpl;
 import org.checkerframework.checker.nullness.Opt;
@@ -115,6 +116,26 @@ public class CompraControllerTest {
         // Then
         assertEquals(HttpStatus.BAD_REQUEST.value(),response.getStatus());
     }
+
+    @Test
+    void siInvocoGuardarCompraYElUsuarioNoEstaAutorizadoDebeRetornarStatusUnauthorized() throws Exception {
+
+        // Given
+        Compra compra = getCompra();
+        doThrow(AuthException.class).when(compraServiceimp).guardarCompra(any(Compra.class));
+
+        // When
+        MockHttpServletResponse response = mockMvc.perform(post("/compras/guardarCompra")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(jsompra.write(compra).getJson())
+                        .accept(MediaType.APPLICATION_JSON))
+                .andReturn()
+                .getResponse();
+
+        // Then
+        assertEquals(HttpStatus.UNAUTHORIZED.value(),response.getStatus());
+    }
+
     @Test
     void siInvocoCambioFechaPorIdSeDebeCambiarLaFechaDeLaCompraYDevolverElStatusOK() throws Exception {
         // Given
