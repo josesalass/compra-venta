@@ -28,7 +28,10 @@ public class CompraServiceImpl implements CompraService{
     RepositorioCompra repCompra;
     
     @Autowired
-    ProductoService productoService; 
+    ProductoService productoService;
+
+	@Autowired
+	UsuarioService usuarioService;
 
 	@PersistenceContext
 	private EntityManager em;
@@ -60,6 +63,13 @@ public class CompraServiceImpl implements CompraService{
 
 	@Override
 	public Compra guardarCompra(Compra compra) throws Exception {
+			Optional<Usuario> usuario = usuarioService.buscarUsuarioPorRut(compra.getRutusuario());
+			if(usuario.isEmpty()){
+				throw new Exception("El usuario asignado a la venta no existe.");
+			}
+			if (usuario.get().getRolusuario()!=Usuario.ADMIN_COMPRAS || usuario.get().getRolusuario()!=Usuario.ADMIN){
+				throw new AuthException("Usuario no autorizado para cometer la acción.");
+			}
 
 			if(compra.getFecha()==null|| compra.getRutempresa()==null|| compra.getRutusuario()==null|| compra.getCompraproductos()==null){
 				throw new Exception();
