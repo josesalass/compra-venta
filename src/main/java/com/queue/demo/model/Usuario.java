@@ -33,6 +33,9 @@ public class Usuario {
 	@Column(name = "contrasenia")
 	private String contrasenia;
 
+	@Column(name = "contadorlogin")
+	private int contadorlogin;
+
 	@OneToMany(mappedBy="usuario",cascade=CascadeType.ALL)
 	private List<TelefonoUsuario> telefonosusuario=new ArrayList<TelefonoUsuario>();
 
@@ -92,6 +95,14 @@ public class Usuario {
 	}
 	public void setContrasenia(String contrasenia) {
 		this.contrasenia = contrasenia;
+	}
+
+	public int getContadorlogin() {
+		return contadorlogin;
+	}
+
+	public void setContadorlogin(int contadorLogin) {
+		this.contadorlogin = contadorLogin;
 	}
 
 	public List<TelefonoUsuario> getTelefonosusuario() {
