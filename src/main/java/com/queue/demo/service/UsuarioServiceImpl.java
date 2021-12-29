@@ -43,10 +43,13 @@ public class UsuarioServiceImpl implements UsuarioService{
 		if(usuario==null){
 			throw new Exception();
 		}
-		Key key = Encriptador.generateKey();
-		String contraseniaEncriptada = Encriptador.encrypt(usuario.getContrasenia(),key);
+		Key key = Encriptador.generateKey();  //Key para encriptar
+		String rut = usuario.getRutusuario();
+		String contra = usuario.getContrasenia();
+		String contra2 = rut.concat(contra);  //Concateno el rut y la contraseña para encriptarla
+		String contraseniaEncriptada = Encriptador.encrypt(contra2,key);
 		usuario.setContrasenia(contraseniaEncriptada);
-		return repUsuario.save(usuario);
+		return repUsuario.save(usuario);  //se guarda como contraseña el rut y la contraseña puesta
 	}
 
 	@Override

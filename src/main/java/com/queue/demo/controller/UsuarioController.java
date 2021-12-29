@@ -25,7 +25,7 @@ public class UsuarioController {
 	@RequestMapping(method=RequestMethod.POST, value="/guardarusuario")
 	public ResponseEntity<String> addUsuario(@RequestBody Usuario usuario) {
 		try {
-			if (usuarioService.buscarUsuarioPorRut( usuario.getRutusuario() ) == null) {
+			if (usuarioService.buscarUsuarioPorRut(usuario.getRutusuario()).isEmpty()) {
 				//El usuario no existe, por lo que se puede crear
 				usuarioService.guardar(usuario);
 				return new ResponseEntity<>("Usuario creado", HttpStatus.CREATED);

@@ -1,6 +1,7 @@
 package com.queue.demo.util;
 
 import java.security.Key;
+import java.util.Arrays;
 import javax.crypto.Cipher;
 import javax.crypto.spec.SecretKeySpec;
 
@@ -12,13 +13,9 @@ public class Encriptador {
 
     private static final String ALGORITHM = "AES";
     private static final byte[] keyValue = "1234567891234567".getBytes();
+    private int corte;
 
-   /* public static void main(String args[]) throws Exception {
-        Key key = generateKey();
-        String encriptValue = encrypt("YOUR_SECRETE_KEY",key);
-        decrypt(encriptValue,key);
 
-    } */
 
     public static Key generateKey() throws Exception {
         Key key = new SecretKeySpec(keyValue, ALGORITHM);
@@ -38,7 +35,7 @@ public class Encriptador {
         return new String(encryptedByteValue);
     }
 
-    public static String decrypt(String encryptedValue, Key key) throws Exception {
+    public static String decrypt(String encryptedValue,int corte, Key key) throws Exception {
         // Key key = generateKey();
         Cipher cipher = Cipher.getInstance(ALGORITHM);
         cipher.init(Cipher.DECRYPT_MODE, key);
@@ -47,8 +44,9 @@ public class Encriptador {
 
         byte[] enctVal = cipher.doFinal(decodedBytes);
 
-        System.out.println("Decrypted Value :: " + new String(enctVal));
-        return new String(enctVal);
+        byte[] slice = Arrays.copyOfRange(enctVal, 0, corte);
+        System.out.println("Decrypted Value :: " + new String(slice));
+        return new String(slice);
     }
 
 }
