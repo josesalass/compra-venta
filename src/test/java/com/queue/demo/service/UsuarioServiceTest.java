@@ -123,6 +123,28 @@ public class UsuarioServiceTest {
         verify(repositorioUsuario, times(2)).deleteById(rutusuario);
     }
 
+    @Test
+    void SiInvocoAjustarIntentoDeLoginFalloDebeGuardarContadorLoginMasUno(){
+        Usuario usuario= getUsuario();
+        given(usuarioService.ajustarIntentoLogin(usuario,"fallo")).willAnswer(invocation -> invocation.getArgument(0));
+
+        Usuario usRetornado = usuarioService.ajustarIntentoLogin(usuario,"fallo");
+
+        assertThat(usRetornado).isNotNull();
+        verify(repositorioUsuario).save(any(Usuario.class));
+    }
+
+    @Test
+    void SiInvocoAjustarIntentoDeLoginExitoDebeGuardarContadorLoginIgualCero(){
+        Usuario usuario= getUsuario();
+        given(usuarioService.ajustarIntentoLogin(usuario,"exito")).willAnswer(invocation -> invocation.getArgument(0));
+
+        Usuario usRetornado = usuarioService.ajustarIntentoLogin(usuario,"exito");
+
+        assertThat(usRetornado).isNotNull();
+        verify(repositorioUsuario).save(any(Usuario.class));
+    }
+
 
 
     private Usuario getUsuario() {

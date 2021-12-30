@@ -22,7 +22,8 @@ CREATE TABLE USUARIO (
 	apellido2 VARCHAR (20),
 	correoUsuario VARCHAR (50) NOT NULL,
 	rolUsuario INT NOT NULL,
-	contrasenia VARCHAR (12)
+	contrasenia VARCHAR (200),
+	contadorlogin INT,
 );
 
 CREATE TABLE CLIENTE(

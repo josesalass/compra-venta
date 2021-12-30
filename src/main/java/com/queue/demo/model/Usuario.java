@@ -47,6 +47,7 @@ public class Usuario {
 		this.correousuario = correousuario;
 		this.rolusuario = rolusuario;
 		this.contrasenia = contrasenia;
+		this.contadorlogin=0;
 	}
 
 
