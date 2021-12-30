@@ -3,6 +3,7 @@ package com.queue.demo.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.queue.demo.model.Proveedor;
+import com.queue.demo.model.Usuario;
 import com.queue.demo.service.ProveedorService;
 import org.checkerframework.checker.nullness.Opt;
 import org.junit.jupiter.api.BeforeEach;
@@ -164,6 +165,7 @@ public class ProveedorControllerTest {
                 .getResponse();
         assertEquals(HttpStatus.NOT_FOUND.value(),respuesta.getStatus());
     }
+    /*
     @Test
     void siInvocoSaveProveedorSeDebeAlmacenarYDevolverElProveedorConStatusCreated() throws Exception {
         // Given
@@ -198,7 +200,7 @@ public class ProveedorControllerTest {
 
         // Then
         assertEquals(HttpStatus.BAD_REQUEST.value(),response.getStatus());
-    }//*/
+    }*/
 
     List<Proveedor> getListaProveedores(){
         List<Proveedor> proveedores = new ArrayList<>();
