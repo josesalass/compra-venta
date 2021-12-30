@@ -1,8 +1,8 @@
 
 INSERT INTO Usuario (rutusuario,nombre,apellido1, apellido2,correousuario,rolusuario,contrasenia)
-VALUES ('164536512','Fernando','Tormenta','China','tormentaxina@yopmail.com',1,'Huevos01'),
-('132675624','katherine','Elder','Scrolls','kathoeso@hotmail.com',3, 'Cypher123'),('203766542','Matias','Sprite','Enjoy','ultraxasesino@gmail.com',2,'Contraseña'),
-('86351462','Jose','Pollo','Undas','chocojump@hotmail.com',3,'AsdqW123')
+VALUES ('164536512','Fernando','Tormenta','China','tormentaxina@yopmail.com',0,'Huevos01',0),
+('132675624','katherine','Elder','Scrolls','kathoeso@hotmail.com',2, 'Cypher123',0),('203766542','Matias','Sprite','Enjoy','ultraxasesino@gmail.com',1,'Contraseña',0),
+('86351462','Jose','Pollo','Undas','chocojump@hotmail.com',2,'AsdqW123',0)
 ;
 
 INSERT INTO cliente (rutcliente,nombre,apellido1,apellido2,telefono,comuna,calle,numerocalle) 

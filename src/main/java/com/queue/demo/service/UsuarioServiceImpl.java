@@ -52,6 +52,17 @@ public class UsuarioServiceImpl implements UsuarioService{
 		return repUsuario.save(usuario);  //se guarda como contraseña el rut y la contraseña puesta
 	}
 
+
+	@Override
+	public Usuario ajustarIntentoLogin(Usuario usuario, String tipo){
+		if(tipo.equals("fallo")){
+			usuario.setContadorlogin(usuario.getContadorlogin()+1);
+		}else{
+			usuario.setContadorlogin(0);
+		}
+		repUsuario.save(usuario);
+		return usuario;
+	}
 	@Override
 	public void borrarUsuarioPorRut(String rut) {
 		repUsuario.deleteById(rut);
