@@ -4,14 +4,15 @@ package com.queue.demo.service;
 
 
 import com.queue.demo.model.Usuario;
+import com.queue.demo.util.Encriptador;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
+import java.security.Key;
 import java.util.List;
 import java.util.Optional;
 
 import com.queue.demo.repository.RepositorioUsuario;
-
 
 
 
@@ -42,9 +43,26 @@ public class UsuarioServiceImpl implements UsuarioService{
 		if(usuario==null){
 			throw new Exception();
 		}
-		return repUsuario.save(usuario);
+		Key key = Encriptador.generateKey();  //Key para encriptar
+		String rut = usuario.getRutusuario();
+		String contra = usuario.getContrasenia();
+		String contra2 = rut.concat(contra);  //Concateno el rut y la contraseña para encriptarla
+		String contraseniaEncriptada = Encriptador.encrypt(contra2,key);
+		usuario.setContrasenia(contraseniaEncriptada);
+		return repUsuario.save(usuario);  //se guarda como contraseña el rut y la contraseña puesta
 	}
 
+
+	@Override
+	public Usuario ajustarIntentoLogin(Usuario usuario, String tipo){
+		if(tipo.equals("fallo")){
+			usuario.setContadorlogin(usuario.getContadorlogin()+1);
+		}else{
+			usuario.setContadorlogin(0);
+		}
+		repUsuario.save(usuario);
+		return usuario;
+	}
 	@Override
 	public void borrarUsuarioPorRut(String rut) {
 		repUsuario.deleteById(rut);
