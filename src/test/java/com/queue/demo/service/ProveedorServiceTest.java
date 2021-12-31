@@ -2,8 +2,10 @@ package com.queue.demo.service;
 
 import com.queue.demo.model.Proveedor;
 import com.queue.demo.model.RepresentanteProveedor;
+import com.queue.demo.model.Usuario;
 import com.queue.demo.repository.RepositorioProveedor;
 import com.queue.demo.repository.RepositorioRepresentanteProveedor;
+import com.queue.demo.repository.RepositorioUsuario;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -48,6 +50,9 @@ public class ProveedorServiceTest {
 
     @InjectMocks
     private ProveedorServiceImpl proveedorServiceImpl;
+
+    @Mock
+    private UsuarioServiceImpl repositorioUsuario;
 
     @Test
     void SiInvocoBuscarPorNombreYExisteUnoDebeRetornarProveedor() {
@@ -181,7 +186,7 @@ public class ProveedorServiceTest {
     @Test
     void SiInvocoGuardarProveedorYNoExisteElProveedorLoInsertaYRetornaProveedor() throws Exception {
         Proveedor respuesta;
-
+        Usuario u=getusuario();
 
         when(entityManager.getCriteriaBuilder()).thenReturn(criteriaBuilder);
 
@@ -192,11 +197,11 @@ public class ProveedorServiceTest {
 
         when(entityManager.createQuery(criteriaQuery)).thenReturn(typedQuery);
         when(typedQuery.getResultList()).thenReturn(new ArrayList<Proveedor>());
-
+        when(repositorioUsuario.buscarUsuarioPorRut(u.getRutusuario())).thenReturn(Optional.of(u));
         when(repositorioProveedor.save(any())).thenReturn(getProveedor());
 
         //Act
-        respuesta=proveedorServiceImpl.guardarProveedor(getProveedor());
+        respuesta=proveedorServiceImpl.guardarProveedor(getProveedor(),u.getRutusuario());
 
         //Assert
         assertEquals(respuesta.getRutempresa(),getProveedor().getRutempresa());
@@ -207,7 +212,7 @@ public class ProveedorServiceTest {
 
         List<Proveedor> proveedores = new ArrayList<>();
         proveedores.add(getProveedor());
-
+        Usuario u=getusuario();
         when(entityManager.getCriteriaBuilder()).thenReturn(criteriaBuilder);
 
         when(criteriaBuilder.createQuery(any())).thenReturn(criteriaQuery);
@@ -217,13 +222,35 @@ public class ProveedorServiceTest {
 
         when(entityManager.createQuery(criteriaQuery)).thenReturn(typedQuery);
         when(typedQuery.getResultList()).thenReturn(proveedores);
-
+        when(repositorioUsuario.buscarUsuarioPorRut(u.getRutusuario())).thenReturn(Optional.of(u));
         Exception exception = assertThrows(Exception.class,
-                () -> {proveedorServiceImpl.guardarProveedor(getProveedor());});
+                () -> {proveedorServiceImpl.guardarProveedor(getProveedor(),u.getRutusuario());});
 
         assertEquals("Ya existente",exception.getMessage());
 
+    }
 
+    @Test
+    void SiInvocoGuardarProveedorYElRutNoEstaAutorizadoDebeLanzarException(){
+        List<Proveedor> proveedores = new ArrayList<>();
+        proveedores.add(getProveedor());
+        Usuario u= new Usuario();
+        u.setRolusuario(Usuario.ADMIN_VENTAS);
+
+        when(entityManager.getCriteriaBuilder()).thenReturn(criteriaBuilder);
+        when(criteriaBuilder.createQuery(any())).thenReturn(criteriaQuery);
+        when(criteriaQuery.from(Proveedor.class)).thenReturn(root);
+        when(criteriaQuery.select(root)).thenReturn(criteriaQuery);
+        when(criteriaQuery.where(criteriaBuilder.equal(root.get("rutempresa"), getProveedor().getRutempresa()))).thenReturn(criteriaQuery);
+
+        when(entityManager.createQuery(criteriaQuery)).thenReturn(typedQuery);
+        when(typedQuery.getResultList()).thenReturn(proveedores);
+        when(repositorioUsuario.buscarUsuarioPorRut(u.getRutusuario())).thenReturn(Optional.of(u));
+
+        Exception exception = assertThrows(Exception.class,
+                () -> {proveedorServiceImpl.guardarProveedor(getProveedor(),u.getRutusuario());});
+
+        assertEquals("Usuario no autorizado para cometer la acción.",exception.getMessage());
     }
 
     @Test
@@ -344,7 +371,14 @@ public class ProveedorServiceTest {
 
         return proveedores;
     }
+    private Usuario getusuario(){
+        Usuario usuario= new Usuario();
+        usuario.setRolusuario(Usuario.ADMIN_COMPRAS);
+        usuario.setRutusuario("164536512");
 
+
+        return usuario;
+    }
     private Proveedor getProveedor(){
         return getProveedores().get(0);
     }

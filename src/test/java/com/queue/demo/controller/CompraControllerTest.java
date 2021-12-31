@@ -6,6 +6,7 @@ import com.queue.demo.model.Venta;
 import com.queue.demo.service.AuthException;
 import com.queue.demo.service.CompraException;
 import com.queue.demo.service.CompraService;
+import com.queue.demo.service.CompraServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -41,7 +42,7 @@ public class CompraControllerTest {
     private JacksonTester<Compra> jsompra;
     private MockMvc mockMvc;
     @Mock
-    private CompraService compraService;
+    private CompraServiceImpl compraService;
     @InjectMocks
     private CompraController  compraController;
 
@@ -116,6 +117,26 @@ public class CompraControllerTest {
         // Then
         assertEquals(HttpStatus.BAD_REQUEST.value(),response.getStatus());
     }
+
+    @Test
+    void siInvocoGuardarCompraYElUsuarioNoEstaAutorizadoDebeRetornarStatusUnauthorized() throws Exception {
+
+        // Given
+        Compra compra = getCompra();
+        doThrow(AuthException.class).when(compraService).guardarCompra(any(Compra.class));
+
+        // When
+        MockHttpServletResponse response = mockMvc.perform(post("/compras/guardarCompra")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(jsompra.write(compra).getJson())
+                        .accept(MediaType.APPLICATION_JSON))
+                .andReturn()
+                .getResponse();
+
+        // Then
+        assertEquals(HttpStatus.UNAUTHORIZED.value(),response.getStatus());
+    }
+
     @Test
     void siInvocoCambioFechaPorIdSeDebeCambiarLaFechaDeLaCompraYDevolverElStatusOK() throws Exception {
         // Given

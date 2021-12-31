@@ -43,7 +43,9 @@ public class CompraController {
         try{
             compraService.guardarCompra(compra);
             return new ResponseEntity<>( HttpStatus.CREATED);
-        }catch (Exception e){
+        }catch(AuthException e){
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+        } catch (Exception e){
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
     }
