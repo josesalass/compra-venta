@@ -32,6 +32,8 @@ public class CompraServiceTest {
     @Mock
     private ProductoServiceImpl productoService;
     @Mock
+    private UsuarioService usuarioService;
+    @Mock
     private EntityManager entityManager;
 
     @Mock
@@ -151,14 +153,60 @@ public class CompraServiceTest {
 
     //actualizarCompra caso exitoso
     @Test
-    void siInvocoActualizarCompraDebeRetornarLaCompraActualizada(){
+    void siInvocoActualizarCompraDebeRetornarLaCompraActualizada() throws Exception{
         Compra compra = getCompras().get(0);
+        Usuario usuario=getUsuario();
+
+        when(usuarioService.buscarUsuarioPorRut(any(String.class))).thenReturn(Optional.of(usuario));
+
         given(repositorioCompra.save(compra)).willReturn(compra);
 
         Compra compraFinal = compraService.actualizarCompra(compra.getIdcompra(),compra);
 
         assertNotNull(compraFinal);
         verify(repositorioCompra).save(any(Compra.class));
+
+
+
+    }
+
+    //actualizarCompra Unauthorized
+    @Test
+    void siInvocoActualizarCompraDebeRetornarUnauthorized() throws Exception{
+        Compra compra = getCompras().get(0);
+        Usuario usuario = getUsuario();
+        usuario.setRolusuario(Usuario.ADMIN_VENTAS);
+        Compra resultado;
+        boolean thrown = false;
+
+        when(usuarioService.buscarUsuarioPorRut(any(String.class))).thenReturn(Optional.of(usuario));
+
+        try{
+            resultado = compraService.actualizarCompra(compra.getIdcompra(),compra);
+        }catch(AuthException e){
+            thrown = true;
+        }
+
+        assertTrue(thrown);
+    }
+
+    //actualizarCompra Exception
+    @Test
+    void siInvocoActualizarCompraDebeRetornarException() throws Exception{
+        Compra compra= getCompras().get(0);
+        Usuario usuario = getUsuario();
+        Compra resultado;
+        boolean thrown = false;
+
+        when(usuarioService.buscarUsuarioPorRut(any(String.class))).thenReturn(Optional.empty());
+
+        try{
+            resultado = compraService.actualizarCompra(compra.getIdcompra(),compra);
+        }catch(Exception e){
+            thrown = true;
+        }
+
+        assertTrue(thrown);
     }
 
     //verRegistroCompraResumen caso exitoso
@@ -235,6 +283,10 @@ public class CompraServiceTest {
         ViewRegistroComprasDetalle v = new ViewRegistroComprasDetalle();
         v.setIdCompra(1);
         return v;
+    }
+    private Usuario getUsuario() {
+        Usuario usuario = new Usuario("12","jose","apellido1","tres","ada@gmail.com",Usuario.ADMIN_COMPRAS,"producto1");
+        return  usuario;
     }
 
 }

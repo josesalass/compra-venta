@@ -186,14 +186,53 @@ public class VentaServiceTest {
     }
 
     @Test
-    void siInvocoActualizarVentaDebeRetornarLaVentaActualizada(){
+    void siInvocoActualizarVentaDebeRetornarLaVentaActualizada() throws Exception {
         Venta venta = getListaVentas().get(0);
+        Usuario usuario=getUsuario();
+        when(usuarioService.buscarUsuarioPorRut(any(String.class))).thenReturn(Optional.of(usuario));
+
         given(repositorioVenta.save(venta)).willReturn(venta);
 
         Venta ventaFinal = ventaService.actualizarVenta(venta.getIdventa(),venta);
 
         assertNotNull(ventaFinal);
         verify(repositorioVenta).save(any(Venta.class));
+    }
+    @Test
+    void siInvocoActualizarVentaYElUsuarioNoExisteDebeRetornarException() throws Exception{
+        Venta venta= getListaVentas().get(0);
+        Usuario usuario = getUsuario();
+        Venta resultado;
+        boolean thrown = false;
+
+        when(usuarioService.buscarUsuarioPorRut(any(String.class))).thenReturn(Optional.empty());
+
+        try{
+            resultado = ventaService.actualizarVenta(venta.getIdventa(),venta);
+        }catch(Exception e){
+            thrown = true;
+        }
+
+        assertTrue(thrown);
+    }
+
+    @Test
+    void siInvocoActualizarVentaYElUsuarioNoEsAdminDeVentasDebeRetornarUnauthorized() throws Exception{
+        Venta venta= getListaVentas().get(0);
+        Usuario usuario = getUsuario();
+        usuario.setRolusuario(Usuario.ADMIN_COMPRAS);
+        Venta resultado;
+        boolean thrown = false;
+
+        when(usuarioService.buscarUsuarioPorRut(any(String.class))).thenReturn(Optional.of(usuario));
+
+        try{
+            resultado = ventaService.actualizarVenta(venta.getIdventa(),venta);
+        }catch(AuthException e){
+            thrown = true;
+        }
+
+        assertTrue(thrown);
     }
 
     @Test

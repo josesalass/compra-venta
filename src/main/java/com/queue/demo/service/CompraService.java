@@ -13,7 +13,7 @@ public interface CompraService {
     public Optional<Compra> buscarCompraPorId(int idCompra);
     public boolean borrarCompraPorId(int idCompra);
     public Compra guardarCompra(Compra compra) throws Exception;
-    public Compra actualizarCompra(int idcompra, Compra compra);
+    public Compra actualizarCompra(int idcompra, Compra compra)throws Exception;
     public List<ViewRegistroComprasResumen> verRegistroCompraResumen();
     public List<ViewRegistroComprasDetalle> verRegistroCompraDetalle();
 }

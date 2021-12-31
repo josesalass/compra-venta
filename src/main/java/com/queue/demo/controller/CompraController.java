@@ -62,6 +62,10 @@ public class CompraController {
 
         }catch (IllegalArgumentException e){
             return new ResponseEntity<>("Debe ingresar un formato valido para la fecha",HttpStatus.BAD_REQUEST);
+        }catch(AuthException e){
+            return new ResponseEntity<>(e.getMessage(),HttpStatus.UNAUTHORIZED);
+        }catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
 
     }
@@ -69,14 +73,20 @@ public class CompraController {
     @PutMapping("/{idcompra}/cambiarEmpresa/{rutempresa}")
     public ResponseEntity<String> cambiarRutEmpresa(@PathVariable int idcompra, @PathVariable String rutempresa) {
         Optional<Compra> compra = compraService.buscarCompraPorId(idcompra);
+        try {
+
 
             if (!compra.isPresent() || rutempresa == null) {
-                return new ResponseEntity<>("Debe ingresar un valor al rut o no se encontró la compra",HttpStatus.BAD_REQUEST);
+                return new ResponseEntity<>("Debe ingresar un valor al rut o no se encontró la compra", HttpStatus.BAD_REQUEST);
             }
             compra.get().setRutempresa(rutempresa);
             compraService.actualizarCompra(idcompra, compra.get());
-            return new ResponseEntity<>("Cambio exitoso" ,HttpStatus.OK );
-
+            return new ResponseEntity<>("Cambio exitoso", HttpStatus.OK);
+        }catch(AuthException e){
+            return new ResponseEntity<>(e.getMessage(),HttpStatus.UNAUTHORIZED);
+        }catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
     }
     @GetMapping("/verRegistroComprasResumen")
     public ResponseEntity<?> verRegistroComprasResumen(){

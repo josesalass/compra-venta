@@ -123,7 +123,14 @@ public class VentaServiceImpl implements VentaService{
 	}
 */
 	@Override
-	public Venta actualizarVenta(int idventa, Venta venta) {
+	public Venta actualizarVenta(int idventa, Venta venta) throws Exception {
+		Optional<Usuario> usuario = usuarioService.buscarUsuarioPorRut(venta.getRutusuario());
+		if(usuario.isEmpty()){
+			throw new Exception("El usuario asignado a la venta no existe.");
+		}
+		if (usuario.get().getRolusuario()!=Usuario.ADMIN_VENTAS && usuario.get().getRolusuario()!=Usuario.ADMIN){
+			throw new AuthException("Usuario no autorizado para cometer la acción.");
+		}
 		repVenta.save(venta);
 		return venta;
 	}

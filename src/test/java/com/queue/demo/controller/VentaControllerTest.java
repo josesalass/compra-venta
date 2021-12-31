@@ -21,11 +21,14 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -174,6 +177,24 @@ public class VentaControllerTest {
         mockMvc.perform(put("/ventas/{idventa}/cambiarFecha/{fecha}",venta.getIdventa(),Timestamp.valueOf("2005-10-30 00:00:00"))).andExpect(status().isBadRequest());
     }
 
+    //editarFecha Unauthorized
+    @Test
+    void siInvocoEditarFechaYElUsuarioNoEsAdminDeVentasDebeRetornarStatusUnauthorized() throws Exception{
+        //Given
+        Venta venta = getVenta();
+        Usuario usuario=getUsuario();
+        given(ventaService.buscarVentaPorId(venta.getIdventa())).willReturn(Optional.of(venta));
+        doThrow(AuthException.class).when(ventaService).actualizarVenta(eq(venta.getIdventa()),any(Venta.class));
+        MockHttpServletResponse response = mockMvc.perform(put("/ventas/{idventa}/cambiarFecha/{fecha}",venta.getIdventa(),Timestamp.valueOf("2005-10-30 00:00:00"))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON))
+                .andReturn()
+                .getResponse();
+
+        //Then
+        assertEquals(HttpStatus.UNAUTHORIZED.value(),response.getStatus());
+    }
+
     //editarTipo caso OK
     @Test
     void siInvocoEditarTipoYNoHayNulosDebeDevolverStatusOk() throws Exception{
@@ -195,6 +216,25 @@ public class VentaControllerTest {
         assertEquals(HttpStatus.OK.value(),response.getStatus());
     }
 
+
+    //editarTipo caso Unauthorized
+    @Test
+    void siInvocoEditarTipoYHayNulosDebeDevolverStatusUnaothorized() throws Exception{
+        //Given
+        Venta venta = getVenta();
+        Usuario usuario=getUsuario();
+        given(ventaService.buscarVentaPorId(venta.getIdventa())).willReturn(java.util.Optional.of(venta));
+        doThrow(AuthException.class).when(ventaService).actualizarVenta(eq(venta.getIdventa()),any(Venta.class));
+        //When
+        MockHttpServletResponse response = mockMvc.perform(put("/ventas/{idventa}/cambiarTipoPrueba/{tipo}",venta.getIdventa(),"boleta")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON))
+                .andReturn()
+                .getResponse();
+
+        //Then
+        assertEquals(HttpStatus.UNAUTHORIZED.value(),response.getStatus());
+    }
 
     //editarTipo caso Bad Request
     @Test
@@ -226,6 +266,17 @@ public class VentaControllerTest {
 
         //Then
         assertEquals(HttpStatus.OK.value(),response.getStatus());
+    }
+
+    //editarMetodoPago caso UNAUTHORIZED
+    @Test
+    void siInvocoEditarMetodoPagoYHayNulosDebeDevolverStatusUNAUTHORIZED() throws Exception{
+        Venta venta = getVenta();
+        Usuario usuario= getUsuario();
+        given(ventaService.buscarVentaPorId(venta.getIdventa())).willReturn(Optional.of(venta));
+        doThrow(AuthException.class).when(ventaService).actualizarVenta(eq(venta.getIdventa()),any(Venta.class));
+
+        mockMvc.perform(put("/ventas/{idventa}/cambiarMetodoPagoPrueba/{metodo}",venta.getIdventa(),"efectivo")).andExpect(status().isUnauthorized());
     }
 
     //editarMetodoPago caso BAD REQUEST

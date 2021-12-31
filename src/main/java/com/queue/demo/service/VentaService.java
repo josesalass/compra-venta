@@ -15,7 +15,7 @@ public interface VentaService {
 	public Optional<Venta> buscarVentaPorId(int id);
 	public boolean borrarVentaPorId(int id);
 	public Venta guardarVenta(Venta venta) throws Exception;
-	public Venta actualizarVenta(int idventa, Venta venta);
+	public Venta actualizarVenta(int idventa, Venta venta) throws Exception;
 	List<ViewRegistroVentasResumen> verRegistroVentaResumen(String tipo);
 
 	List<ViewRegistroVentasResumen> verRegistroVentaResumen();
