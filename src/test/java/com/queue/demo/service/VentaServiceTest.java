@@ -18,7 +18,6 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.BDDMockito.given;
@@ -30,6 +29,8 @@ public class VentaServiceTest {
     private RepositorioVenta repositorioVenta;
     @Mock
     private ProductoServiceImpl productoService;
+    @Mock
+    private UsuarioService usuarioService;
     @Mock
     private EntityManager entityManager;
 
@@ -113,6 +114,7 @@ public class VentaServiceTest {
     @Test
     void GuardarVentaDebeRetornarLaVentaGuardada() throws Exception {
         Venta venta= getListaVentas().get(0);
+        Usuario usuario = getUsuario();
         Producto producto= getProducto();
         Asociada_Venta asociadaVenta=new Asociada_Venta();
         asociadaVenta.setProducto(producto);
@@ -121,8 +123,7 @@ public class VentaServiceTest {
         venta.getVentaproductos().add(asociadaVenta);
         producto.setStock(producto.getStock()-asociadaVenta.getCantidad());
         Venta resultado;
-
-
+        when(usuarioService.buscarUsuarioPorRut(any(String.class))).thenReturn(Optional.of(usuario));
         when(productoService.buscarProductoPorId(1)).thenReturn(Optional.of(producto));
         when(repositorioVenta.save(any(Venta.class))).thenReturn(venta);
 
@@ -135,14 +136,103 @@ public class VentaServiceTest {
     }
 
     @Test
-    void siInvocoActualizarVentaDebeRetornarLaVentaActualizada(){
+    void siInvocoGuardarVentaYElUsuarioNoExisteDebeRetornarException() throws Exception{
+        Venta venta= getListaVentas().get(0);
+        Producto producto= getProducto();
+        Asociada_Venta asociadaVenta=new Asociada_Venta();
+        asociadaVenta.setProducto(producto);
+        asociadaVenta.setVenta(venta);
+        asociadaVenta.setCantidad(10);
+        venta.getVentaproductos().add(asociadaVenta);
+        producto.setStock(producto.getStock()-asociadaVenta.getCantidad());
+        Venta resultado;
+        boolean thrown = false;
+
+        when(usuarioService.buscarUsuarioPorRut(any(String.class))).thenReturn(Optional.empty());
+
+        try {
+            resultado = ventaService.guardarVenta(venta);
+        }catch(Exception e){
+            thrown = true;
+        }
+        assertTrue(thrown);
+    }
+
+    @Test
+    void siInvocoGuardarVentaYElUsuarioNoEsAdminDeVentasDebeRetornarUnauthorized() throws Exception{
+        Venta venta= getListaVentas().get(0);
+        Usuario usuario = getUsuario();
+        usuario.setRolusuario(Usuario.ADMIN_COMPRAS);
+        Producto producto= getProducto();
+        Asociada_Venta asociadaVenta=new Asociada_Venta();
+        asociadaVenta.setProducto(producto);
+        asociadaVenta.setVenta(venta);
+        asociadaVenta.setCantidad(10);
+        venta.getVentaproductos().add(asociadaVenta);
+        producto.setStock(producto.getStock()-asociadaVenta.getCantidad());
+        Venta resultado;
+        boolean thrown = false;
+
+
+            when(usuarioService.buscarUsuarioPorRut(any(String.class))).thenReturn(Optional.of(usuario));
+
+        try{
+            resultado = ventaService.guardarVenta(venta);
+        }catch(AuthException e){
+            thrown = true;
+        }
+
+        assertTrue(thrown);
+    }
+
+    @Test
+    void siInvocoActualizarVentaDebeRetornarLaVentaActualizada() throws Exception {
         Venta venta = getListaVentas().get(0);
+        Usuario usuario=getUsuario();
+        when(usuarioService.buscarUsuarioPorRut(any(String.class))).thenReturn(Optional.of(usuario));
+
         given(repositorioVenta.save(venta)).willReturn(venta);
 
         Venta ventaFinal = ventaService.actualizarVenta(venta.getIdventa(),venta);
 
         assertNotNull(ventaFinal);
         verify(repositorioVenta).save(any(Venta.class));
+    }
+    @Test
+    void siInvocoActualizarVentaYElUsuarioNoExisteDebeRetornarException() throws Exception{
+        Venta venta= getListaVentas().get(0);
+        Usuario usuario = getUsuario();
+        Venta resultado;
+        boolean thrown = false;
+
+        when(usuarioService.buscarUsuarioPorRut(any(String.class))).thenReturn(Optional.empty());
+
+        try{
+            resultado = ventaService.actualizarVenta(venta.getIdventa(),venta);
+        }catch(Exception e){
+            thrown = true;
+        }
+
+        assertTrue(thrown);
+    }
+
+    @Test
+    void siInvocoActualizarVentaYElUsuarioNoEsAdminDeVentasDebeRetornarUnauthorized() throws Exception{
+        Venta venta= getListaVentas().get(0);
+        Usuario usuario = getUsuario();
+        usuario.setRolusuario(Usuario.ADMIN_COMPRAS);
+        Venta resultado;
+        boolean thrown = false;
+
+        when(usuarioService.buscarUsuarioPorRut(any(String.class))).thenReturn(Optional.of(usuario));
+
+        try{
+            resultado = ventaService.actualizarVenta(venta.getIdventa(),venta);
+        }catch(AuthException e){
+            thrown = true;
+        }
+
+        assertTrue(thrown);
     }
 
     @Test
@@ -356,5 +446,9 @@ public class VentaServiceTest {
         v2.setFecha(Timestamp.valueOf("2020-11-24 00:00:00"));
         viewRegistroVentasDetalleList.add(v2);
         return viewRegistroVentasDetalleList;
+    }
+    private Usuario getUsuario() {
+        Usuario usuario = new Usuario("123","jose","apellido1","tres","ada@gmail.com",Usuario.ADMIN_VENTAS,"producto1");
+        return  usuario;
     }
 }

@@ -7,6 +7,10 @@ import java.util.List;
 @Entity
 @Table(name = "usuario")
 public class Usuario {
+	public static final int ADMIN=0;
+	public static final int ADMIN_COMPRAS=1;
+	public static final int ADMIN_VENTAS=2;
+
 	@Id
     @Column(name = "rutusuario")
 	private String rutusuario;

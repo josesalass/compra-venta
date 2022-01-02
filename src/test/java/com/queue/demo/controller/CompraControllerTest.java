@@ -1,10 +1,12 @@
 package com.queue.demo.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.queue.demo.controller.CompraController;
 import com.queue.demo.model.Compra;
+import com.queue.demo.model.Usuario;
+import com.queue.demo.model.Venta;
+import com.queue.demo.service.AuthException;
 import com.queue.demo.service.CompraException;
+import com.queue.demo.service.CompraService;
 import com.queue.demo.service.CompraServiceImpl;
-import org.checkerframework.checker.nullness.Opt;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -21,9 +23,9 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.doThrow;
 
-import java.sql.Time;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
@@ -40,7 +42,7 @@ public class CompraControllerTest {
     private JacksonTester<Compra> jsompra;
     private MockMvc mockMvc;
     @Mock
-    private CompraServiceImpl compraServiceimp;
+    private CompraServiceImpl compraService;
     @InjectMocks
     private CompraController  compraController;
 
@@ -53,7 +55,7 @@ public class CompraControllerTest {
     void SiInvocoFuncionListDebeRetornarTodosLasCompras() throws Exception {
         // Given
         List<Compra> compras = getCompras();
-        given(compraServiceimp.buscarTodasLasCompras()).willReturn(compras);
+        given(compraService.buscarTodasLasCompras()).willReturn(compras);
         // When
         MockHttpServletResponse response= mockMvc.perform(get("/compras")
                         .accept(MediaType.APPLICATION_JSON))
@@ -68,7 +70,7 @@ public class CompraControllerTest {
     void SiInvocoFuncionListYNoExistenComprasDebeRetornarListaVacia() throws Exception {
         // Given
         List<Compra> compras = new ArrayList<>();
-        given(compraServiceimp.buscarTodasLasCompras()).willReturn(compras);
+        given(compraService.buscarTodasLasCompras()).willReturn(compras);
 
         MockHttpServletResponse response = mockMvc.perform(get("/compras")
                         .accept(MediaType.APPLICATION_JSON))
@@ -83,7 +85,7 @@ public class CompraControllerTest {
     void siInvocoGuardarCompraSeDebeAlmacenarYDevolverElStatusCREATED() throws Exception {
         // Given
         Compra compra = getCompra();
-        given(compraServiceimp.guardarCompra(any(Compra.class))).willReturn(compra);
+        given(compraService.guardarCompra(any(Compra.class))).willReturn(compra);
 
         // When
         MockHttpServletResponse response = mockMvc.perform(post("/compras/guardarCompra")
@@ -102,7 +104,7 @@ public class CompraControllerTest {
 
         // Given
         Compra compra = getCompra();
-        doThrow(CompraException.class).when(compraServiceimp).guardarCompra(any(Compra.class));
+        doThrow(CompraException.class).when(compraService).guardarCompra(any(Compra.class));
 
         // When
         MockHttpServletResponse response = mockMvc.perform(post("/compras/guardarCompra")
@@ -115,14 +117,34 @@ public class CompraControllerTest {
         // Then
         assertEquals(HttpStatus.BAD_REQUEST.value(),response.getStatus());
     }
+
+    @Test
+    void siInvocoGuardarCompraYElUsuarioNoEstaAutorizadoDebeRetornarStatusUnauthorized() throws Exception {
+
+        // Given
+        Compra compra = getCompra();
+        doThrow(AuthException.class).when(compraService).guardarCompra(any(Compra.class));
+
+        // When
+        MockHttpServletResponse response = mockMvc.perform(post("/compras/guardarCompra")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(jsompra.write(compra).getJson())
+                        .accept(MediaType.APPLICATION_JSON))
+                .andReturn()
+                .getResponse();
+
+        // Then
+        assertEquals(HttpStatus.UNAUTHORIZED.value(),response.getStatus());
+    }
+
     @Test
     void siInvocoCambioFechaPorIdSeDebeCambiarLaFechaDeLaCompraYDevolverElStatusOK() throws Exception {
         // Given
         Compra compra = getCompra();
         Compra compraf= compra;
         compraf.setFecha(Timestamp.valueOf("2020-11-23 00:00:00"));
-        given(compraServiceimp.buscarCompraPorId(compra.getIdcompra())).willReturn(Optional.of(compra));
-        given(compraServiceimp.actualizarCompra(compra.getIdcompra(),compra)).willReturn(compra);
+        given(compraService.buscarCompraPorId(compra.getIdcompra())).willReturn(Optional.of(compra));
+        given(compraService.actualizarCompra(compra.getIdcompra(),compra)).willReturn(compra);
 
         // When
         MockHttpServletResponse response = mockMvc.perform(put("/compras/{idcompra}/cambiarFecha/{fecha}",compra.getIdcompra(),"2020-11-23 00:00:00")
@@ -135,13 +157,30 @@ public class CompraControllerTest {
         assertEquals(HttpStatus.OK.value(),response.getStatus());
     }
 
+    //editarFecha Unauthorized
+    @Test
+    void siInvocoCambioFechaPorIdYNoSePuedeCambiarLaFechaDeLaCompraDebeDevolverElStatusUnauthorized() throws Exception{
+        //Given
+        Compra compra = getCompra();
+        Usuario usuario=getUsuario();
+        given(compraService.buscarCompraPorId(compra.getIdcompra())).willReturn(Optional.of(compra));
+        doThrow(AuthException.class).when(compraService).actualizarCompra(eq(compra.getIdcompra()),any(Compra.class));
+        MockHttpServletResponse response = mockMvc.perform(put("/compras/{idcompra}/cambiarFecha/{fecha}",compra.getIdcompra(),Timestamp.valueOf("2005-10-30 00:00:00"))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON))
+                .andReturn()
+                .getResponse();
+
+        //Then
+        assertEquals(HttpStatus.UNAUTHORIZED.value(),response.getStatus());
+    }
 
     @Test
     void siInvocoCambioFechaPorIdYNoSePuedeCambiarLaFechaDeLaCompraDebeDevolverElStatusBadRequest() throws Exception {
         // Given
         Compra compra = getCompra();
         String fechan= "lo que sea";
-        given(compraServiceimp.buscarCompraPorId(compra.getIdcompra())).willReturn(Optional.of(compra));
+        given(compraService.buscarCompraPorId(compra.getIdcompra())).willReturn(Optional.of(compra));
 
 
         // When
@@ -151,7 +190,7 @@ public class CompraControllerTest {
     @Test
     void siInvocoCambioFechaYLaCompraNoExisteDebeDevolverElStatusBadRequest() throws Exception{
         Compra compra = getCompra();
-        given(compraServiceimp.buscarCompraPorId(compra.getIdcompra())).willReturn(Optional.empty());
+        given(compraService.buscarCompraPorId(compra.getIdcompra())).willReturn(Optional.empty());
 
         mockMvc.perform(put("/compras/{idcompra}/cambiarFecha/{fecha}",compra.getIdcompra(),"2020-11-23 00:00:00")).andExpect(status().isBadRequest());
     }
@@ -162,8 +201,8 @@ public class CompraControllerTest {
         Compra compra = getCompra();
         Compra compraf= compra;
         compraf.setRutempresa("792954367");
-        given(compraServiceimp.buscarCompraPorId(compra.getIdcompra())).willReturn(Optional.of(compra));
-        given(compraServiceimp.actualizarCompra(compra.getIdcompra(),compra)).willReturn(compraf);
+        given(compraService.buscarCompraPorId(compra.getIdcompra())).willReturn(Optional.of(compra));
+        given(compraService.actualizarCompra(compra.getIdcompra(),compra)).willReturn(compraf);
 
         // When
         MockHttpServletResponse response = mockMvc.perform(put("/compras/{idcompra}/cambiarEmpresa/{rutempresa}",compra.getIdcompra(),"792954367")
@@ -177,10 +216,22 @@ public class CompraControllerTest {
     }
 
     @Test
+    void siInvocoCambiarRutEmpresaPorIdYNoSePuedeCambiarElRutEmpresaDeLaCompraDebeDevolverElStatusUnauthorized() throws Exception {
+
+        Compra compra = getCompra();
+        Usuario usuario=getUsuario();
+        given(compraService.buscarCompraPorId(compra.getIdcompra())).willReturn(Optional.of(compra));
+        doThrow(AuthException.class).when(compraService).actualizarCompra(eq(compra.getIdcompra()),any(Compra.class));
+
+        mockMvc.perform(put("/compras/{idcompra}/cambiarEmpresa/{rutempresa}",compra.getIdcompra(),"792954367")).andExpect(status().isUnauthorized());
+
+    }
+
+    @Test
     void siInvocoCambiarRutEmpresaPorIdYNoSePuedeCambiarElRutEmpresaDeLaCompraDebeDevolverElStatusBadRequest() throws Exception {
 
         Compra compra = getCompra();
-        given(compraServiceimp.buscarCompraPorId(compra.getIdcompra())).willReturn(Optional.empty());
+        given(compraService.buscarCompraPorId(compra.getIdcompra())).willReturn(Optional.empty());
 
         mockMvc.perform(put("/compras/{idcompra}/cambiarEmpresa/{rutempresa}",compra.getIdcompra(),"792954367")).andExpect(status().isBadRequest());
 
@@ -203,6 +254,10 @@ public class CompraControllerTest {
         compra.setFecha(new Timestamp(System.currentTimeMillis()));
         compra.setRutempresa("257963345");
         return compra;
+    }
+    private Usuario getUsuario() {
+        Usuario usuario = new Usuario("123576642","jose","apellido1","tres","ada@gmail.com",Usuario.ADMIN_COMPRAS,"producto1");
+        return  usuario;
     }
 
 

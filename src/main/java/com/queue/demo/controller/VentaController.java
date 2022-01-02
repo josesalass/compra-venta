@@ -1,12 +1,10 @@
 package com.queue.demo.controller;
 
+import com.queue.demo.model.Usuario;
 import com.queue.demo.model.Venta;
 import com.queue.demo.model.ViewRegistroVentasDetalle;
 import com.queue.demo.model.ViewRegistroVentasResumen;
-import com.queue.demo.service.Asociada_VentaService;
-import com.queue.demo.service.ClienteService;
-import com.queue.demo.service.ProductoService;
-import com.queue.demo.service.VentaService;
+import com.queue.demo.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -42,50 +40,66 @@ public class VentaController {
 	}
 
 	@PostMapping("/guardarVenta")
-	public ResponseEntity<Venta> saveVenta(@RequestBody Venta venta) {
+	public ResponseEntity<?> saveVenta(@RequestBody Venta venta) {
 		try {
 			return new ResponseEntity<>(ventaService.guardarVenta(venta),HttpStatus.CREATED);
+		} catch(AuthException e){
+			return new ResponseEntity<>(e.getMessage(),HttpStatus.UNAUTHORIZED);
 		} catch (Exception e) {
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 		}
 	}
 
 	@PutMapping("/{idventa}/cambiarFecha/{fecha}")
-	public ResponseEntity<String> cambioFecha(@PathVariable int idventa, @PathVariable String fecha) {
+	public ResponseEntity<?> cambioFecha(@PathVariable int idventa, @PathVariable String fecha) {
 		Optional<Venta> venta = ventaService.buscarVentaPorId(idventa);
 		try{
 			Timestamp fechaTS = Timestamp.valueOf(fecha);
-			if (venta == null || fechaTS == null){
+				if (venta.isEmpty() || fechaTS == null){
 				return new ResponseEntity<>("La venta que se quiere editar no existe o falta el valor de la fecha",HttpStatus.BAD_REQUEST);
 			}
 			venta.get().setFecha(fechaTS);
 			ventaService.actualizarVenta(idventa,venta.get());
 			return new ResponseEntity<>("Edición exitosa",HttpStatus.OK);
+		} catch(AuthException e){
+			return new ResponseEntity<>(e.getMessage(),HttpStatus.UNAUTHORIZED);
 		}catch(Exception e){
 			return new ResponseEntity<>("El formato de la fecha no corresponde",HttpStatus.BAD_REQUEST);
 		}
 	}
 
 	@PutMapping("/{idventa}/cambiarTipoPrueba/{tipo}")
-	public ResponseEntity<String> cambioTipo(@PathVariable int idventa, @PathVariable String tipo) {
+	public ResponseEntity<String> cambioTipo(@PathVariable int idventa, @PathVariable String tipo){
 		Optional<Venta> venta = ventaService.buscarVentaPorId(idventa);
-			if (venta == null || tipo == null){
-				return new ResponseEntity<>("La venta que se quiere editar no existe o falta el valor del tipo de venta",HttpStatus.BAD_REQUEST);
+		try {
+			if (venta == null || tipo == null) {
+				return new ResponseEntity<>("La venta que se quiere editar no existe o falta el valor del tipo de venta", HttpStatus.BAD_REQUEST);
 			}
 			venta.get().setTipoventa(tipo);
-			ventaService.actualizarVenta(idventa,venta.get());
-			return new ResponseEntity<>("Edición exitosa",HttpStatus.OK);
+			ventaService.actualizarVenta(idventa, venta.get());
+			return new ResponseEntity<>("Edición exitosa", HttpStatus.OK);
+		}catch(AuthException e){
+			return new ResponseEntity<>(e.getMessage(),HttpStatus.UNAUTHORIZED);
+		}catch (Exception e) {
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		}
 	}
 
 	@PutMapping("/{idventa}/cambiarMetodoPagoPrueba/{metodo}")
 	public ResponseEntity<String> cambioMetodoPago(@PathVariable int idventa, @PathVariable String metodo) {
 		Optional<Venta> venta = ventaService.buscarVentaPorId(idventa);
-		if (venta == null || metodo == null){
-			return new ResponseEntity<>("La venta que se quiere editar no existe o falta el valor del metodo de pago de venta",HttpStatus.BAD_REQUEST);
+		try {
+			if (venta == null || metodo == null) {
+				return new ResponseEntity<>("La venta que se quiere editar no existe o falta el valor del metodo de pago de venta", HttpStatus.BAD_REQUEST);
+			}
+			venta.get().setMetodopago(metodo);
+			ventaService.actualizarVenta(idventa, venta.get());
+			return new ResponseEntity<>("Edición exitosa", HttpStatus.OK);
+		}catch (AuthException e){
+			return new ResponseEntity<>(e.getMessage(),HttpStatus.UNAUTHORIZED);
+		}catch (Exception e) {
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 		}
-		venta.get().setMetodopago(metodo);
-		ventaService.actualizarVenta(idventa,venta.get());
-		return new ResponseEntity<>("Edición exitosa",HttpStatus.OK);
 	}
 
 	@GetMapping("/verRegistroVentasResumen")

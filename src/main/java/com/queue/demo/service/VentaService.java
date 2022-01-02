@@ -4,6 +4,7 @@ import java.sql.Timestamp;
 import java.util.List;
 import java.util.Optional;
 
+import com.queue.demo.model.Usuario;
 import com.queue.demo.model.Venta;
 import com.queue.demo.model.ViewRegistroVentasDetalle;
 import com.queue.demo.model.ViewRegistroVentasResumen;
@@ -14,7 +15,7 @@ public interface VentaService {
 	public Optional<Venta> buscarVentaPorId(int id);
 	public boolean borrarVentaPorId(int id);
 	public Venta guardarVenta(Venta venta) throws Exception;
-	public Venta actualizarVenta(int idventa, Venta venta);
+	public Venta actualizarVenta(int idventa, Venta venta) throws Exception;
 	List<ViewRegistroVentasResumen> verRegistroVentaResumen(String tipo);
 
 	List<ViewRegistroVentasResumen> verRegistroVentaResumen();

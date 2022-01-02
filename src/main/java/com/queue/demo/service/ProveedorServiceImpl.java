@@ -2,6 +2,7 @@ package com.queue.demo.service;
 
 import com.queue.demo.model.Proveedor;
 import com.queue.demo.model.RepresentanteProveedor;
+import com.queue.demo.model.Usuario;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
@@ -31,6 +32,8 @@ public class ProveedorServiceImpl implements ProveedorService{
 	RepositorioRepresentanteProveedor repRepProveedor;
 	@Autowired
 	RepositorioTelefonoRepresentante repTelefonoRep;
+	@Autowired
+	UsuarioService usuarioService;
 	
 	@Override
 	// metodo en el cual buscamos a los proveedores por su nombre
@@ -116,7 +119,15 @@ public class ProveedorServiceImpl implements ProveedorService{
 
 
 	@Override
-	public Proveedor guardarProveedor(Proveedor proveedor) throws Exception{
+	public Proveedor guardarProveedor( Proveedor proveedor, String rut ) throws Exception{
+
+		Optional<Usuario> usuario = usuarioService.buscarUsuarioPorRut(rut);
+		if(usuario.isEmpty()){
+			throw new Exception("El usuario asignado no existe.");
+		}
+		if (usuario.get().getRolusuario()!=Usuario.ADMIN_COMPRAS && usuario.get().getRolusuario()!=Usuario.ADMIN){
+			throw new AuthException("Usuario no autorizado para cometer la acción.");
+		}
 		if(proveedor==null || buscarPorRut(proveedor.getRutempresa()).isPresent()){
 			throw new Exception("Ya existente");
 		}

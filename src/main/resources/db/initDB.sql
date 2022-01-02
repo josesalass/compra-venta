@@ -133,3 +133,28 @@ CREATE OR REPLACE VIEW promedioventasmes AS
 select to_char(fecha,'yyyy-mm') AS anio_mes,CAST(AVG(ALL valortotal) as int) AS promedio_mensual
 from registroventasresumen
 GROUP BY to_char(fecha,'yyyy-mm') ORDER BY to_char(fecha,'yyyy-mm');
+
+CREATE OR REPLACE VIEW ProductoMasVendidoPorMes as 
+select t1.fecha, detalleproducto, t1.cantidad from (
+select to_char(fecha,'yyyy-mm') AS fecha, detalleproducto, sum(cantidad) as cantidad
+from asociada_venta NATURAL JOIN producto NATURAL join VENTA
+GROUP BY to_char(fecha,'yyyy-mm'),detalleproducto) as t1 
+inner join 
+(SELECT fecha, max(maxcantidad) as cantidad from (
+SELECT to_char(fecha,'yyyy-mm') as fecha,sum(cantidad) AS maxcantidad
+from asociada_venta NATURAL JOIN producto NATURAL join VENTA
+group by to_char(fecha,'yyyy-mm'),detalleproducto
+) as maxprod group by fecha) as t2 on t1.cantidad=t2.cantidad;
+
+CREATE OR REPLACE VIEW ProductoMenosVendido as 
+select distinct  t1.fecha, detalleproducto, t1.cantidad from (
+select to_char(fecha,'yyyy-mm') AS fecha, detalleproducto, sum(cantidad) as cantidad
+from asociada_venta NATURAL JOIN producto NATURAL join VENTA
+GROUP BY to_char(fecha,'yyyy-mm'),detalleproducto) as t1 
+inner join 
+(SELECT fecha, min(maxcantidad) as cantidad from (
+SELECT to_char(fecha,'yyyy-mm') as fecha,sum(cantidad) AS maxcantidad
+from asociada_venta NATURAL JOIN producto NATURAL join VENTA
+group by to_char(fecha,'yyyy-mm'),detalleproducto
+) as minprod group by fecha) as t2 on t1.cantidad=t2.cantidad;
+
