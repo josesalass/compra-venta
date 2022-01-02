@@ -231,26 +231,42 @@ public class ProveedorServiceTest {
     }
 
     @Test
-    void SiInvocoGuardarProveedorYElRutNoEstaAutorizadoDebeLanzarException(){
-        List<Proveedor> proveedores = new ArrayList<>();
-        proveedores.add(getProveedor());
-        Usuario u= new Usuario();
+    void SiInvocoGuardarProveedorYElRutNoEstaAutorizadoDebeLanzarException() throws Exception {
+        Usuario u=getusuario();
+        Proveedor p=getProveedor();
         u.setRolusuario(Usuario.ADMIN_VENTAS);
 
-        when(entityManager.getCriteriaBuilder()).thenReturn(criteriaBuilder);
-        when(criteriaBuilder.createQuery(any())).thenReturn(criteriaQuery);
-        when(criteriaQuery.from(Proveedor.class)).thenReturn(root);
-        when(criteriaQuery.select(root)).thenReturn(criteriaQuery);
-        when(criteriaQuery.where(criteriaBuilder.equal(root.get("rutempresa"), getProveedor().getRutempresa()))).thenReturn(criteriaQuery);
+        Proveedor resultado;
+        boolean thrown = false;
 
-        when(entityManager.createQuery(criteriaQuery)).thenReturn(typedQuery);
-        when(typedQuery.getResultList()).thenReturn(proveedores);
-        when(repositorioUsuario.buscarUsuarioPorRut(u.getRutusuario())).thenReturn(Optional.of(u));
+        when(repositorioUsuario.buscarUsuarioPorRut(any(String.class))).thenReturn(Optional.of(u));
 
-        Exception exception = assertThrows(Exception.class,
-                () -> {proveedorServiceImpl.guardarProveedor(getProveedor(),u.getRutusuario());});
+        try{
+            resultado = proveedorServiceImpl.guardarProveedor(p,u.getRutusuario());
+        }catch(AuthException e){
+            thrown = true;
+        }
 
-        assertEquals("Usuario no autorizado para cometer la acción.",exception.getMessage());
+        assertTrue(thrown);
+    }
+    @Test
+    void SiInvocoGuardarProveedorYElRutNoExisteDebeLanzarException() throws Exception {
+        Usuario u= new Usuario();
+        Proveedor p=getProveedor();
+        u.setRolusuario(Usuario.ADMIN_VENTAS);
+
+        Proveedor resultado;
+        boolean thrown = false;
+
+        when(repositorioUsuario.buscarUsuarioPorRut(any(String.class))).thenReturn(Optional.of(u));
+
+        try{
+            resultado = proveedorServiceImpl.guardarProveedor(p,u.getRutusuario());
+        }catch(Exception e){
+            thrown = true;
+        }
+
+        assertTrue(thrown);
     }
 
     @Test

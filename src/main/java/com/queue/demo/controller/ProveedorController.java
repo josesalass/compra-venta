@@ -73,11 +73,11 @@ public class ProveedorController {
 	}
 
 	@PostMapping("/guardarProveedor")
-	public ResponseEntity<Proveedor> saveProveedor(@RequestParam(value="rut",required=true) String rut , @RequestBody Proveedor proveedor) {
+	public ResponseEntity<?> saveProveedor(@RequestParam(value="rut",required=true) String rut , @RequestBody Proveedor proveedor) {
 		try {
 			return new ResponseEntity<>(proveedorService.guardarProveedor(proveedor,rut), HttpStatus.CREATED);
 		}catch(AuthException e){
-			return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+			return new ResponseEntity<>(e.getMessage(),HttpStatus.UNAUTHORIZED);
 		} catch (Exception e){
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 		}

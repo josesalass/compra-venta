@@ -120,6 +120,7 @@ public class ProveedorServiceImpl implements ProveedorService{
 
 	@Override
 	public Proveedor guardarProveedor( Proveedor proveedor, String rut ) throws Exception{
+
 		Optional<Usuario> usuario = usuarioService.buscarUsuarioPorRut(rut);
 		if(usuario.isEmpty()){
 			throw new Exception("El usuario asignado no existe.");
