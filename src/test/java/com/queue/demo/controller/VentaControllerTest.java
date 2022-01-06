@@ -3,6 +3,8 @@ package com.queue.demo.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.queue.demo.model.Usuario;
 import com.queue.demo.model.Venta;
+import com.queue.demo.model.ViewRegistroVentasDetalle;
+import com.queue.demo.model.ViewRegistroVentasResumen;
 import com.queue.demo.service.AuthException;
 import com.queue.demo.service.VentaService;
 import org.junit.jupiter.api.BeforeEach;
@@ -18,6 +20,7 @@ import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
+import java.sql.Time;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
@@ -287,6 +290,214 @@ public class VentaControllerTest {
 
         mockMvc.perform(put("/ventas/{idventa}/cambiarMetodoPagoPrueba/{metodo}",venta.getIdventa(),"efectivo")).andExpect(status().isBadRequest());
     }
+
+    @Test
+    void siInvocoViewRegistroVentaResumenDebeRetornarLista() throws Exception {
+        List<ViewRegistroVentasResumen> a = getViewRegistroVentaResumen();
+        given(ventaService.verRegistroVentaResumen()).willReturn(a);
+
+        MockHttpServletResponse response = mockMvc.perform(get("/ventas/verRegistroVentasResumen")
+                        .accept(MediaType.APPLICATION_JSON))
+                .andReturn()
+                .getResponse();
+
+        assertEquals(HttpStatus.OK.value(),response.getStatus());
+    }
+
+    @Test
+    void siInvocoViewRegistroVentaResumenDebeRetornarListaVacia() throws Exception {
+        List<ViewRegistroVentasResumen> a = new ArrayList<>();
+        given(ventaService.verRegistroVentaResumen()).willReturn(a);
+
+        MockHttpServletResponse response = mockMvc.perform(get("/ventas/verRegistroVentasResumen")
+                        .accept(MediaType.APPLICATION_JSON))
+                .andReturn()
+                .getResponse();
+
+        assertEquals(HttpStatus.BAD_REQUEST.value(),response.getStatus());
+    }
+
+    @Test
+    void siInvocoViewRegistroVentaResumenTipoDebeRetornarLista() throws Exception {
+        List<ViewRegistroVentasResumen> a = getViewRegistroVentaResumen();
+        given(ventaService.verRegistroVentaResumen(any(String.class))).willReturn(a);
+
+        MockHttpServletResponse response = mockMvc.perform(get("/ventas/verRegistroVentasResumenTipo?tipoventa=boleta")
+                        .accept(MediaType.APPLICATION_JSON))
+                .andReturn()
+                .getResponse();
+
+        assertEquals(HttpStatus.OK.value(),response.getStatus());
+    }
+
+    @Test
+    void siInvocoViewRegistroVentaResumenTipoDebeRetornarListaVacia() throws Exception {
+        List<ViewRegistroVentasResumen> a = new ArrayList<>();
+        given(ventaService.verRegistroVentaResumen(any(String.class))).willReturn(a);
+
+        MockHttpServletResponse response = mockMvc.perform(get("/ventas/verRegistroVentasResumenTipo?tipoventa=boleta")
+                        .accept(MediaType.APPLICATION_JSON))
+                .andReturn()
+                .getResponse();
+
+        assertEquals(HttpStatus.BAD_REQUEST.value(),response.getStatus());
+    }
+
+    @Test
+    void siInvocoViewRegistroVentaDetalleDebeRetornarLista() throws Exception {
+        List<ViewRegistroVentasDetalle> a = getViewRegistroVentaDetalle();
+        given(ventaService.verRegistroVentaDetalle()).willReturn(a);
+
+        MockHttpServletResponse response = mockMvc.perform(get("/ventas/verRegistroVentasDetalle")
+                        .accept(MediaType.APPLICATION_JSON))
+                .andReturn()
+                .getResponse();
+
+        assertEquals(HttpStatus.OK.value(),response.getStatus());
+    }
+
+    @Test
+    void siInvocoViewRegistroVentaDetalleDebeRetornarListaVacia() throws Exception {
+        List<ViewRegistroVentasDetalle> a = new ArrayList<>();
+        given(ventaService.verRegistroVentaDetalle()).willReturn(a);
+
+        MockHttpServletResponse response = mockMvc.perform(get("/ventas/verRegistroVentasDetalle")
+                        .accept(MediaType.APPLICATION_JSON))
+                .andReturn()
+                .getResponse();
+
+        assertEquals(HttpStatus.BAD_REQUEST.value(),response.getStatus());
+    }
+
+    @Test
+    void siInvocoViewRegistroVentaDetalleConTipoDebeRetornarLista() throws Exception {
+        List<ViewRegistroVentasDetalle> a = getViewRegistroVentaDetalle();
+        given(ventaService.verRegistroVentaDetalle(any(String.class))).willReturn(a);
+
+        MockHttpServletResponse response = mockMvc.perform(get("/ventas/verRegistroVentasDetalleTipo?tipoventa=boleta")
+                        .accept(MediaType.APPLICATION_JSON))
+                .andReturn()
+                .getResponse();
+
+        assertEquals(HttpStatus.OK.value(),response.getStatus());
+    }
+
+    @Test
+    void siInvocoViewRegistroVentaDetalleConTipoDebeRetornarListaVacia() throws Exception {
+        List<ViewRegistroVentasDetalle> a = new ArrayList<>();
+        given(ventaService.verRegistroVentaDetalle(any(String.class))).willReturn(a);
+
+        MockHttpServletResponse response = mockMvc.perform(get("/ventas/verRegistroVentasDetalleTipo?tipoventa=boleta")
+                        .accept(MediaType.APPLICATION_JSON))
+                .andReturn()
+                .getResponse();
+
+        assertEquals(HttpStatus.BAD_REQUEST.value(),response.getStatus());
+    }
+
+    @Test
+    void siInvocoVerRegistroVentasResumenDiaDebeRetornarLista() throws Exception {
+        List<ViewRegistroVentasResumen> a = getViewRegistroVentaResumen();
+        given(ventaService.verRegistroVentaResumenDia(any(Timestamp.class))).willReturn(a);
+
+        MockHttpServletResponse response = mockMvc.perform(get("/ventas/verRegistroVentasResumenDia?dia=2020-10-02 00:00:00")
+                        .accept(MediaType.APPLICATION_JSON))
+                .andReturn()
+                .getResponse();
+
+        assertEquals(HttpStatus.OK.value(),response.getStatus());
+    }
+
+    @Test
+    void siInvocoVerRegistroVentasResumenDiaDebeRetornarListaVacia() throws Exception {
+        List<ViewRegistroVentasResumen> a = new ArrayList<>();
+        given(ventaService.verRegistroVentaResumenDia(any(Timestamp.class))).willReturn(a);
+
+        MockHttpServletResponse response = mockMvc.perform(get("/ventas/verRegistroVentasResumenDia?dia=2020-10-02 00:00:00")
+                        .accept(MediaType.APPLICATION_JSON))
+                .andReturn()
+                .getResponse();
+
+        assertEquals(HttpStatus.BAD_REQUEST.value(),response.getStatus());
+    }
+    @Test
+    void siInvocoVerRegistroVentaResumenEntreDiasDebeRetornarLista() throws Exception {
+        List<ViewRegistroVentasResumen> a = getViewRegistroVentaResumen();
+        given(ventaService.verRegistroVentaResumenEntreDias(any(Timestamp.class),any(Timestamp.class))).willReturn(a);
+
+        MockHttpServletResponse response = mockMvc.perform(get("/ventas/verRegistroVentasResumenEntreDias?dia1=2020-10-01 00:00:00&dia2=2020-10-03 00:00:00")
+                        .accept(MediaType.APPLICATION_JSON))
+                .andReturn()
+                .getResponse();
+
+        assertEquals(HttpStatus.OK.value(),response.getStatus());
+    }
+
+    @Test
+    void siInvocoVerRegistroVentaResumenEntreDiasDebeRetornarListaVacia() throws Exception {
+        List<ViewRegistroVentasResumen> a = new ArrayList<>();
+        given(ventaService.verRegistroVentaResumenEntreDias(any(Timestamp.class),any(Timestamp.class))).willReturn(a);
+
+        MockHttpServletResponse response = mockMvc.perform(get("/ventas/verRegistroVentasResumenEntreDias?dia1=2020-10-01 00:00:00&dia2=2020-10-03 00:00:00")
+                        .accept(MediaType.APPLICATION_JSON))
+                .andReturn()
+                .getResponse();
+
+        assertEquals(HttpStatus.BAD_REQUEST.value(),response.getStatus());
+    }
+
+    @Test
+    void siInvocoVerRegistroVentasDetalleDiaDebeRetornarLista() throws Exception {
+        List<ViewRegistroVentasDetalle> a = getViewRegistroVentaDetalle();
+        given(ventaService.verRegistroVentaDetalleDia(any(Timestamp.class))).willReturn(a);
+
+        MockHttpServletResponse response = mockMvc.perform(get("/ventas/verRegistroVentasDetalleDia?dia=2020-10-02 00:00:00")
+                        .accept(MediaType.APPLICATION_JSON))
+                .andReturn()
+                .getResponse();
+
+        assertEquals(HttpStatus.OK.value(),response.getStatus());
+    }
+
+    @Test
+    void siInvocoVerRegistroVentasDetalleDiaDebeRetornarListaVacia() throws Exception {
+        List<ViewRegistroVentasDetalle> a = new ArrayList<>();
+        given(ventaService.verRegistroVentaDetalleDia(any(Timestamp.class))).willReturn(a);
+
+        MockHttpServletResponse response = mockMvc.perform(get("/ventas/verRegistroVentasDetalleDia?dia=2020-10-02 00:00:00")
+                        .accept(MediaType.APPLICATION_JSON))
+                .andReturn()
+                .getResponse();
+
+        assertEquals(HttpStatus.BAD_REQUEST.value(),response.getStatus());
+    }
+
+    @Test
+    void siInvocoVerRegistroVentasDetalleEntreDiasDebeRetornarLista() throws Exception {
+        List<ViewRegistroVentasDetalle> a = getViewRegistroVentaDetalle();
+        given(ventaService.verRegistroVentaDetalleEntreDias(any(Timestamp.class),any(Timestamp.class))).willReturn(a);
+
+        MockHttpServletResponse response = mockMvc.perform(get("/ventas/verRegistroVentasDetalleEntreDias?dia1=2020-10-01 00:00:00&dia2=2020-10-03 00:00:00")
+                        .accept(MediaType.APPLICATION_JSON))
+                .andReturn()
+                .getResponse();
+
+        assertEquals(HttpStatus.OK.value(),response.getStatus());
+    }
+
+    @Test
+    void siInvocoVerRegistroVentasDetalleEntreDiasDebeRetornarListaVacia() throws Exception {
+        List<ViewRegistroVentasDetalle> a = new ArrayList<>();
+        given(ventaService.verRegistroVentaDetalleEntreDias(any(Timestamp.class),any(Timestamp.class))).willReturn(a);
+
+        MockHttpServletResponse response = mockMvc.perform(get("/ventas/verRegistroVentasDetalleEntreDias?dia1=2020-10-01 00:00:00&dia2=2020-10-03 00:00:00")
+                        .accept(MediaType.APPLICATION_JSON))
+                .andReturn()
+                .getResponse();
+
+        assertEquals(HttpStatus.BAD_REQUEST.value(),response.getStatus());
+    }
+
     Venta getVenta(){
         Venta venta = new Venta();
         venta.setIdventa(1);
@@ -312,5 +523,25 @@ public class VentaControllerTest {
     private Usuario getUsuario() {
         Usuario usuario = new Usuario("123","jose","apellido1","tres","ada@gmail.com",Usuario.ADMIN_VENTAS,"producto1");
         return  usuario;
+    }
+
+    private List<ViewRegistroVentasResumen> getViewRegistroVentaResumen(){
+        List<ViewRegistroVentasResumen> a = new ArrayList<>();
+        ViewRegistroVentasResumen viewRegistroVentasResumen = new ViewRegistroVentasResumen();
+        viewRegistroVentasResumen.setFecha(Timestamp.valueOf("2020-10-02 00:00:00"));
+        viewRegistroVentasResumen.setIdventa(432);
+        viewRegistroVentasResumen.setTipoventa("boleta");
+        a.add(viewRegistroVentasResumen);
+        return a;
+    }
+
+    private List<ViewRegistroVentasDetalle> getViewRegistroVentaDetalle(){
+        List<ViewRegistroVentasDetalle> a = new ArrayList<>();
+        ViewRegistroVentasDetalle v = new ViewRegistroVentasDetalle();
+        v.setFecha(Timestamp.valueOf("2020-10-02 00:00:00"));
+        v.setIdventa(231);
+        v.setTipoventa("boleta");
+        a.add(v);
+        return a;
     }
 }

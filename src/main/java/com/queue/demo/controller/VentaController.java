@@ -46,7 +46,7 @@ public class VentaController {
 		} catch(AuthException e){
 			return new ResponseEntity<>(e.getMessage(),HttpStatus.UNAUTHORIZED);
 		} catch (Exception e) {
-			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+			return new ResponseEntity<>(e.getMessage(),HttpStatus.BAD_REQUEST);
 		}
 	}
 

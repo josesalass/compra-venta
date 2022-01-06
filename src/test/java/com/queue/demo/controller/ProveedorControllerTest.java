@@ -4,6 +4,7 @@ package com.queue.demo.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.queue.demo.model.Proveedor;
 import com.queue.demo.model.Usuario;
+import com.queue.demo.service.AuthException;
 import com.queue.demo.service.ProveedorService;
 import org.checkerframework.checker.nullness.Opt;
 import org.junit.jupiter.api.BeforeEach;
@@ -165,15 +166,15 @@ public class ProveedorControllerTest {
                 .getResponse();
         assertEquals(HttpStatus.NOT_FOUND.value(),respuesta.getStatus());
     }
-    /*
+
     @Test
     void siInvocoSaveProveedorSeDebeAlmacenarYDevolverElProveedorConStatusCreated() throws Exception {
         // Given
         Proveedor proveedor = getProveedor();
-        given(proveedorService.guardarProveedor(any(Proveedor.class))).willReturn(proveedor);
+        given(proveedorService.guardarProveedor(any(Proveedor.class),any(String.class))).willReturn(proveedor);
 
         // When
-        MockHttpServletResponse response = mockMvc.perform(post("/proveedores/guardarProveedor")
+        MockHttpServletResponse response = mockMvc.perform(post("/proveedores/guardarProveedor?rut=12334323")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(jsonProveedor.write(proveedor).getJson())
                         .accept(MediaType.APPLICATION_JSON))
@@ -181,17 +182,18 @@ public class ProveedorControllerTest {
                 .getResponse();
 
         // Then
-        assertEquals(HttpStatus.CREATED.value(),response.getStatus());
-        assertEquals(jsonProveedor.write(proveedor).getJson(),response.getContentAsString());
+        assertEquals(HttpStatus.CREATED.value(), response.getStatus());
+        assertEquals(jsonProveedor.write(proveedor).getJson(), response.getContentAsString());
     }
+
     @Test
     void siInvocoSaveProveedorSeDebeDevolverElStatusBadRequest() throws Exception {
         // Given
         Proveedor proveedor = getProveedor();
-        doThrow(Exception.class).when(proveedorService).guardarProveedor(any(Proveedor.class));
+        given(proveedorService.guardarProveedor(any(Proveedor.class),any(String.class))).willThrow(Exception.class);
 
         // When
-        MockHttpServletResponse response = mockMvc.perform(post("/proveedores/guardarProveedor")
+        MockHttpServletResponse response = mockMvc.perform(post("/proveedores/guardarProveedor?rut=23213423")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(jsonProveedor.write(proveedor).getJson())
                         .accept(MediaType.APPLICATION_JSON))
@@ -200,7 +202,26 @@ public class ProveedorControllerTest {
 
         // Then
         assertEquals(HttpStatus.BAD_REQUEST.value(),response.getStatus());
-    }*/
+    }
+
+    @Test
+    void siInvocoSaveProveedorSeDebeDevolverElStatusUNAUTHORIZED() throws Exception {
+        // Given
+        Proveedor proveedor = getProveedor();
+        given(proveedorService.guardarProveedor(any(Proveedor.class),any(String.class))).willThrow(AuthException.class);
+
+        // When
+        MockHttpServletResponse response = mockMvc.perform(post("/proveedores/guardarProveedor?rut=23213423")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(jsonProveedor.write(proveedor).getJson())
+                        .accept(MediaType.APPLICATION_JSON))
+                .andReturn()
+                .getResponse();
+
+        // Then
+        assertEquals(HttpStatus.UNAUTHORIZED.value(),response.getStatus());
+    }
+
 
     List<Proveedor> getListaProveedores(){
         List<Proveedor> proveedores = new ArrayList<>();

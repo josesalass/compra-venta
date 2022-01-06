@@ -27,7 +27,7 @@ public class EstadisticasController {
         return new ResponseEntity<>(lista,HttpStatus.OK);
     }
 
-    @GetMapping("/verproductomenosvendido")
+    @GetMapping("/productomenosvendido")
     public ResponseEntity<?> getProductoMenosVendido(@RequestParam(value="año",required = true) int año){
         List<ViewProductoMenosVendidoPorMes> lista = estadisticasService.verProductoMenosVendido(año);
         if (lista.isEmpty()){

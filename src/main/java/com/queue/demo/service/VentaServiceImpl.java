@@ -11,6 +11,7 @@ import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 import javax.transaction.Transactional;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -32,6 +33,9 @@ public class VentaServiceImpl implements VentaService{
 
 	@Autowired
 	UsuarioService usuarioService;
+
+	@Autowired
+	ClienteService clienteService;
 	
 	@Override
 	public List<Venta> buscarTodasLasVentas(){
@@ -61,12 +65,23 @@ public class VentaServiceImpl implements VentaService{
 	@Override
 	public Venta guardarVenta(Venta venta) throws Exception{
 		Optional<Usuario> usuario = usuarioService.buscarUsuarioPorRut(venta.getRutusuario());
+		Optional<Cliente> cliente = clienteService.buscarClientePorRut(venta.getRutcliente());
 		if(usuario.isEmpty()){
 			throw new Exception("El usuario asignado a la venta no existe.");
 		}
-		if (usuario.get().getRolusuario()!=Usuario.ADMIN_VENTAS){
+		if (cliente.isEmpty() && venta.getTipoventa().equals("factura")){
+			throw new Exception("El cliente asignado a la factura no está registrado.");
+		}
+		if (usuario.get().getRolusuario()!=Usuario.ADMIN_VENTAS && usuario.get().getRolusuario()!=Usuario.ADMIN){
 			throw new AuthException("Usuario no autorizado para cometer la acción.");
 		}
+		/*Iterator<Asociada_Venta> a = venta.getVentaproductos().iterator();
+		while(a.hasNext()){
+			Asociada_Venta as = a.next();
+			if ( as.getProducto().getStock() < as.getCantidad()){
+				throw new Exception("No se puede realizar la venta debido a que un producto no posee el suficiente stock documentado.");
+			}
+		} */
 		Venta nuevaVenta = new Venta();
 		if (venta.getFecha() == null || venta.getMetodopago() == null || venta.getRutusuario() == null || venta.getTipoventa() == null){
 			throw new Exception();
@@ -87,6 +102,8 @@ public class VentaServiceImpl implements VentaService{
 					producto.get().setStock(producto.get().getStock()-asociadaVenta.getCantidad());
 					return asociadaVenta;
 				}).collect(Collectors.toList())));
+
+		nuevaVenta.setCliente(cliente.get());
 		return repVenta.save(nuevaVenta);
 
 	}
