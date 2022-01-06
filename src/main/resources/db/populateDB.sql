@@ -1,5 +1,5 @@
 
-INSERT INTO Usuario (rutusuario,nombre,apellido1, apellido2,correousuario,rolusuario,contrasenia)
+INSERT INTO Usuario (rutusuario,nombre,apellido1, apellido2,correousuario,rolusuario,contrasenia, contadorlogin)
 VALUES ('164536512','Fernando','Tormenta','China','tormentaxina@yopmail.com',0,'Huevos01',0),
 ('132675624','katherine','Elder','Scrolls','kathoeso@hotmail.com',2, 'Cypher123',0),('203766542','Matias','Sprite','Enjoy','ultraxasesino@gmail.com',1,'Contraseña',0),
 ('86351462','Jose','Pollo','Undas','chocojump@hotmail.com',2,'AsdqW123',0)

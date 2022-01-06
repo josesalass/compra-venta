@@ -23,7 +23,7 @@ CREATE TABLE USUARIO (
 	correoUsuario VARCHAR (50) NOT NULL,
 	rolUsuario INT NOT NULL,
 	contrasenia VARCHAR (200),
-	contadorlogin INT,
+	contadorlogin INT
 );
 
 CREATE TABLE CLIENTE(
@@ -135,7 +135,7 @@ from registroventasresumen
 GROUP BY to_char(fecha,'yyyy-mm') ORDER BY to_char(fecha,'yyyy-mm');
 
 CREATE OR REPLACE VIEW ProductoMasVendidoPorMes as 
-select t1.fecha, detalleproducto, t1.cantidad from (
+select DISTINCT t1.fecha, detalleproducto, t1.cantidad from (
 select to_char(fecha,'yyyy-mm') AS fecha, detalleproducto, sum(cantidad) as cantidad
 from asociada_venta NATURAL JOIN producto NATURAL join VENTA
 GROUP BY to_char(fecha,'yyyy-mm'),detalleproducto) as t1 
@@ -146,7 +146,7 @@ from asociada_venta NATURAL JOIN producto NATURAL join VENTA
 group by to_char(fecha,'yyyy-mm'),detalleproducto
 ) as maxprod group by fecha) as t2 on t1.cantidad=t2.cantidad;
 
-CREATE OR REPLACE VIEW ProductoMenosVendido as 
+CREATE OR REPLACE VIEW ProductoMenosVendidoPorMes as
 select distinct  t1.fecha, detalleproducto, t1.cantidad from (
 select to_char(fecha,'yyyy-mm') AS fecha, detalleproducto, sum(cantidad) as cantidad
 from asociada_venta NATURAL JOIN producto NATURAL join VENTA
@@ -158,3 +158,17 @@ from asociada_venta NATURAL JOIN producto NATURAL join VENTA
 group by to_char(fecha,'yyyy-mm'),detalleproducto
 ) as minprod group by fecha) as t2 on t1.cantidad=t2.cantidad;
 
+CREATE OR REPLACE  VIEW IngresosPorMes AS
+Select to_char(date_trunc('month', fecha),'yyyy-mm') as mes, SUM(RV.valortotal) as ingresos
+From RegistroVentasResumen as RV
+Group by mes;
+
+CREATE OR REPLACE  VIEW EgresosPorMes AS
+Select to_char(date_trunc('month', fecha),'yyyy-mm') as mes, SUM(RC.valortotal) as egresos
+From RegistroComprasResumen as RC
+Group by mes;
+
+CREATE OR REPLACE  VIEW FlujoDeCaja AS
+Select COALESCE (IngresosPorMes.mes,EgresosPorMes.mes) AS mes,COALESCE(ingresos,0) AS ingresos,COALESCE(egresos,0) AS egresos,(COALESCE(ingresos,0)-COALESCE(egresos,0)) as flujo
+FROM IngresosPorMes FULL OUTER JOIN EgresosPorMes ON IngresosPorMes.mes=EgresosPorMes.mes
+ORDER BY IngresosPorMes.mes

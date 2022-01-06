@@ -411,7 +411,7 @@ public class VentaServiceTest {
     }
     private Producto getProducto() {
         Producto p = new Producto();
-        p.setStock(10);
+        p.setStock(Integer.MAX_VALUE);
         p.setStockmin(2);
         p.setDetalleproducto("ajashkdb");
         p.setIdproducto(1);

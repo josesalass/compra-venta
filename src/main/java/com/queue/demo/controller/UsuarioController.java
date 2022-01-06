@@ -20,8 +20,12 @@ public class UsuarioController {
 
 
 	@GetMapping("")
-	public List <Usuario> list(){
-		return usuarioService.buscarTodosLosUsuarios();
+	public ResponseEntity<?> list(){
+		List <Usuario> list = usuarioService.buscarTodosLosUsuarios();
+		if (list.isEmpty()){
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+		}
+		return new ResponseEntity<>(list, HttpStatus.OK);
 	}
 
 	@RequestMapping(method=RequestMethod.POST, value="/guardarusuario")

@@ -72,7 +72,7 @@ public class EstadisticasControllerTest {
         List<ViewProductoMenosVendidoPorMes> lista = getViewVerminimo();
         given(estadisticasService.verProductoMenosVendido(2021)).willReturn(lista);
 
-        MockHttpServletResponse respuesta = mockMvc.perform(get("/estadisticas/verproductomenosvendido?año=2021")
+        MockHttpServletResponse respuesta = mockMvc.perform(get("/estadisticas/productomenosvendido?año=2021")
                         .accept(MediaType.APPLICATION_JSON))
                 .andReturn()
                 .getResponse();
@@ -84,7 +84,7 @@ public class EstadisticasControllerTest {
         List<ViewProductoMenosVendidoPorMes> lista = new ArrayList<>();
         given(estadisticasService.verProductoMenosVendido(2021)).willReturn(lista);
 
-        MockHttpServletResponse respuesta = mockMvc.perform(get("/estadisticas/verproductomenosvendido?año=2021")
+        MockHttpServletResponse respuesta = mockMvc.perform(get("/estadisticas/productomenosvendido?año=2021")
                         .accept(MediaType.APPLICATION_JSON))
                 .andReturn()
                 .getResponse();

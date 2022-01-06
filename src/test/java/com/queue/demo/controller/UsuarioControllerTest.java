@@ -2,6 +2,7 @@ package com.queue.demo.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.queue.demo.model.Usuario;
+import com.queue.demo.model.Venta;
 import com.queue.demo.service.UsuarioService;
 import com.queue.demo.util.Encriptador;
 import org.checkerframework.checker.nullness.Opt;
@@ -19,14 +20,16 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import java.security.Key;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.doThrow;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 
 @ExtendWith(MockitoExtension.class)
 public class UsuarioControllerTest {
@@ -42,6 +45,38 @@ public class UsuarioControllerTest {
         JacksonTester.initFields(this,new ObjectMapper());
         mockMvc = MockMvcBuilders.standaloneSetup(usuarioController).build();
     }
+
+    @Test
+    void siInvocoListDebeMostrarTodasLosUsuarios() throws Exception{
+        List<Usuario> u = new ArrayList<>();
+        u.add(getUsuario());
+        given(usuarioService.buscarTodosLosUsuarios()).willReturn(u);
+
+        MockHttpServletResponse response = mockMvc.perform(get("/usuarios")
+                        .accept(MediaType.APPLICATION_JSON))
+                .andReturn()
+                .getResponse();
+
+
+
+        assertEquals(HttpStatus.OK.value(),response.getStatus());
+    }
+
+    //list con lista vacía
+    @Test
+    void siInvocoListYNoHayUsuariosDebeRetornarNotFound() throws Exception{
+        List<Usuario> u = new ArrayList<>();
+        given(usuarioService.buscarTodosLosUsuarios()).willReturn(u);
+
+        MockHttpServletResponse response = mockMvc.perform(get("/usuarios")
+                        .accept(MediaType.APPLICATION_JSON))
+                .andReturn()
+                .getResponse();
+
+
+        assertEquals(HttpStatus.NOT_FOUND.value(),response.getStatus());
+    }
+
     @Test
     void siInvocoAddUsuarioSeDebeAlmacenarYDevolverElProveedorConStatusCreated()throws Exception{
         // Given

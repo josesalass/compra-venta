@@ -1,8 +1,6 @@
 package com.queue.demo.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.queue.demo.model.Compra;
-import com.queue.demo.model.Usuario;
-import com.queue.demo.model.Venta;
+import com.queue.demo.model.*;
 import com.queue.demo.service.AuthException;
 import com.queue.demo.service.CompraException;
 import com.queue.demo.service.CompraService;
@@ -236,7 +234,58 @@ public class CompraControllerTest {
         mockMvc.perform(put("/compras/{idcompra}/cambiarEmpresa/{rutempresa}",compra.getIdcompra(),"792954367")).andExpect(status().isBadRequest());
 
     }
+    @Test
+    void siInvocoVerViewRegistroComprasResumenDebeMostrarList() throws Exception{
+        List<ViewRegistroComprasResumen> lista = getViewResumen();
+        given(compraService.verRegistroCompraResumen()).willReturn(lista);
 
+        MockHttpServletResponse respuesta = mockMvc.perform(get("/compras/verRegistroComprasResumen")
+                        .accept(MediaType.APPLICATION_JSON))
+                .andReturn()
+                .getResponse();
+
+        assertEquals(HttpStatus.OK.value(),respuesta.getStatus());
+
+    }
+    @Test
+    void siInvocoVerViewRegistroComprasResumenDebeRetornarBadRequest() throws Exception{
+        List<ViewRegistroComprasResumen> lista = new ArrayList<>();
+        given(compraService.verRegistroCompraResumen()).willReturn(lista);
+
+        MockHttpServletResponse respuesta = mockMvc.perform(get("/compras/verRegistroComprasResumen")
+                        .accept(MediaType.APPLICATION_JSON))
+                .andReturn()
+                .getResponse();
+
+        assertEquals(HttpStatus.BAD_REQUEST.value(),respuesta.getStatus());
+
+    }
+    @Test
+    void siInvocoVerViewRegistroComprasDetalleDebeMostrarList() throws Exception{
+        List<ViewRegistroComprasDetalle> lista = getViewDetalle();
+        given(compraService.verRegistroCompraDetalle()).willReturn(lista);
+
+        MockHttpServletResponse respuesta = mockMvc.perform(get("/compras/verRegistroComprasDetalle")
+                        .accept(MediaType.APPLICATION_JSON))
+                .andReturn()
+                .getResponse();
+
+        assertEquals(HttpStatus.OK.value(),respuesta.getStatus());
+
+    }
+    @Test
+    void siInvocoVerViewRegistroComprasDetalleDebeRetornarBadRequest() throws Exception{
+        List<ViewRegistroComprasDetalle> lista = new ArrayList<>();
+        given(compraService.verRegistroCompraDetalle()).willReturn(lista);
+
+        MockHttpServletResponse respuesta = mockMvc.perform(get("/compras/verRegistroComprasDetalle")
+                        .accept(MediaType.APPLICATION_JSON))
+                .andReturn()
+                .getResponse();
+
+        assertEquals(HttpStatus.BAD_REQUEST.value(),respuesta.getStatus());
+
+    }
     //Datos para los test
     List<Compra> getCompras() {
         List<Compra>compras = new ArrayList<Compra> ();
@@ -255,6 +304,23 @@ public class CompraControllerTest {
         compra.setRutempresa("257963345");
         return compra;
     }
+
+    private List <ViewRegistroComprasDetalle> getViewDetalle(){
+        List <ViewRegistroComprasDetalle> l= new ArrayList<>();
+        ViewRegistroComprasDetalle v= new ViewRegistroComprasDetalle();
+        v.setIdCompra(1);
+        l.add(v);
+        return l;
+    }
+    private List <ViewRegistroComprasResumen> getViewResumen(){
+        List <ViewRegistroComprasResumen> l= new ArrayList<>();
+        ViewRegistroComprasResumen v= new ViewRegistroComprasResumen();
+        v.setIdCompra(1);
+
+        l.add(v);
+        return l;
+    }
+
     private Usuario getUsuario() {
         Usuario usuario = new Usuario("123576642","jose","apellido1","tres","ada@gmail.com",Usuario.ADMIN_COMPRAS,"producto1");
         return  usuario;
